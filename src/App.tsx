@@ -15,7 +15,7 @@ function App() {
     <View style={styles.container}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       <View>
-        <Text>Econofy initial</Text>
+        <Text>Econofy</Text>
       </View>
     </View>
     </SafeAreaView>
