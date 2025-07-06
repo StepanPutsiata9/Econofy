@@ -13,7 +13,7 @@ import {
   Text,
   SafeAreaView,
 } from 'react-native';
-import { store } from './src/store/store';
+import { store } from './store/store';
 import { Provider } from 'react-redux';
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -24,7 +24,8 @@ function App() {
         <View style={styles.container}>
           <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
           <View>
-            <Text>Econofy</Text>
+            <Text style={styles.econofyText1}>Econofy Medium</Text>
+            <Text style={styles.econofyText2}>Econofy Bold</Text>
           </View>
         </View>
       </SafeAreaView>
@@ -38,9 +39,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  safeArea:{
-    flex:1,
-  }
+  safeArea: {
+    flex: 1,
+  },
+  econofyText1: {
+    fontSize: 24,
+    fontFamily: 'Montserrat',
+  },
+  econofyText2: {
+    fontFamily: 'MontserratBold',
+    fontSize: 24,
+    fontWeight: 700,
+  },
 });
 
 export default App;
