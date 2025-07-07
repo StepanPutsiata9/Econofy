@@ -7,5 +7,20 @@ export const styles = StyleSheet.create({
     paddingHorizontal:16,
     height:"100%",
   },
-
+  loadContainer:{
+    flex:1,
+    justifyContent:'center',
+    alignItems:'center',
+  },
+  logoView:{
+    marginBottom:20,
+  },
+  loadText:{
+    color:'#5BFF6F',
+    fontSize:20,
+    fontFamily:'Montserrat',
+  },
+  loader:{
+    marginBottom:20,
+  }
 });
