@@ -1,58 +1,43 @@
-import { StyleSheet, Animated, Easing, View } from 'react-native';
-import React, { useEffect, useRef, useCallback } from 'react';
+import React, { useEffect, useRef } from 'react';
+import { Animated, Easing, View, StyleSheet } from 'react-native';
 
 const CustomLoader = () => {
-  const spinValue = useRef(new Animated.Value(0)).current;
-  const animationRef = useRef<Animated.CompositeAnimation | null>(null);
-
-  const startAnimation = useCallback(() => {
-    animationRef.current = Animated.loop(
-      Animated.timing(spinValue, {
-        toValue: 1,
-        duration: 1000,
-        easing: Easing.linear,
-        useNativeDriver: true,
-        isInteraction: false
-      })
-    );
-    animationRef.current.start();
-  }, [spinValue]); 
-
+  const rotation = useRef(new Animated.Value(0)).current;
   useEffect(() => {
-    startAnimation();
-    
-    return () => {
-      if (animationRef.current) {
-        animationRef.current.stop();
-      }
+    const animate = () => {
+      Animated.loop(
+        Animated.timing(rotation, {
+          toValue: 1,
+          duration: 1000,
+          easing: Easing.linear,
+          useNativeDriver: true,
+        })
+      ).start();
     };
-  }, [startAnimation]); 
+    animate();
+    return () => rotation.setValue(0); // Сброс при размонтировании
+  }, [rotation]);
 
-  const spin = spinValue.interpolate({
+  const spin = rotation.interpolate({
     inputRange: [0, 1],
-    outputRange: ['0deg', '360deg']
+    outputRange: ['0deg', '360deg'],
   });
-
   return (
-    <View style={styles.container}>
+    <View >
       <Animated.View style={[styles.spinner, { transform: [{ rotate: spin }] }]} />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   spinner: {
     width: 50,
     height: 50,
-    borderRadius: 25,
+    borderRadius: 30,
     borderWidth: 5,
     borderColor: '#5BFF6F',
-    borderTopColor: 'transparent'
-  }
+    borderTopColor: 'transparent',
+  },
 });
 
 export default CustomLoader;

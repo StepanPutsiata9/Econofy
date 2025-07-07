@@ -14,7 +14,7 @@ function Load() {
         <View style={styles.loader}>
           <Loader />
         </View>
-        <Text style={styles.loadText}> Загрузка</Text>
+        <Text style={styles.loadText}>Загрузка</Text>
       </View>
     </View>
   );
