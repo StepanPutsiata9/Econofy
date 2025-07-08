@@ -48,4 +48,12 @@ export const styles = StyleSheet.create({
     lineHeight:17,
     textDecorationLine:'underline',
   },
+    eye: {
+    position: 'absolute',
+    right: 17,
+    top: 13
+  },
+  inputView: {
+    position: 'relative'
+  },
 });

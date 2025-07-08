@@ -6,25 +6,27 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Header from '../../components/ui/Header/Header.tsx';
-import { styles } from './AuthScreen.ts';
+import { styles } from './RegistrationScreen.ts';
 import MainButton from '../../components/ui/MainButton/MainButton.tsx';
-import { useState } from 'react';
 import EyeClosed from '../../components/SvgComponents/EyeClosed.tsx';
 import EyeOpened from '../../components/SvgComponents/EyeOpened.tsx';
-function AuthScreen() {
+import { useState } from 'react';
+function RegistrationScreen() {
   const [isSecure, setIsSecure] = useState<boolean>(false);
   const [loginText, setLoginText] = useState<string>('');
   const [passwordText, setPasswordText] = useState<string>('');
+  const [repitPasswordText, setRepitPasswordText] = useState<string>('');
+  const [isSecureRepit, setIsSecureRepit] = useState<boolean>(false);
   return (
     <View style={styles.container}>
       <Header />
-      <Text style={styles.authText}>Войти</Text>
+      <Text style={styles.authText}>Регистрация</Text>
       <ScrollView>
         <View>
           <TextInput
             value={loginText}
             placeholder="Login"
-            style={styles.loginInput}
+            style={styles.input}
             onChangeText={setLoginText}
             keyboardType="email-address"
             autoCapitalize="none"
@@ -34,7 +36,7 @@ function AuthScreen() {
             <TextInput
               value={passwordText}
               placeholder="Пароль"
-              style={styles.passwordInput}
+              style={styles.input}
               onChangeText={setPasswordText}
               placeholderTextColor="#fff"
               secureTextEntry={!isSecure}
@@ -45,15 +47,30 @@ function AuthScreen() {
               </TouchableOpacity>
             </View>
           </View>
+          <View style={styles.inputView}>
+            <TextInput
+              value={repitPasswordText}
+              placeholder="Повторите пароль"
+              style={styles.repitPasswordInput}
+              onChangeText={setRepitPasswordText}
+              placeholderTextColor="#fff"
+              secureTextEntry={!isSecureRepit}
+            />
+            <View style={styles.eye}>
+              <TouchableOpacity
+                onPress={() => setIsSecureRepit(!isSecureRepit)}
+              >
+                {isSecureRepit ? <EyeClosed /> : <EyeOpened />}
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
         <TouchableOpacity onPress={() => {}} style={styles.touchOpacity}>
-          <Text style={styles.noAccountText}>
-            Нет аккаунта? Зарегистрироваться
-          </Text>
+          <Text style={styles.noAccountText}>Есть аккаунт? Войти</Text>
         </TouchableOpacity>
-        <MainButton title="Войти" onClick={() => {}} />
+        <MainButton title="Зарегистрироваться" onClick={() => {}} />
       </ScrollView>
     </View>
   );
 }
-export default AuthScreen;
+export default RegistrationScreen;

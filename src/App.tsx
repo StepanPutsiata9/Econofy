@@ -6,6 +6,7 @@ import {
 // import Start from './screens/StartScreen/StartScreen.tsx';
 // import Load from './screens/LoadScreen/LoadScreen.tsx';
 import AuthScreen from "./screens/AuthScreen/AuthScreen.tsx"
+// import RegistrationScreen from "./screens/RegistrationScreen/RegistrationScreen.tsx"
 import { store } from './store/store';
 import { Provider } from 'react-redux';
 
@@ -22,6 +23,7 @@ function App() {
           {/* <Start /> */}
           {/* <Load/> */}
           <AuthScreen/>
+          {/* <RegistrationScreen/> */}
       </SafeAreaProvider>
     </Provider>
   );
