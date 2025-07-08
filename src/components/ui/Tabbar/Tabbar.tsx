@@ -1,9 +1,11 @@
 import { View, TouchableOpacity, StyleSheet, Text } from 'react-native';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
-import Icon from 'react-native-vector-icons/Ionicons';
 import { JSX } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
+import HomeTab from "../../SvgComponents/HomeTab.tsx";
+import SettingsTab from "../../SvgComponents/SettingsTab.tsx"
+import BudgetTab from "../../SvgComponents/BudgetTab.tsx"
+import CurrencyTab from "../../SvgComponents/CurrencyTab.tsx"
 function TabBar({
   state,
   descriptors,
@@ -14,9 +16,11 @@ function TabBar({
   const tabBarStyle = descriptors[currentRoute.key].options.tabBarStyle;
   const shouldHideTabBar =
     tabBarStyle && 'height' in tabBarStyle && tabBarStyle.height === 0;
+
   if (shouldHideTabBar) {
-    return <></>;
+    return <></>; // Лучше возвращать `null`, чем `<></>`
   }
+
   return (
     <View
       style={[
@@ -29,28 +33,23 @@ function TabBar({
     >
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
-        const label =
-          options.tabBarLabel !== undefined
-            ? options.tabBarLabel
-            : options.title !== undefined
-            ? options.title
-            : route.name;
-
         const isFocused = state.index === index;
+        let icon: JSX.Element =<Text>фотка</Text>;
+        const title:string|undefined=options.title;
 
-        const iconName =
-          route.name === 'Home'
-            ? isFocused
-              ? 'home'
-              : 'home-outline'
-            : route.name === 'Settings'
-            ? isFocused
-              ? 'settings'
-              : 'settings-outline'
-            : isFocused
-            ? 'list'
-            : 'list-outline'; // fallback icon
-
+        switch(options.title){
+          case "Home":
+            icon=<HomeTab color={"#fff"}/>
+            break;
+          case "Settings":
+            icon=<SettingsTab color={"#fff"}/>
+            break;
+          case "Budget":
+            icon =<BudgetTab color={"#fff"}/>
+            break;
+          case "Currency":
+            icon =<CurrencyTab color={"#fff"}/>
+        }
         const onPress = () => {
           const event = navigation.emit({
             type: 'tabPress',
@@ -59,34 +58,18 @@ function TabBar({
           });
 
           if (!isFocused && !event.defaultPrevented) {
-            navigation.navigate(route.name, route.params);
+            navigation.navigate(route.name);
           }
         };
 
         return (
           <TouchableOpacity
             key={route.key}
-            accessibilityRole="button"
-            accessibilityState={isFocused ? { selected: true } : {}}
-            accessibilityLabel={options.tabBarAccessibilityLabel}
-            
-            onPress={onPress}
+            onPress={onPress} 
             style={styles.tabButton}
           >
-            <Icon
-              name={iconName}
-              size={24}
-              color={isFocused ? '#673ab7' : '#222'}
-            />
-            <Text
-              style={{
-                color: isFocused ? '#673ab7' : '#222',
-                fontSize: 12,
-                marginTop: 4,
-              }}
-            >
-              {label}
-            </Text>
+            <View>{icon}</View>
+            <Text>{title}</Text>
           </TouchableOpacity>
         );
       })}
@@ -103,7 +86,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#2B2B2B',
     borderRadius: 16,
     marginHorizontal: 16,
-    // marginBottom: 20,
     position: 'absolute',
     bottom: 0,
     left: 0,
@@ -121,5 +103,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+
   },
 });

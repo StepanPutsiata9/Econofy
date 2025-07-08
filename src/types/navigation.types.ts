@@ -1,19 +1,28 @@
 import { NavigatorScreenParams } from "@react-navigation/native";
-
 // types/navigation.ts
+
+
 export type AuthStackParamList = {
   AuthScreen: undefined;
   RegistrationScreen:undefined; 
 };
-
-// export type MainStackParamList = {
-//   Home: undefined;
-//   Profile: { userId: string };
-//   Settings: undefined;
-// };
+export type HomeStackParamList={
+  HomeScreen:undefined;
+}
+export type SettingsStackParamList={
+  SettingsScreen:undefined,
+}
+export type BudgetStackParamList={
+  BudgetScreen:undefined,
+}
+export type CurrencyStackParamList={
+  CurrencyScreen:undefined;
+}
 
 export type RootStackParamList = {
   Auth: NavigatorScreenParams<AuthStackParamList>;
-//   MainStack: NavigatorScreenParams<MainStackParamList>;
-//   Splash: undefined;
+  Home:NavigatorScreenParams<HomeStackParamList>;
+  Settings:NavigatorScreenParams<SettingsStackParamList>;
+  Budget:NavigatorScreenParams<BudgetStackParamList>;
+  Currency:NavigatorScreenParams<CurrencyStackParamList>;
 };
