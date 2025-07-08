@@ -13,7 +13,7 @@ export const styles = StyleSheet.create({
     alignItems:'center',
   },
   logoView:{
-    marginBottom:20,
+    marginBottom:45,
   },
   loadText:{
     color:'#5BFF6F',

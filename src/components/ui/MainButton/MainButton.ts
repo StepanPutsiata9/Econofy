@@ -4,8 +4,9 @@ export const styles = StyleSheet.create({
   btn:{
     width:"100%",
     backgroundColor:"#5BFF6F",
-    paddingVertical:14,
+    height:48,
     borderRadius:10,
+    justifyContent:'center',
     
   },
   btnText:{
