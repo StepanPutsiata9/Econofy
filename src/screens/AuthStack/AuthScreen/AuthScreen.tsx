@@ -12,13 +12,15 @@ import { useState } from 'react';
 import EyeClosed from '../../../components/SvgComponents/EyeClosed.tsx';
 import EyeOpened from '../../../components/SvgComponents/EyeOpened.tsx';
 import { useNavigation } from '@react-navigation/native';
-import {AuthStackParamList} from "../../../types/navigation.types.ts"
+import {AuthStackParamList,RootStackParamList} from "../../../types/navigation.types.ts"
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 function AuthScreen() {
   const [isSecure, setIsSecure] = useState<boolean>(false);
   const [loginText, setLoginText] = useState<string>('');
   const [passwordText, setPasswordText] = useState<string>('');
-  const navigation = useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
+
+  const authNavigation = useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
+  const rootNavigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   return (
     <View style={styles.container}>
@@ -51,12 +53,12 @@ function AuthScreen() {
             </View>
           </View>
         </View>
-        <TouchableOpacity onPress={() => { navigation.navigate('RegistrationScreen')}} style={styles.touchOpacity}>
+        <TouchableOpacity onPress={() => { authNavigation.navigate('RegistrationScreen')}} style={styles.touchOpacity}>
           <Text style={styles.noAccountText}>
             Нет аккаунта? Зарегистрироваться
           </Text>
         </TouchableOpacity>
-        <MainButton title="Войти" onClick={() =>{}} />
+        <MainButton title="Войти" onClick={() =>{rootNavigation.navigate('Home',{screen:"HomeScreen"})}} />
       </ScrollView>
     </View>
   );

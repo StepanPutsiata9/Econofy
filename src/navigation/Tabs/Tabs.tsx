@@ -7,7 +7,7 @@ import AuthStack from '../../screens/AuthStack/AuthStack.tsx';
 import SettingsStack from '../../screens/SettingsStack/SettingsStack.tsx';
 import BudgetStack from '../../screens/BudgetStack/BudgetStack.tsx';
 import CurrencyStack from '../../screens/CurrencyStack/CurrencyStack.tsx';
-import HomeStack from "../../screens/HomeStack/HomeStack.tsx"
+import HomeStack from '../../screens/HomeStack/HomeStack.tsx';
 import { RootStackParamList } from '../../types/navigation.types.ts';
 import CustomTabBar from '../../components/ui/Tabbar/Tabbar.tsx';
 
@@ -16,11 +16,12 @@ const Tab = createBottomTabNavigator<RootStackParamList>();
 function Tabs() {
   return (
     <Tab.Navigator
+      initialRouteName="Auth"
       // eslint-disable-next-line react/no-unstable-nested-components
       tabBar={props => <CustomTabBar {...props} />}
       screenOptions={{
         headerShown: false,
-        animation: 'none',
+        animation: 'fade',
       }}
     >
       <Tab.Screen
@@ -29,19 +30,16 @@ function Tabs() {
         options={
           {
             // tabBarStyle: { height: 0 },
-            tabBarLabel: 'Авторизация',
-            title: 'Auth',
+            title: 'Авторизация',
           } as BottomTabNavigationOptions
         }
       />
-       <Tab.Screen
+      <Tab.Screen
         name="Home"
         component={HomeStack}
         options={
           {
-            // tabBarStyle: { height: 0 },
-            tabBarLabel: 'Цели',
-            title: 'Home',
+            title: 'Цели',
           } as BottomTabNavigationOptions
         }
       />
@@ -50,8 +48,7 @@ function Tabs() {
         component={CurrencyStack}
         options={
           {
-            tabBarLabel: 'Валюты',
-            title: 'Currency',
+            title: 'Валюты',
           } as BottomTabNavigationOptions
         }
       />
@@ -61,8 +58,7 @@ function Tabs() {
         component={BudgetStack}
         options={
           {
-            tabBarLabel: 'Бюджет',
-            title: 'Budget',
+            title: 'Бюджет',
           } as BottomTabNavigationOptions
         }
       />
@@ -71,8 +67,7 @@ function Tabs() {
         component={SettingsStack}
         options={
           {
-            tabBarLabel: 'Настройки',
-            title: 'Settings',
+            title: 'Настройки',
           } as BottomTabNavigationOptions
         }
       />
