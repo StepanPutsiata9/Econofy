@@ -5,16 +5,21 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
-import Header from '../../components/ui/Header/Header.tsx';
+import Header from '../../../components/ui/Header/Header.tsx';
 import { styles } from './AuthScreen.ts';
-import MainButton from '../../components/ui/MainButton/MainButton.tsx';
+import MainButton from '../../../components/ui/MainButton/MainButton.tsx';
 import { useState } from 'react';
-import EyeClosed from '../../components/SvgComponents/EyeClosed.tsx';
-import EyeOpened from '../../components/SvgComponents/EyeOpened.tsx';
+import EyeClosed from '../../../components/SvgComponents/EyeClosed.tsx';
+import EyeOpened from '../../../components/SvgComponents/EyeOpened.tsx';
+import { useNavigation } from '@react-navigation/native';
+import {AuthStackParamList} from "../../../types/navigation.types.ts"
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 function AuthScreen() {
   const [isSecure, setIsSecure] = useState<boolean>(false);
   const [loginText, setLoginText] = useState<string>('');
   const [passwordText, setPasswordText] = useState<string>('');
+  const navigation = useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
+
   return (
     <View style={styles.container}>
       <Header />
@@ -46,12 +51,12 @@ function AuthScreen() {
             </View>
           </View>
         </View>
-        <TouchableOpacity onPress={() => {}} style={styles.touchOpacity}>
+        <TouchableOpacity onPress={() => { navigation.navigate('RegistrationScreen')}} style={styles.touchOpacity}>
           <Text style={styles.noAccountText}>
             Нет аккаунта? Зарегистрироваться
           </Text>
         </TouchableOpacity>
-        <MainButton title="Войти" onClick={() => {}} />
+        <MainButton title="Войти" onClick={() =>{}} />
       </ScrollView>
     </View>
   );
