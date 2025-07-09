@@ -6,6 +6,7 @@ export type AuthStackParamList = {
   StartScreen:undefined;
   AuthScreen: undefined;
   RegistrationScreen:undefined; 
+  LoadScreen:undefined;
 };
 export type HomeStackParamList={
   HomeScreen:undefined;
