@@ -12,11 +12,11 @@ import { RootStackParamList } from '../../types/navigation.types.ts';
 import CustomTabBar from '../../components/ui/Tabbar/Tabbar.tsx';
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
-
+const isAuth:boolean=false;
+// разделение на два стека: авторизованного и не авторизованного
 function Tabs() {
   return (
     <Tab.Navigator
-      initialRouteName="Auth"
       // eslint-disable-next-line react/no-unstable-nested-components
       tabBar={props => <CustomTabBar {...props} />}
       screenOptions={{
@@ -24,6 +24,8 @@ function Tabs() {
         animation: 'fade',
       }}
     >
+
+
       <Tab.Screen
         name="Auth"
         component={AuthStack}
@@ -52,7 +54,6 @@ function Tabs() {
           } as BottomTabNavigationOptions
         }
       />
-
       <Tab.Screen
         name="Budget"
         component={BudgetStack}

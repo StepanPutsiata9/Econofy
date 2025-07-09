@@ -114,6 +114,7 @@ function TabBar({
         };
 
         return (
+
           <TouchableOpacity
             key={route.key}
             onPress={onPress}
