@@ -14,28 +14,42 @@ import CustomTabBar from '../../components/ui/Tabbar/Tabbar.tsx';
 const Tab = createBottomTabNavigator<RootStackParamList>();
 const isAuth:boolean=false;
 // разделение на два стека: авторизованного и не авторизованного
-function Tabs() {
-  return (
+
+function AuthTabs(){
+  return(
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: false,
+        animation: 'fade',
+      }}
+    >
+        <Tab.Screen
+        name="Auth"
+        component={AuthStack}
+        options={
+          {
+            tabBarStyle: { display:'none'},
+            title: 'Авторизация',
+          } as BottomTabNavigationOptions
+        }
+      />
+    </Tab.Navigator>
+  )
+}
+
+function MainTabs(){
+   return (
+
     <Tab.Navigator
       // eslint-disable-next-line react/no-unstable-nested-components
       tabBar={props => <CustomTabBar {...props} />}
+      initialRouteName='Home'
       screenOptions={{
         headerShown: false,
         animation: 'fade',
       }}
     >
 
-
-      <Tab.Screen
-        name="Auth"
-        component={AuthStack}
-        options={
-          {
-            // tabBarStyle: { height: 0 },
-            title: 'Авторизация',
-          } as BottomTabNavigationOptions
-        }
-      />
       <Tab.Screen
         name="Home"
         component={HomeStack}
@@ -45,6 +59,7 @@ function Tabs() {
           } as BottomTabNavigationOptions
         }
       />
+
       <Tab.Screen
         name="Currency"
         component={CurrencyStack}
@@ -54,6 +69,7 @@ function Tabs() {
           } as BottomTabNavigationOptions
         }
       />
+
       <Tab.Screen
         name="Budget"
         component={BudgetStack}
@@ -63,6 +79,7 @@ function Tabs() {
           } as BottomTabNavigationOptions
         }
       />
+
       <Tab.Screen
         name="Settings"
         component={SettingsStack}
@@ -75,4 +92,16 @@ function Tabs() {
     </Tab.Navigator>
   );
 }
+function Tabs() {
+  return(
+    <>
+    {isAuth?
+    <MainTabs/>
+    :
+    <AuthTabs/>
+  }
+    </>
+  )
+}
 export default Tabs;
+
