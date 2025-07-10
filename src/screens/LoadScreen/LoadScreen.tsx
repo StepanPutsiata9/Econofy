@@ -3,10 +3,9 @@ import Loader from '../../components/ui/Loader/Loader.tsx';
 import { styles } from './LoadScreen.ts';
 import Header from '../../components/ui/Header/Header.tsx';
 import LogoPig from '../../components/SvgComponents/LoadPig.tsx';
-function Load() {
-  return (
-    <View style={styles.container}>
-      <Header />
+
+export function LoadContainer(){
+  return(
       <View style={styles.loadContainer}>
         <View style={styles.logoView}>
           <LogoPig />
@@ -16,6 +15,13 @@ function Load() {
         </View>
         <Text style={styles.loadText}>Загрузка</Text>
       </View>
+  )
+}
+function Load() {
+  return (
+    <View style={styles.container}>
+      <Header />
+      <LoadContainer/>
     </View>
   );
 }
