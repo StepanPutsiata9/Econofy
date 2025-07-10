@@ -13,7 +13,6 @@ import CustomTabBar from '../../components/ui/Tabbar/Tabbar.tsx';
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
 const isAuth:boolean=true;
-// разделение на два стека: авторизованного и не авторизованного
 
 function AuthTabs(){
   return(
@@ -39,7 +38,6 @@ function AuthTabs(){
 
 function MainTabs(){
    return (
-
     <Tab.Navigator
       // eslint-disable-next-line react/no-unstable-nested-components
       tabBar={props => <CustomTabBar {...props} />}
@@ -55,7 +53,7 @@ function MainTabs(){
         component={HomeStack}
         options={
           {
-            title: 'Цели',
+            title: 'Главная',
           } as BottomTabNavigationOptions
         }
       />
