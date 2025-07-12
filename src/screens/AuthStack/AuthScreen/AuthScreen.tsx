@@ -24,8 +24,6 @@ function AuthScreen() {
 
   const authNavigation =
     useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
-  // const rootNavigation =
-  //   useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   return (
     <View style={styles.container}>

@@ -5,6 +5,8 @@ interface CurrencyState {
   loading: boolean;
   error: string | null;
   lastUpdated: string | null;
+  loadedCurrency: Record<string, number> | null;
+  isFull: boolean | null;
 }
 
 const API_KEY = '5aa85e109bc74b6ab5b17fdfd67313b4';
@@ -14,18 +16,18 @@ const initialState: CurrencyState = {
   loading: false,
   error: null,
   lastUpdated: null,
+  loadedCurrency: null,
+  isFull: false,
 };
 
 export const fetchCurrencyRates = createAsyncThunk(
   'currency/fetchRates',
-  async (baseCurrency: string = 'USD', { rejectWithValue }) => {
+  async (baseCurrency: string = 'EUR', { rejectWithValue }) => {
     try {
-        const dataCurrency = await axios.get(
-          `https://api.currencyfreaks.com/v2.0/rates/latest?apikey=${API_KEY}&base=${baseCurrency}`,
-        );
-      //   const metaData=await axios.get(`https://api.currencyfreaks.com/currency/list?apikey=${API_KEY}`)
-        return [dataCurrency.data];
-
+      const dataCurrency = await axios.get(
+        `https://api.currencyfreaks.com/v2.0/rates/latest?apikey=${API_KEY}&base=${baseCurrency}`,
+      );
+      return dataCurrency.data;
     } catch (error) {
       return rejectWithValue(
         error instanceof Error ? error.message : 'Unknown error',
@@ -46,8 +48,13 @@ const currencySlice = createSlice({
       })
       .addCase(fetchCurrencyRates.fulfilled, (state, action) => {
         state.loading = false;
-        state.rates = action.payload[0].rates;
-        state.lastUpdated = action.payload[0].date;
+        state.rates = action.payload.rates;
+        state.lastUpdated = action.payload.date;
+        state.loadedCurrency = action.payload.rates
+          ? (Object.fromEntries(
+              Object.entries(action.payload.rates).slice(0, 10),
+            ) as Record<string, number>)
+          : null;
       })
       .addCase(fetchCurrencyRates.rejected, (state, action) => {
         state.loading = false;
