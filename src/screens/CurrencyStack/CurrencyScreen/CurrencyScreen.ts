@@ -24,6 +24,13 @@ export const styles = StyleSheet.create({
     fontFamily: 'MontserratBold',
     marginBottom: 5,
   },
+  updateText: { 
+    color: '#fff', 
+    marginBottom: 15,
+    textDecorationLine:'underline',
+    fontSize:14,
+    fontFamily: 'Montserrat',
+},
   green: {
     color: '#5BFF6F',
   },
@@ -31,11 +38,9 @@ export const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontFamily: 'Montserrat',
-    marginBottom: 15,
+    marginBottom: 10,
   },
-  flatList: {
-    paddingVertical: 10,
-  },
+
   showMoreView: {
     alignSelf: 'center',
   },
@@ -43,7 +48,7 @@ export const styles = StyleSheet.create({
     color: '#5BFF6F',
     fontSize: 18,
     fontFamily: 'Montserrat',
-    paddingBottom:25,
+    paddingBottom: 25,
   },
   currencyView: {
     flex: 1,

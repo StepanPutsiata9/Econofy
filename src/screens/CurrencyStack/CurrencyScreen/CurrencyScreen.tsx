@@ -59,9 +59,15 @@ function Currency() {
         Курс относительно <Text style={styles.green}>USD</Text>
       </Text>
       <Text style={styles.lastUpdate}>
-        Актуально на:{' '}
-        <Text style={styles.green}>{lastUpdated || 'нет информации'}</Text>
+        Актуально на:
+        <Text style={styles.green}>
+          {' '}
+          {lastUpdated?.slice(0, 10) || 'нет информации'}
+        </Text>
       </Text>
+      <TouchableOpacity onPress={refreshData}>
+        <Text style={styles.updateText}>Обновить</Text>
+      </TouchableOpacity>
       <View style={styles.searchView}>
         <TextInput
           value={search}
@@ -73,13 +79,13 @@ function Currency() {
           placeholderTextColor="#B2B2B2"
         />
       </View>
-      <TouchableOpacity onPress={refreshData}>
-        <Text style={{ color: '#fff', marginBottom: 10 }}>Обновить</Text>
-      </TouchableOpacity>
+
       {loading && <LoadContainer />}
       {error && <ErrorMessage onClose={refreshData} />}
       {!loading && !error && (
-        <View style={[styles.currencyView,{marginBottom:insets.bottom+90}]}>
+        <View
+          style={[styles.currencyView, { marginBottom: insets.bottom + 90 }]}
+        >
           <FlatList
             data={currencyData}
             renderItem={({ item }) => (
@@ -93,7 +99,6 @@ function Currency() {
             initialNumToRender={10}
             maxToRenderPerBatch={5}
             windowSize={5}
-            style={styles.flatList}
             ListFooterComponent={
               <TouchableOpacity
                 style={styles.showMoreView}
