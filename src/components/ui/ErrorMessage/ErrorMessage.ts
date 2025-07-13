@@ -48,4 +48,15 @@ export const styles = StyleSheet.create({
     color: '#fff',
     textDecorationLine: 'underline',
   },
+  errorView: {
+    flex: 1,
+    marginTop: 100,
+    alignItems: 'center',
+  },
+  errorText: {
+    color: '#5BFF6F',
+    fontSize: 30,
+    fontFamily: 'MontserratBold',
+    marginTop: 20,
+  },
 });

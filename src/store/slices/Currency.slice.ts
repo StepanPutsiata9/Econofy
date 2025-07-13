@@ -5,7 +5,7 @@ interface CurrencyState {
   loading: boolean;
   error: string | null;
   lastUpdated: string | null;
-  loadedCurrency: Record<string, number> | null;
+  loadedCurrency: Record<string, number> | Array<string & number>;
   isFull: boolean | null;
 }
 
@@ -16,7 +16,7 @@ const initialState: CurrencyState = {
   loading: false,
   error: null,
   lastUpdated: null,
-  loadedCurrency: null,
+  loadedCurrency: [],
   isFull: false,
 };
 
@@ -39,7 +39,27 @@ export const fetchCurrencyRates = createAsyncThunk(
 const currencySlice = createSlice({
   name: 'currency',
   initialState,
-  reducers: {},
+  reducers: {
+    loadMoreCurrency(state) {
+  if (!state.isFull && state.rates) {
+    const currentLength = Object.keys(state.loadedCurrency).length;
+    const ratesLength = Object.keys(state.rates).length;
+    const newEntries = Object.entries(state.rates).slice(
+      currentLength,
+      currentLength + 10
+    );
+    
+    state.loadedCurrency = {
+      ...state.loadedCurrency,
+      ...Object.fromEntries(newEntries),
+    };
+
+    if (Object.keys(state.loadedCurrency).length >= ratesLength) {
+      state.isFull = true;
+    }
+  }
+}
+  },
   extraReducers: builder => {
     builder
       .addCase(fetchCurrencyRates.pending, state => {
@@ -54,7 +74,7 @@ const currencySlice = createSlice({
           ? (Object.fromEntries(
               Object.entries(action.payload.rates).slice(0, 10),
             ) as Record<string, number>)
-          : null;
+          : [];
       })
       .addCase(fetchCurrencyRates.rejected, (state, action) => {
         state.loading = false;
@@ -63,4 +83,5 @@ const currencySlice = createSlice({
   },
 });
 
+export const { loadMoreCurrency } = currencySlice.actions
 export default currencySlice.reducer;

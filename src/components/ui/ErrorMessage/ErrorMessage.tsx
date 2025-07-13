@@ -12,15 +12,10 @@ function ErrorMessage({ onClose }: ErrorProps) {
   const insets = useSafeAreaInsets();
   return (
     <>
-      <View style={{ flex: 1, marginTop: 100, alignItems: 'center' }}>
+      <View style={styles.errorView}>
         <LoadPig />
         <Text
-          style={{
-            color: '#5BFF6F',
-            fontSize: 30,
-            fontFamily: 'MontserratBold',
-            marginTop: 20,
-          }}
+          style={styles.errorText}
         >
           Что то пошло не так!
         </Text>

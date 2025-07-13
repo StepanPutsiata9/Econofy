@@ -4,7 +4,6 @@ import {
   TouchableOpacity,
   View,
   FlatList,
-  Alert,
   TextInput,
 } from 'react-native';
 import { styles } from './CurrencyScreen.ts';
@@ -16,10 +15,11 @@ import { fetchCurrencyRates } from '../../../store/slices/Currency.slice.ts';
 import CurrencyComp from './CurrencyComp/CurrencyComp.tsx';
 import { LoadContainer } from '../../LoadScreen/LoadScreen.tsx';
 import ErrorMessage from '../../../components/ui/ErrorMessage/ErrorMessage.tsx';
+import { loadMoreCurrency } from '../../../store/slices/Currency.slice.ts';
 function Currency() {
   const insets = useSafeAreaInsets();
   const [search, setSearch] = useState('');
-  const { loadedCurrency, loading, error, lastUpdated } = useSelector(
+  const { loadedCurrency, loading, error, lastUpdated, isFull } = useSelector(
     (state: RootState) => state.currency,
   );
   const dispatch = useAppDispatch();
@@ -100,14 +100,18 @@ function Currency() {
             maxToRenderPerBatch={5}
             windowSize={5}
             ListFooterComponent={
-              <TouchableOpacity
-                style={styles.showMoreView}
-                onPress={() => {
-                  Alert.alert('as');
-                }}
-              >
-                <Text style={styles.showMoreText}>Показать еще</Text>
-              </TouchableOpacity>
+              <View>
+                { !isFull&&
+                  <TouchableOpacity
+                    style={styles.showMoreView}
+                    onPress={() => {
+                      dispatch(loadMoreCurrency());
+                    }}
+                  >
+                    <Text style={styles.showMoreText}>Показать еще</Text>
+                  </TouchableOpacity>
+                }
+              </View>
             }
           />
         </View>
