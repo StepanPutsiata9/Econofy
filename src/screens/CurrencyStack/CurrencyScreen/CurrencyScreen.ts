@@ -54,12 +54,13 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
 
-  searchView: {},
+  searchView: {
+    marginBottom: 25,
+  },
   search: {
     height: 50,
     borderRadius: 18,
     paddingHorizontal: 17,
-    marginBottom: 15,
     fontSize: 16,
     backgroundColor: '#2B2B2B',
     fontFamily: 'Montserrat',

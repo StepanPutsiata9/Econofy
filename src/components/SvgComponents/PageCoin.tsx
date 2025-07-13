@@ -2,9 +2,10 @@ import * as React from "react"
 import Svg, { SvgProps, Path } from "react-native-svg"
 const PageCoin = (props: SvgProps) => (
   <Svg
-    width={28}
-    height={28}
+    width={36}
+    height={36}
     fill="none"
+    viewBox="0 0 28 28"
     {...props}
   >
     <Path

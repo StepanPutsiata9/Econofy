@@ -12,6 +12,7 @@ export const styles = StyleSheet.create({
   },
   infoView:{
     flexDirection:'row',
+    alignItems:'center',
     marginLeft:22,
   },
 
