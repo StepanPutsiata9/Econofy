@@ -15,11 +15,11 @@ import { fetchCurrencyRates } from '../../../store/slices/Currency.slice.ts';
 import CurrencyComp from './CurrencyComp/CurrencyComp.tsx';
 import { LoadContainer } from '../../LoadScreen/LoadScreen.tsx';
 import ErrorMessage from '../../../components/ui/ErrorMessage/ErrorMessage.tsx';
-import { loadMoreCurrency } from '../../../store/slices/Currency.slice.ts';
+import { loadMoreCurrency,searchCurrency } from '../../../store/slices/Currency.slice.ts';
 function Currency() {
   const insets = useSafeAreaInsets();
   const [search, setSearch] = useState('');
-  const { loadedCurrency, loading, error, lastUpdated, isFull } = useSelector(
+  const { searchedCurrency, loading, error, lastUpdated, isFull } = useSelector(
     (state: RootState) => state.currency,
   );
   const dispatch = useAppDispatch();
@@ -27,19 +27,23 @@ function Currency() {
   const refreshData = useCallback(() => {
     dispatch(fetchCurrencyRates('USD'));
   }, [dispatch]);
+  const searchData=useCallback((text:string) => {
+    setSearch(text);
+    dispatch(searchCurrency(text));
+  }, [dispatch]);
 
   useEffect(() => {
     refreshData();
   }, [refreshData]);
 
   const currencyData = React.useMemo(() => {
-    return loadedCurrency
-      ? Object.entries(loadedCurrency).map(([currency, rate]) => ({
+    return searchedCurrency
+      ? Object.entries(searchedCurrency).map(([currency, rate]) => ({
           currency,
           rate,
         }))
       : [];
-  }, [loadedCurrency]);
+  }, [searchedCurrency]);
 
   return (
     <View
@@ -73,7 +77,7 @@ function Currency() {
           value={search}
           placeholder="Поиск"
           style={styles.search}
-          onChangeText={setSearch}
+          onChangeText={searchData}
           keyboardType="email-address"
           autoCapitalize="none"
           placeholderTextColor="#B2B2B2"
