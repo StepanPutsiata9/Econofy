@@ -25,7 +25,7 @@ function Currency() {
   const dispatch = useAppDispatch();
 
   const refreshData = useCallback(() => {
-    dispatch(fetchCurrencyRates('USD'));
+    dispatch(fetchCurrencyRates('UD'));
   }, [dispatch]);
   const searchData=useCallback((text:string) => {
     setSearch(text);

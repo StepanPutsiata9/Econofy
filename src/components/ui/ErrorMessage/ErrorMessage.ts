@@ -2,16 +2,13 @@ import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   centeredView: {
-    flex: 1,
     justifyContent: 'flex-end',
+    flex:1,
     alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    height: '100%',
+    width: '100%',
   },
   modalOverlay: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(0,0,0,0.5)',
   },
   modalView: {
@@ -41,7 +38,6 @@ export const styles = StyleSheet.create({
     color: '#fff',
     marginBottom: 5,
   },
-
   textStyle: {
     fontSize: 16,
     fontFamily: 'Montserrat',

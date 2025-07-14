@@ -10,13 +10,12 @@ type ErrorProps = {
 function ErrorMessage({ onClose }: ErrorProps) {
   const [modalVisible, setModalVisible] = useState(true);
   const insets = useSafeAreaInsets();
+  
   return (
     <>
       <View style={styles.errorView}>
         <LoadPig />
-        <Text
-          style={styles.errorText}
-        >
+        <Text style={styles.errorText}>
           Что то пошло не так!
         </Text>
       </View>
@@ -26,15 +25,20 @@ function ErrorMessage({ onClose }: ErrorProps) {
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}
       >
-        <TouchableOpacity
-          style={styles.modalOverlay}
-          onPress={() => setModalVisible(false)}
-        >
+        <View style={styles.modalOverlay}>
+          <TouchableOpacity
+            style={styles.modalOverlay}
+            activeOpacity={1}
+            onPress={() => setModalVisible(false)}
+          >
+            <View style={styles.modalOverlay} />
+          </TouchableOpacity>
+          
           <View
             style={[
               styles.centeredView,
               {
-                marginBottom: insets.bottom + 15,
+                paddingBottom: insets.bottom + 15,
               },
             ]}
           >
@@ -53,7 +57,7 @@ function ErrorMessage({ onClose }: ErrorProps) {
               </Pressable>
             </View>
           </View>
-        </TouchableOpacity>
+        </View>
       </Modal>
     </>
   );

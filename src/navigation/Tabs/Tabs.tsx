@@ -12,42 +12,41 @@ import { RootStackParamList } from '../../types/navigation.types.ts';
 import CustomTabBar from '../../components/ui/Tabbar/Tabbar.tsx';
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
-const isAuth:boolean=true;
+const isAuth: boolean = true;
 
-function AuthTabs(){
-  return(
+function AuthTabs() {
+  return (
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
         animation: 'fade',
       }}
     >
-        <Tab.Screen
+      <Tab.Screen
         name="Auth"
         component={AuthStack}
         options={
           {
-            tabBarStyle: { display:'none'},
+            tabBarStyle: { display: 'none' },
             title: 'Авторизация',
           } as BottomTabNavigationOptions
         }
       />
     </Tab.Navigator>
-  )
+  );
 }
 
-function MainTabs(){
-   return (
+function MainTabs() {
+  return (
     <Tab.Navigator
       // eslint-disable-next-line react/no-unstable-nested-components
       tabBar={props => <CustomTabBar {...props} />}
-      initialRouteName='Home'
+      initialRouteName="Home"
       screenOptions={{
         headerShown: false,
         animation: 'fade',
       }}
     >
-
       <Tab.Screen
         name="Home"
         component={HomeStack}
@@ -91,15 +90,6 @@ function MainTabs(){
   );
 }
 function Tabs() {
-  return(
-    <>
-    {isAuth?
-    <MainTabs/>
-    :
-    <AuthTabs/>
-  }
-    </>
-  )
+  return <>{isAuth ? <MainTabs /> : <AuthTabs />}</>;
 }
 export default Tabs;
-
