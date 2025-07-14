@@ -25,7 +25,7 @@ function Currency() {
   const dispatch = useAppDispatch();
 
   const refreshData = useCallback(() => {
-    dispatch(fetchCurrencyRates('UD'));
+    dispatch(fetchCurrencyRates('USD'));
   }, [dispatch]);
   const searchData=useCallback((text:string) => {
     setSearch(text);
@@ -83,9 +83,8 @@ function Currency() {
           placeholderTextColor="#B2B2B2"
         />
       </View>
-
       {loading && <LoadContainer />}
-      {error && <ErrorMessage onClose={refreshData} />}
+      {error && <ErrorMessage/>}
       {!loading && !error && (
         <View
           style={[styles.currencyView, { marginBottom: insets.bottom + 90 }]}

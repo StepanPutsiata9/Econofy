@@ -1,17 +1,8 @@
 import { createStackNavigator } from '@react-navigation/stack';
 
 import { SettingsStackParamList } from '../../types/navigation.types.ts';
-import { Text, View } from 'react-native';
-export function Settings(){
-    return(
-        <View style={{flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    }}>
-            <Text>Settings</Text>
-        </View>
-    )
-}
+import Settings from "./SettingsScreen/SettingsScreen.tsx"
+
 
 const SettingsStack = createStackNavigator<SettingsStackParamList>();
 function SettingsStackScreen() {
