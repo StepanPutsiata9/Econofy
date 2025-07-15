@@ -1,8 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { getTokens, clearTokens, storeTokens } from './AuthStorage';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
-import axios from 'axios';
-
+import { Tokens } from './AuthStorage';
 const isTokenValid = (decoded: unknown): boolean => {
   if (
     typeof decoded === 'object' &&
@@ -56,6 +55,55 @@ export const loadUser = createAsyncThunk(
   },
 );
 
+export const login = createAsyncThunk(
+  'auth/login',
+  async ({ accessToken, refreshToken }: Tokens, { rejectWithValue }) => {
+    try {
+      if (!accessToken || !refreshToken) {
+        throw new Error('Access token and refresh token are required');
+      }
+      try {
+        await storeTokens({ accessToken, refreshToken });
+      } catch (storageError) {
+        console.error('Failed to store tokens:', storageError);
+        throw new Error('Failed to save authentication data');
+      }
+      try {
+        const tokens = await getTokens();
+        if (tokens?.accessToken && checkTokenExpiration(tokens.accessToken)) {
+          const decoded = jwtDecode(tokens.accessToken);
+          return decoded;
+        } else {
+          const decoded = null;
+          return decoded;
+        }
+      } catch (error) {
+        console.error('Login error:', error);
+        const decoded = null;
+        return decoded;
+      }
+    } catch (error) {
+      return rejectWithValue(
+        error instanceof Error ? error.message : 'Unknown error',
+      );
+    }
+  },
+);
+
+export const logout = createAsyncThunk(
+  'auth/logout',
+  async (_, { rejectWithValue }) => {
+    try {
+      await clearTokens();
+    } catch (error) {
+      return rejectWithValue(
+        error instanceof Error ? error.message : 'Unknown error',
+      );
+    }
+  },
+);
+
+
 const currencySlice = createSlice({
   name: 'auth',
   initialState,
@@ -68,17 +116,37 @@ const currencySlice = createSlice({
       .addCase(loadUser.fulfilled, (state, action) => {
         state.user = action.payload;
         state.isLoadinng = false;
-
       })
-      .addCase(loadUser.rejected,(state)=>{
-        state.user=null;
+      .addCase(loadUser.rejected, state => {
+        state.user = null;
+        state.isLoadinng = false;
+      })
+
+
+      .addCase(login.pending, state => {
+        state.isLoadinng = true;
+      })
+      .addCase(login.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.isLoadinng = false;
+      })
+      .addCase(login.rejected, state => {
+        state.user = null;
+        state.isLoadinng = false;
+      })
+
+
+      .addCase(logout.pending, state => {
+        state.isLoadinng = true;
+      })
+      .addCase(logout.fulfilled, (state) => {
+        state.user = null;
         state.isLoadinng = false;
       })
   },
 });
 
 export default currencySlice.reducer;
-
 
 //   const login = async (accessToken, refreshToken) => {
 //     try {
@@ -114,15 +182,5 @@ export default currencySlice.reducer;
 //       setUser(null);
 //       setToken(null);
 //       throw error;
-//     }
-//   };
-
-//   const logout = async () => {
-//     try {
-//       await clearTokens();
-//       setUser(null);
-//       setToken(null);
-//     } catch (error) {
-//       console.error('Logout error:', error);
 //     }
 //   };

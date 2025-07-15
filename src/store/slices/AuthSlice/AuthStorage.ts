@@ -1,6 +1,12 @@
 import * as SecureStore from 'expo-secure-store';
+// import { JwtPayload } from 'jwt-decode';
+// 
 
-export const storeTokens = async (accessToken:string, refreshToken:string) => {
+export interface Tokens {
+  accessToken: string;
+  refreshToken: string;
+}
+export const storeTokens = async ({accessToken, refreshToken}:Tokens) => {
   try {
     await SecureStore.setItemAsync('authData', JSON.stringify({
       accessToken,

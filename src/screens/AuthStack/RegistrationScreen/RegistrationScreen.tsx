@@ -16,6 +16,9 @@ import { useEffect, useRef, useState } from 'react';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '../../../types/navigation.types.ts';
 import { useNavigation } from '@react-navigation/native';
+// import { RootState, useAppDispatch } from '../../../store/store.ts';
+// import { useSelector } from 'react-redux';
+// import { login } from '../../../store/slices/AuthSlice/Auth.slice.ts';
 function RegistrationScreen() {
   const [isSecure, setIsSecure] = useState<boolean>(false);
   const [loginText, setLoginText] = useState<string>('');
@@ -26,6 +29,11 @@ function RegistrationScreen() {
   const [error, setError] = useState<string>('');
   const authNavigation =
     useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
+
+  // const { user,isLoadinng} = useSelector(
+  //   (state: RootState) => state.auth,
+  // );
+  // const dispatch = useAppDispatch();
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
   useEffect(() => {
@@ -62,28 +70,23 @@ function RegistrationScreen() {
       setPasswordText('');
       setLoading(false);
     }
-    try {
-      // const response = await api.post('/login', {
-      //   username: loginText,
-      //   password: passwordText
-      // });
-      // const { accessToken, refreshToken } = response.data;
-      // if (!accessToken  !refreshToken) {
-      //   throw new Error('Не получили токены от сервера');
-      // }
-      // await login(accessToken, refreshToken);
-    } catch (err) {
-      // setError(
-      //   err.response?.data?.message
-      //   err.message ||
-      //   'Произошла ошибка при входфе'
-      // );
-      // setLoginText('');
-      // setPasswordText('');
-    } finally {
-      setLoading(false);
-    }
+    // try {
+    //   const response = await api.post('/register', {
+    //     username: loginText,
+    //     password:passwordText,
+    //   });
+    //   const { accessToken, refreshToken } = response.data;
+    //   if (!accessToken || !refreshToken) {
+    //     throw new Error('Не получили токены от сервера');
+    //   }
+    //   await login(accessToken, refreshToken);
+    // } catch (err) {
+    //   setError(err.response?.data?.message || 'Registration failed');
+    // } finally {
+    //   setLoading(false);
+    // }
   };
+
   const setLogin = (text: string) => {
     setLoginText(text);
     setError('');
@@ -105,7 +108,7 @@ function RegistrationScreen() {
           <TextInput
             value={loginText}
             placeholder="Login"
-            style={[styles.input,error&&styles.errorInput]}
+            style={[styles.input, error && styles.errorInput]}
             onChangeText={setLogin}
             keyboardType="email-address"
             autoCapitalize="none"
@@ -115,14 +118,18 @@ function RegistrationScreen() {
             <TextInput
               value={passwordText}
               placeholder="Пароль"
-              style={[styles.input,error&&styles.errorInput]}
+              style={[styles.input, error && styles.errorInput]}
               onChangeText={setPassword}
               placeholderTextColor="#fff"
               secureTextEntry={!isSecure}
             />
             <View style={styles.eye}>
               <TouchableOpacity onPress={() => setIsSecure(!isSecure)}>
-                {isSecure ? <EyeClosed color={error ? '#FF1B44' : '#5BFF6F'} /> : <EyeOpened color={error ? '#FF1B44' : '#5BFF6F'} />}
+                {isSecure ? (
+                  <EyeClosed color={error ? '#FF1B44' : '#5BFF6F'} />
+                ) : (
+                  <EyeOpened color={error ? '#FF1B44' : '#5BFF6F'} />
+                )}
               </TouchableOpacity>
             </View>
           </View>
@@ -130,7 +137,7 @@ function RegistrationScreen() {
             <TextInput
               value={repitPasswordText}
               placeholder="Повторите пароль"
-              style={[styles.repitPasswordInput,error&&styles.errorInput]}
+              style={[styles.repitPasswordInput, error && styles.errorInput]}
               onChangeText={setRepitPassword}
               placeholderTextColor="#fff"
               secureTextEntry={!isSecureRepit}
@@ -139,7 +146,11 @@ function RegistrationScreen() {
               <TouchableOpacity
                 onPress={() => setIsSecureRepit(!isSecureRepit)}
               >
-                {isSecureRepit ? <EyeClosed color={error ? '#FF1B44' : '#5BFF6F'} /> : <EyeOpened  color={error ? '#FF1B44' : '#5BFF6F'}/>}
+                {isSecureRepit ? (
+                  <EyeClosed color={error ? '#FF1B44' : '#5BFF6F'} />
+                ) : (
+                  <EyeOpened color={error ? '#FF1B44' : '#5BFF6F'} />
+                )}
               </TouchableOpacity>
             </View>
           </View>
@@ -158,14 +169,7 @@ function RegistrationScreen() {
           <Text style={styles.noAccountText}>Есть аккаунт? Войти</Text>
         </TouchableOpacity>
         {!loading ? (
-          <MainButton
-            title="Зарегистрироваться"
-            onClick={
-              handleRegistration
-              // authNavigation.navigate('LoadScreen');
-              // rootNavigation.navigate('Home',{screen:"HomeScreen"})
-            }
-          />
+          <MainButton title="Зарегистрироваться" onClick={handleRegistration} />
         ) : (
           <ActivityIndicator size={30} color={'#5BFF6F'} />
         )}

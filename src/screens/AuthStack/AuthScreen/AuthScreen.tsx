@@ -10,21 +10,31 @@ import {
 import Header from '../../../components/ui/Header/Header.tsx';
 import { styles } from './AuthScreen.ts';
 import MainButton from '../../../components/ui/MainButton/MainButton.tsx';
-import {useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import EyeClosed from '../../../components/SvgComponents/EyeClosed.tsx';
 import EyeOpened from '../../../components/SvgComponents/EyeOpened.tsx';
 import { useNavigation } from '@react-navigation/native';
 import {
   AuthStackParamList,
-  // RootStackParamList,
 } from '../../../types/navigation.types.ts';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+// import { RootState, useAppDispatch } from '../../../store/store.ts';
+// import { useSelector } from 'react-redux';
+// import { login } from '../../../store/slices/AuthSlice/Auth.slice.ts';
+
+
 function AuthScreen() {
   const [isSecure, setIsSecure] = useState<boolean>(false);
   const [loginText, setLoginText] = useState<string>('');
   const [passwordText, setPasswordText] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
+  // const { user,isLoadinng} = useSelector(
+  //   (state: RootState) => state.auth,
+  // );
+  // const dispatch = useAppDispatch();
+
+
   const authNavigation =
     useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
 
@@ -40,6 +50,7 @@ function AuthScreen() {
       fadeAnim.setValue(0);
     }
   }, [error, fadeAnim]);
+
   const handleLogin = async () => {
     setLoading(true);
     setError('');
@@ -66,12 +77,12 @@ function AuthScreen() {
       // if (!accessToken  !refreshToken) {
       //   throw new Error('Не получили токены от сервера');
       // }
-      // await login(accessToken, refreshToken);
+      // await login({accessToken, refreshToken});
     } catch (err) {
       // setError(
       //   err.response?.data?.message
       //   err.message ||
-      //   'Произошла ошибка при входфе'
+      //   'Произошла ошибка при входе'
       // );
       // setLoginText('');
       // setPasswordText('');
@@ -140,11 +151,7 @@ function AuthScreen() {
         {!loading ? (
           <MainButton
             title="Войти"
-            onClick={
-              handleLogin
-              // authNavigation.navigate('LoadScreen');
-              // rootNavigation.navigate('Home',{screen:"HomeScreen"})
-            }
+            onClick={handleLogin}
           />
         ) : (
           <ActivityIndicator size={30} color={'#5BFF6F'} />
