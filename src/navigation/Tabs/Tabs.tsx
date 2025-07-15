@@ -10,9 +10,13 @@ import CurrencyStack from '../../screens/CurrencyStack/CurrencyStack.tsx';
 import HomeStack from '../../screens/HomeStack/HomeStack.tsx';
 import { RootStackParamList } from '../../types/navigation.types.ts';
 import CustomTabBar from '../../components/ui/Tabbar/Tabbar.tsx';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/store.ts';
+import Load from '../../screens/LoadScreen/LoadScreen.tsx';
+import { useEffect } from 'react';
+import { loadUser } from '../../store/slices/AuthSlice/Auth.slice.ts';
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
-const isAuth: boolean = true;
 
 function AuthTabs() {
   return (
@@ -90,6 +94,18 @@ function MainTabs() {
   );
 }
 function Tabs() {
-  return <>{isAuth ? <MainTabs /> : <AuthTabs />}</>;
+  const { isLoadinng } = useSelector((state: RootState) => state.auth);
+  const isAuth: boolean = true;
+  useEffect(() => {
+    loadUser();
+  }, []);
+  // может быть это надо будет сделать при изменении user
+  if (!isAuth) {
+    return <AuthTabs />;
+  } else if (isAuth && isLoadinng) {
+    return <Load />;
+  } else if (isAuth && !isLoadinng) {
+    return <MainTabs />;
+  }
 }
 export default Tabs;

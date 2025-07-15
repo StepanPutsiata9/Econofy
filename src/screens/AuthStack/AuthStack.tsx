@@ -3,7 +3,7 @@ import AuthScreen from "./AuthScreen/AuthScreen.tsx"
 import RegistrationScreen from "./RegistrationScreen/RegistrationScreen.tsx"
 import { AuthStackParamList } from '../../types/navigation.types.ts';
 import StartScreen from "../StartScreen/StartScreen.tsx"
-import LoadScreen from "../LoadScreen/LoadScreen.tsx"
+
 const AuthStack = createStackNavigator<AuthStackParamList>();
 
 function AuthStackScreen() {
@@ -16,7 +16,7 @@ function AuthStackScreen() {
       <AuthStack.Screen name="StartScreen" component={StartScreen}  />
       <AuthStack.Screen name="AuthScreen" component={AuthScreen}  />
       <AuthStack.Screen name="RegistrationScreen" component={RegistrationScreen} />
-      <AuthStack.Screen name="LoadScreen" component={LoadScreen} />
+
 
 
     </AuthStack.Navigator>

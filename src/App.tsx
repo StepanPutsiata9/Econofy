@@ -9,6 +9,7 @@ import { Provider } from 'react-redux';
 import { NavigationContainer } from '@react-navigation/native';
 import Tabs from './navigation/Tabs/Tabs.tsx';
 function App() {
+
   return (
     <NavigationContainer>
       <Provider store={store}>
