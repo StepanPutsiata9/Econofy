@@ -7,6 +7,7 @@ export const store = configureStore({
     currency:currencySlice,
     auth:authSlice,
   },
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat()
 })
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

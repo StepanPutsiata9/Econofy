@@ -1,10 +1,8 @@
-// перкписать на мидлвееры
-
 import axios from 'axios';
-import { clearTokens, getTokens, storeTokens } from './authStorage';
+import { clearTokens, getTokens, storeTokens } from './AuthStorage.ts';
 
 const api = axios.create({
-  baseURL: 'http://testyandex.onrender.com/auth',
+  baseURL: 'https://econofy-backend.onrender.com/auth',
 });
 
 api.interceptors.request.use(async (config) => {
@@ -27,10 +25,9 @@ api.interceptors.response.use(
       !originalRequest._retry
     ) {
       originalRequest._retry = true;
-
       try {
         const response = await axios.post(
-          'http://testyandex.onrender.com/auth/refresh',
+          'https://econofy-backend.onrender.com/auth/refresh',
           { refreshToken: tokens.refreshToken }
         );
 
@@ -44,7 +41,6 @@ api.interceptors.response.use(
         return Promise.reject(refreshError);
       }
     }
-
     return Promise.reject(error);
   }
 );

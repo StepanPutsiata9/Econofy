@@ -14,14 +14,11 @@ import { useEffect, useRef, useState } from 'react';
 import EyeClosed from '../../../components/SvgComponents/EyeClosed.tsx';
 import EyeOpened from '../../../components/SvgComponents/EyeOpened.tsx';
 import { useNavigation } from '@react-navigation/native';
-import {
-  AuthStackParamList,
-} from '../../../types/navigation.types.ts';
+import { AuthStackParamList } from '../../../types/navigation.types.ts';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-// import { RootState, useAppDispatch } from '../../../store/store.ts';
-// import { useSelector } from 'react-redux';
-// import { login } from '../../../store/slices/AuthSlice/Auth.slice.ts';
-
+import { login } from '../../../store/slices/AuthSlice/Auth.slice.ts';
+import axios from 'axios';
+import api from '../../../store/slices/AuthSlice/api.ts';
 
 function AuthScreen() {
   const [isSecure, setIsSecure] = useState<boolean>(false);
@@ -29,11 +26,6 @@ function AuthScreen() {
   const [passwordText, setPasswordText] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
-  // const { user,isLoadinng} = useSelector(
-  //   (state: RootState) => state.auth,
-  // );
-  // const dispatch = useAppDispatch();
-
 
   const authNavigation =
     useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
@@ -69,23 +61,29 @@ function AuthScreen() {
       return;
     }
     try {
-      // const response = await api.post('/login', {
-      //   username: loginText,
-      //   password: passwordText
-      // });
-      // const { accessToken, refreshToken } = response.data;
-      // if (!accessToken  !refreshToken) {
-      //   throw new Error('Не получили токены от сервера');
-      // }
-      // await login({accessToken, refreshToken});
-    } catch (err) {
-      // setError(
-      //   err.response?.data?.message
-      //   err.message ||
-      //   'Произошла ошибка при входе'
-      // );
-      // setLoginText('');
-      // setPasswordText('');
+      const response = await api.post('/login', {
+        username: loginText,
+        password: passwordText,
+      });
+      const { accessToken, refreshToken } = response.data;
+      if (!accessToken || !refreshToken) {
+        throw new Error('Не получили токены от сервера');
+      }
+      await login({ accessToken, refreshToken });
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        setError(
+          err.response?.data?.message ||
+            err.message ||
+            'Произошла ошибка при входе',
+        );
+      } else if (err instanceof Error) {
+        setError(err.message || 'Произошла ошибка при входе');
+      } else {
+        setError('Произошла неизвестная ошибка при входе');
+      }
+      setLoginText('');
+      setPasswordText('');
     } finally {
       setLoading(false);
     }
@@ -149,10 +147,7 @@ function AuthScreen() {
           </Text>
         </TouchableOpacity>
         {!loading ? (
-          <MainButton
-            title="Войти"
-            onClick={handleLogin}
-          />
+          <MainButton title="Войти" onClick={handleLogin} />
         ) : (
           <ActivityIndicator size={30} color={'#5BFF6F'} />
         )}

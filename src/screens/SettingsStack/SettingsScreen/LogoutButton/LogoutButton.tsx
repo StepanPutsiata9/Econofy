@@ -3,14 +3,14 @@ import Arrow from '../../../../components/SvgComponents/Arrow';
 import { styles } from './LogoutButton.ts';
 import React from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { logout } from '../../../../store/slices/AuthSlice/Auth.slice.ts';
 
 function LogoutButton() {
   const [modalVisible, setModalVisible] = React.useState(false);
   const insets = useSafeAreaInsets();
 
-  const handleLogout = () => {
-    // Логика выхода из аккаунта
-    console.log('User logged out');
+  const handleLogout = async() => {
+    await logout();
     setModalVisible(false);
   };
 

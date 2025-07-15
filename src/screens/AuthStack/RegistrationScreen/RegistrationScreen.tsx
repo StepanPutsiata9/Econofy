@@ -16,9 +16,9 @@ import { useEffect, useRef, useState } from 'react';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '../../../types/navigation.types.ts';
 import { useNavigation } from '@react-navigation/native';
-// import { RootState, useAppDispatch } from '../../../store/store.ts';
-// import { useSelector } from 'react-redux';
-// import { login } from '../../../store/slices/AuthSlice/Auth.slice.ts';
+import { login } from '../../../store/slices/AuthSlice/Auth.slice.ts';
+import api from '../../../store/slices/AuthSlice/api.ts';
+import axios from 'axios';
 function RegistrationScreen() {
   const [isSecure, setIsSecure] = useState<boolean>(false);
   const [loginText, setLoginText] = useState<string>('');
@@ -30,10 +30,6 @@ function RegistrationScreen() {
   const authNavigation =
     useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
 
-  // const { user,isLoadinng} = useSelector(
-  //   (state: RootState) => state.auth,
-  // );
-  // const dispatch = useAppDispatch();
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
   useEffect(() => {
@@ -70,21 +66,34 @@ function RegistrationScreen() {
       setPasswordText('');
       setLoading(false);
     }
-    // try {
-    //   const response = await api.post('/register', {
-    //     username: loginText,
-    //     password:passwordText,
-    //   });
-    //   const { accessToken, refreshToken } = response.data;
-    //   if (!accessToken || !refreshToken) {
-    //     throw new Error('Не получили токены от сервера');
-    //   }
-    //   await login(accessToken, refreshToken);
-    // } catch (err) {
-    //   setError(err.response?.data?.message || 'Registration failed');
-    // } finally {
-    //   setLoading(false);
-    // }
+    try {
+      const response = await api.post('/registration', {
+        username: loginText,
+        password:passwordText,
+      });
+      const { accessToken, refreshToken } = response.data;
+      if (!accessToken || !refreshToken) {
+        throw new Error('Не получили токены от сервера');
+      }
+      await login(accessToken, refreshToken);
+    }catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        setError(
+          err.response?.data?.message ||
+            err.message ||
+            'Произошла ошибка при входе',
+        );
+      } else if (err instanceof Error) {
+        setError(err.message || 'Произошла ошибка при регистрации');
+      } else {
+        setError('Произошла неизвестная ошибка при регистрации');
+      }
+      setLoginText('');
+      setPasswordText('');
+      setRepitPassword('');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const setLogin = (text: string) => {
