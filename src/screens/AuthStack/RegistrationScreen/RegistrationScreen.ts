@@ -39,6 +39,9 @@ export const styles = StyleSheet.create({
     fontFamily: 'Montserrat',
     color: '#ffffff',
   },
+    errorInput:{
+    borderColor:'#FF1B44',
+  },
   touchOpacity: {
     alignSelf: 'flex-end',
     marginBottom: 25,
@@ -56,5 +59,13 @@ export const styles = StyleSheet.create({
   },
   inputView: {
     position: 'relative'
+  },
+    errorText: {
+    color: '#FF1B44',
+    fontSize: 14,
+    textAlign: 'left',
+    marginBottom: 5,
+    paddingVertical: 3,
+    fontFamily:'Montserrat'
   },
 });

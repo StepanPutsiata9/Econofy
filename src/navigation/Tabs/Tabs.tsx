@@ -12,7 +12,7 @@ import { RootStackParamList } from '../../types/navigation.types.ts';
 import CustomTabBar from '../../components/ui/Tabbar/Tabbar.tsx';
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
-const isAuth: boolean = true;
+const isAuth: boolean = false;
 
 function AuthTabs() {
   return (

@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
 import currencySlice from './slices/Currency.slice'
+import authSlice from "./slices/Auth.slice"
 import { useDispatch } from 'react-redux'
 export const store = configureStore({
   reducer: {
     currency:currencySlice,
+    auth:authSlice,
   },
 })
 
