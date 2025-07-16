@@ -119,8 +119,6 @@ const currencySlice = createSlice({
   reducers: {},
   extraReducers: builder => {
     builder
-
-    
       .addCase(loadUser.pending, state => {
         state.isLoadinng = true;
       })

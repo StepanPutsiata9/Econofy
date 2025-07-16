@@ -79,7 +79,7 @@ function RegistrationScreen() {
       if (!accessToken || !refreshToken) {
         throw new Error('Не получили токены от сервера');
       }
-      await dispatch(login(accessToken, refreshToken));
+      await dispatch(login({accessToken, refreshToken}));
     }catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         setError(
