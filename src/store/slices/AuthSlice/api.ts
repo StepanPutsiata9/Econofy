@@ -2,7 +2,7 @@ import axios from 'axios';
 import { clearTokens, getTokens, storeTokens } from './AuthStorage.ts';
 
 const api = axios.create({
-  baseURL: 'https://econofy-backend.onrender.com/auth',
+  baseURL: 'https://econofy-backend.onrender.com/',
 });
 
 api.interceptors.request.use(async (config) => {
@@ -30,7 +30,6 @@ api.interceptors.response.use(
           'https://econofy-backend.onrender.com/auth/refresh',
           { refreshToken: tokens.refreshToken }
         );
-
         const { accessToken, refreshToken } = response.data;
         await storeTokens({accessToken, refreshToken});
 

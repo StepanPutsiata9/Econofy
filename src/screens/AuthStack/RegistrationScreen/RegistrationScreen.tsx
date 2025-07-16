@@ -68,7 +68,7 @@ function RegistrationScreen() {
       setLoading(false);
     }
     try {
-      const response = await api.post('/registration', {
+      const response = await api.post('auth/registration', {
         login: loginText,
         password:passwordText,
       });

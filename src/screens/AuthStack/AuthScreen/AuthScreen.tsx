@@ -63,7 +63,7 @@ function AuthScreen() {
       return;
     }
     try {
-      const response = await api.post('/login', {
+      const response = await api.post('auth/login', {
         login: loginText,
         password: passwordText,
       });
@@ -84,7 +84,7 @@ function AuthScreen() {
             err.message ||
             'Произошла ошибка при входе',
         );
-        
+
       } else if (err instanceof Error) {
         setError(err.message || 'Произошла ошибка при входе');
       } else {

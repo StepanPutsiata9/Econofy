@@ -80,11 +80,9 @@ export const login = createAsyncThunk(
         console.log('getTokens', tokens?.accessToken);
         if (tokens?.accessToken && checkTokenExpiration(tokens.accessToken)) {
           const decoded = jwtDecode(tokens.accessToken);
-          console.log(decoded, 'decoded');
           return decoded;
         } else {
           const decoded = null;
-          console.log(decoded, 'decoded is null');
           return decoded;
         }
       } catch (error) {
