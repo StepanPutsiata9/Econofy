@@ -1,26 +1,33 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { getTokens, clearTokens, storeTokens } from './AuthStorage';
-import { jwtDecode, JwtPayload } from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import { Tokens } from './AuthStorage';
+interface JwtPayload {
+  exp?: number; 
+  iat?: number; 
+  [key: string]: any; 
+}
+
 const isTokenValid = (decoded: unknown): boolean => {
-  if (
-    typeof decoded === 'object' &&
-    decoded !== null &&
-    'exp' in decoded &&
-    (typeof (decoded as { exp: unknown }).exp === 'number' ||
-      typeof (decoded as { exp: unknown }).exp === 'string')
-  ) {
-    const exp = (decoded as { exp: number | string }).exp;
-    const expTime = typeof exp === 'string' ? parseInt(exp, 10) : exp;
-    return expTime * 1000 > Date.now();
+  if (typeof decoded !== 'object' || decoded === null) {
+    return false;
   }
-  return false;
+  const payload = decoded as JwtPayload;
+  if (payload.exp === undefined) {
+    return true;
+  }
+  if (typeof payload.exp !== 'number') {
+    return false;
+  }
+  const expirationTime = payload.exp * 1000;
+  const currentTime = Date.now();
+  return expirationTime > currentTime;
 };
 const checkTokenExpiration = (token: string) => {
   if (!token) return false;
   try {
     const decoded = jwtDecode(token) as JwtPayload;
-    isTokenValid(decoded);
+    return isTokenValid(decoded);
   } catch (error) {
     console.error('Token decode error:', error);
     return false;
@@ -70,11 +77,14 @@ export const login = createAsyncThunk(
       }
       try {
         const tokens = await getTokens();
+        console.log('getTokens', tokens?.accessToken);
         if (tokens?.accessToken && checkTokenExpiration(tokens.accessToken)) {
           const decoded = jwtDecode(tokens.accessToken);
+          console.log(decoded, 'decoded');
           return decoded;
         } else {
           const decoded = null;
+          console.log(decoded, 'decoded is null');
           return decoded;
         }
       } catch (error) {
@@ -103,13 +113,14 @@ export const logout = createAsyncThunk(
   },
 );
 
-
 const currencySlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {},
   extraReducers: builder => {
     builder
+
+    
       .addCase(loadUser.pending, state => {
         state.isLoadinng = true;
       })
@@ -139,10 +150,10 @@ const currencySlice = createSlice({
       .addCase(logout.pending, state => {
         state.isLoadinng = true;
       })
-      .addCase(logout.fulfilled, (state) => {
+      .addCase(logout.fulfilled, state => {
         state.user = null;
         state.isLoadinng = false;
-      })
+      });
   },
 });
 

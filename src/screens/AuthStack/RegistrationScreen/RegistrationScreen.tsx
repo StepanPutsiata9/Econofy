@@ -19,6 +19,7 @@ import { useNavigation } from '@react-navigation/native';
 import { login } from '../../../store/slices/AuthSlice/Auth.slice.ts';
 import api from '../../../store/slices/AuthSlice/api.ts';
 import axios from 'axios';
+import { useAppDispatch } from '../../../store/store.ts';
 function RegistrationScreen() {
   const [isSecure, setIsSecure] = useState<boolean>(false);
   const [loginText, setLoginText] = useState<string>('');
@@ -30,7 +31,7 @@ function RegistrationScreen() {
   const authNavigation =
     useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
 
-
+  const dispatch=useAppDispatch();
   const fadeAnim = useRef(new Animated.Value(0)).current;
   useEffect(() => {
     if (error) {
@@ -68,14 +69,17 @@ function RegistrationScreen() {
     }
     try {
       const response = await api.post('/registration', {
-        username: loginText,
+        login: loginText,
         password:passwordText,
       });
       const { accessToken, refreshToken } = response.data;
+      console.log('====================================');
+      console.log("regist", accessToken);
+      console.log('====================================');
       if (!accessToken || !refreshToken) {
         throw new Error('Не получили токены от сервера');
       }
-      await login(accessToken, refreshToken);
+      await dispatch(login(accessToken, refreshToken));
     }catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         setError(

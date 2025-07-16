@@ -4,13 +4,15 @@ import { styles } from './LogoutButton.ts';
 import React from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { logout } from '../../../../store/slices/AuthSlice/Auth.slice.ts';
+import { useAppDispatch } from '../../../../store/store.ts';
 
 function LogoutButton() {
   const [modalVisible, setModalVisible] = React.useState(false);
   const insets = useSafeAreaInsets();
-
+    const dispatch = useAppDispatch();
+  
   const handleLogout = async() => {
-    await logout();
+    await dispatch(logout());
     setModalVisible(false);
   };
 

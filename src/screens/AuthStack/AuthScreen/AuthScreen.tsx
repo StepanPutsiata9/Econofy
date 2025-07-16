@@ -19,6 +19,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { login } from '../../../store/slices/AuthSlice/Auth.slice.ts';
 import axios from 'axios';
 import api from '../../../store/slices/AuthSlice/api.ts';
+import { useAppDispatch } from '../../../store/store.ts';
 
 function AuthScreen() {
   const [isSecure, setIsSecure] = useState<boolean>(false);
@@ -26,6 +27,7 @@ function AuthScreen() {
   const [passwordText, setPasswordText] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
+  const dispatch = useAppDispatch();
 
   const authNavigation =
     useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
@@ -62,21 +64,27 @@ function AuthScreen() {
     }
     try {
       const response = await api.post('/login', {
-        username: loginText,
+        login: loginText,
         password: passwordText,
       });
       const { accessToken, refreshToken } = response.data;
       if (!accessToken || !refreshToken) {
         throw new Error('Не получили токены от сервера');
       }
-      await login({ accessToken, refreshToken });
+
+      await dispatch(login({ accessToken, refreshToken }));
+      setLoginText('');
+      setPasswordText('');
+
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
+
         setError(
           err.response?.data?.message ||
             err.message ||
             'Произошла ошибка при входе',
         );
+        
       } else if (err instanceof Error) {
         setError(err.message || 'Произошла ошибка при входе');
       } else {

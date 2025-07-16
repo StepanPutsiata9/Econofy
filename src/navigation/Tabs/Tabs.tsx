@@ -11,7 +11,7 @@ import HomeStack from '../../screens/HomeStack/HomeStack.tsx';
 import { RootStackParamList } from '../../types/navigation.types.ts';
 import CustomTabBar from '../../components/ui/Tabbar/Tabbar.tsx';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../store/store.ts';
+import { RootState, useAppDispatch } from '../../store/store.ts';
 import Load from '../../screens/LoadScreen/LoadScreen.tsx';
 import { useEffect } from 'react';
 import { loadUser } from '../../store/slices/AuthSlice/Auth.slice.ts';
@@ -94,17 +94,18 @@ function MainTabs() {
   );
 }
 function Tabs() {
-  const { isLoadinng } = useSelector((state: RootState) => state.auth);
-  const isAuth: boolean = true;
+  const { isLoadinng, user } = useSelector((state: RootState) => state.auth);
+  const dispatch=useAppDispatch();
   useEffect(() => {
-    loadUser();
-  }, []);
-  // может быть это надо будет сделать при изменении user
-  if (!isAuth) {
-    return <AuthTabs />;
-  } else if (isAuth && isLoadinng) {
+    dispatch(loadUser());
+  }, [dispatch]);
+  if (isLoadinng) {
     return <Load />;
-  } else if (isAuth && !isLoadinng) {
+  }
+  if (!user) {
+    return <AuthTabs />;
+  }
+  if (user && !isLoadinng) {
     return <MainTabs />;
   }
 }
