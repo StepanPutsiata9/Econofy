@@ -111,10 +111,14 @@ export const logout = createAsyncThunk(
   },
 );
 
-const currencySlice = createSlice({
+const authSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers: {},
+  reducers: {
+    setLoading(state,action){
+      state.isLoadinng=action.payload;
+    }
+  },
   extraReducers: builder => {
     builder
       .addCase(loadUser.pending, state => {
@@ -153,4 +157,6 @@ const currencySlice = createSlice({
   },
 });
 
-export default currencySlice.reducer;
+
+export const { setLoading } = authSlice.actions
+export default authSlice.reducer;

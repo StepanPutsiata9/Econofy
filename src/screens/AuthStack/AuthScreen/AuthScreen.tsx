@@ -4,7 +4,6 @@ import {
   View,
   TextInput,
   TouchableOpacity,
-  ActivityIndicator,
   Animated,
 } from 'react-native';
 import Header from '../../../components/ui/Header/Header.tsx';
@@ -17,22 +16,20 @@ import { useNavigation } from '@react-navigation/native';
 import { AuthStackParamList } from '../../../types/navigation.types.ts';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { login } from '../../../store/slices/AuthSlice/Auth.slice.ts';
-import axios from 'axios';
 import api from '../../../store/slices/AuthSlice/api.ts';
 import { useAppDispatch } from '../../../store/store.ts';
-
+import { setLoading } from '../../../store/slices/AuthSlice/Auth.slice.ts';
+import { checkError, errorInputs } from './AuthValidation.ts'
 function AuthScreen() {
   const [isSecure, setIsSecure] = useState<boolean>(false);
   const [loginText, setLoginText] = useState<string>('');
   const [passwordText, setPasswordText] = useState<string>('');
-  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const dispatch = useAppDispatch();
-
   const authNavigation =
     useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
-
   const fadeAnim = useRef(new Animated.Value(0)).current;
+
   useEffect(() => {
     if (error) {
       Animated.timing(fadeAnim, {
@@ -45,21 +42,23 @@ function AuthScreen() {
     }
   }, [error, fadeAnim]);
 
+  const setNullInputs = () => {
+    setLoginText('');
+    setPasswordText('');
+  };
   const handleLogin = async () => {
-    setLoading(true);
+    dispatch(setLoading(true));
     setError('');
-    if (loginText.trim().length === 0 || passwordText.trim().length === 0) {
-      setError('Все поля должны быть заполненными');
-      setLoginText('');
-      setPasswordText('');
-      setLoading(false);
-      return;
-    }
-    if (loginText.trim().length <= 6 || passwordText.trim().length <= 6) {
-      setError('Логин и пароль должны состоять минимум из 6 символов');
-      setLoginText('');
-      setPasswordText('');
-      setLoading(false);
+    if (
+      !errorInputs(
+        loginText,
+        passwordText,
+        setError,
+        setLoginText,
+        setPasswordText,
+        dispatch,
+      )
+    ) {
       return;
     }
     try {
@@ -68,34 +67,14 @@ function AuthScreen() {
         password: passwordText,
       });
       const { accessToken, refreshToken } = response.data;
-      if (!accessToken || !refreshToken) {
-        throw new Error('Не получили токены от сервера');
-      }
-
       await dispatch(login({ accessToken, refreshToken }));
-      setLoginText('');
-      setPasswordText('');
-
+      setNullInputs();
     } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
-
-        setError(
-          err.response?.data?.message ||
-            err.message ||
-            'Произошла ошибка при входе',
-        );
-
-      } else if (err instanceof Error) {
-        setError(err.message || 'Произошла ошибка при входе');
-      } else {
-        setError('Произошла неизвестная ошибка при входе');
-      }
-      setLoginText('');
-      setPasswordText('');
-    } finally {
-      setLoading(false);
+      checkError(err, setError);
+      setNullInputs();
     }
   };
+
   const setLogin = (text: string) => {
     setLoginText(text);
     setError('');
@@ -104,6 +83,7 @@ function AuthScreen() {
     setPasswordText(text);
     setError('');
   };
+
   return (
     <View style={styles.container}>
       <Header />
@@ -154,11 +134,7 @@ function AuthScreen() {
             Нет аккаунта? Зарегистрироваться
           </Text>
         </TouchableOpacity>
-        {!loading ? (
-          <MainButton title="Войти" onClick={handleLogin} />
-        ) : (
-          <ActivityIndicator size={30} color={'#5BFF6F'} />
-        )}
+        <MainButton title="Войти" onClick={handleLogin} />
       </ScrollView>
     </View>
   );

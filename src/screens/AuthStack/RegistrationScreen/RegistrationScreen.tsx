@@ -5,7 +5,6 @@ import {
   TextInput,
   TouchableOpacity,
   Animated,
-  ActivityIndicator,
 } from 'react-native';
 import Header from '../../../components/ui/Header/Header.tsx';
 import { styles } from './RegistrationScreen.ts';
@@ -18,20 +17,20 @@ import { AuthStackParamList } from '../../../types/navigation.types.ts';
 import { useNavigation } from '@react-navigation/native';
 import { login } from '../../../store/slices/AuthSlice/Auth.slice.ts';
 import api from '../../../store/slices/AuthSlice/api.ts';
-import axios from 'axios';
 import { useAppDispatch } from '../../../store/store.ts';
+import { setLoading } from '../../../store/slices/AuthSlice/Auth.slice.ts';
+import { checkError, errorInputs } from './RegistrationValidation.ts';
 function RegistrationScreen() {
   const [isSecure, setIsSecure] = useState<boolean>(false);
   const [loginText, setLoginText] = useState<string>('');
   const [passwordText, setPasswordText] = useState<string>('');
   const [repitPasswordText, setRepitPasswordText] = useState<string>('');
   const [isSecureRepit, setIsSecureRepit] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const authNavigation =
     useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
 
-  const dispatch=useAppDispatch();
+  const dispatch = useAppDispatch();
   const fadeAnim = useRef(new Animated.Value(0)).current;
   useEffect(() => {
     if (error) {
@@ -44,59 +43,40 @@ function RegistrationScreen() {
       fadeAnim.setValue(0);
     }
   }, [error, fadeAnim]);
+
+    const setNullInputs = () => {
+    setLoginText('');
+    setPasswordText('');
+    setRepitPasswordText('');
+  };
   const handleRegistration = async () => {
-    setLoading(true);
+    dispatch(setLoading(true));
     setError('');
-    if (loginText.trim().length === 0 || passwordText.trim().length === 0) {
-      setError('Все поля должны быть заполненными');
-      setLoginText('');
-      setPasswordText('');
-      setLoading(false);
+    if (
+      !errorInputs(
+        loginText,
+        passwordText,
+        repitPasswordText,
+        setError,
+        setLoginText,
+        setPasswordText,
+        setRepitPasswordText,
+        dispatch,
+      )
+    ) {
       return;
-    }
-    if (loginText.trim().length <= 6 || passwordText.trim().length <= 6) {
-      setError('Логин и пароль должны состоять минимум из 6 символов');
-      setLoginText('');
-      setPasswordText('');
-      setLoading(false);
-      return;
-    }
-    if (passwordText.trim() !== repitPasswordText.trim()) {
-      setError('Пароли должны совпадать');
-      setLoginText('');
-      setPasswordText('');
-      setLoading(false);
     }
     try {
       const response = await api.post('auth/registration', {
         login: loginText,
-        password:passwordText,
+        password: passwordText,
       });
       const { accessToken, refreshToken } = response.data;
-      console.log('====================================');
-      console.log("regist", accessToken);
-      console.log('====================================');
-      if (!accessToken || !refreshToken) {
-        throw new Error('Не получили токены от сервера');
-      }
-      await dispatch(login({accessToken, refreshToken}));
-    }catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
-        setError(
-          err.response?.data?.message ||
-            err.message ||
-            'Произошла ошибка при входе',
-        );
-      } else if (err instanceof Error) {
-        setError(err.message || 'Произошла ошибка при регистрации');
-      } else {
-        setError('Произошла неизвестная ошибка при регистрации');
-      }
-      setLoginText('');
-      setPasswordText('');
-      setRepitPassword('');
-    } finally {
-      setLoading(false);
+      await dispatch(login({ accessToken, refreshToken }));
+      setNullInputs();
+    } catch (err: unknown) {
+      checkError();
+      setNullInputs();
     }
   };
 
@@ -181,11 +161,7 @@ function RegistrationScreen() {
         >
           <Text style={styles.noAccountText}>Есть аккаунт? Войти</Text>
         </TouchableOpacity>
-        {!loading ? (
-          <MainButton title="Зарегистрироваться" onClick={handleRegistration} />
-        ) : (
-          <ActivityIndicator size={30} color={'#5BFF6F'} />
-        )}
+        <MainButton title="Зарегистрироваться" onClick={handleRegistration} />
       </ScrollView>
     </View>
   );

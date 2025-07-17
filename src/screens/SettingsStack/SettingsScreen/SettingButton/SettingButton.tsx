@@ -9,8 +9,8 @@ function SettingButton() {
       <Text style={styles.settingText}>Установить фото аккаунта</Text>
       <TouchableOpacity
         onPress={() => {
-           api.get("");
-          console.log("get to backend");
+          api.get('');
+          console.log('get to backend');
         }}
         hitSlop={{ top: 5, bottom: 5, right: 5, left: 5 }}
       >
