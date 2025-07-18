@@ -37,14 +37,15 @@ const checkTokenExpiration = (token: string) => {
 interface AuthState {
   user: JwtPayload | null;
   isLoadinng: boolean;
-  avatar:ImageSourcePropType | null;
+  ava:ImageSourcePropType | null;
 }
 
 const initialState: AuthState = {
   user: null,
   isLoadinng: false,
-  avatar:null,
+  ava:null,
 };
+
 export const loadUser = createAsyncThunk(
   'auth/loadUser',
   async (_, { rejectWithValue }) => {
@@ -80,7 +81,6 @@ export const login = createAsyncThunk(
       }
       try {
         const tokens = await getTokens();
-        console.log('getTokens', tokens?.accessToken);
         if (tokens?.accessToken && checkTokenExpiration(tokens.accessToken)) {
           const decoded = jwtDecode(tokens.accessToken);
           return decoded;
@@ -122,7 +122,7 @@ const authSlice = createSlice({
       state.isLoadinng=action.payload;
     },
     setAva(state,action){
-      state.avatar=action.payload
+      state.ava=action.payload;
     }
   },
   extraReducers: builder => {
@@ -164,5 +164,5 @@ const authSlice = createSlice({
 });
 
 
-export const { setLoading } = authSlice.actions
+export const { setLoading,setAva } = authSlice.actions
 export default authSlice.reducer;

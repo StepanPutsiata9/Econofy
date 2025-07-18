@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   View,
   Image,
@@ -16,10 +16,13 @@ import {
 import {styles} from "./AvatarUploader.ts"
 import EmptyAvatar from '../../../../components/SvgComponents/EmptyAvatar.tsx';
 import MainButton from '../../../../components/ui/MainButton/MainButton.tsx';
+import { RootState, useAppDispatch } from '../../../../store/store.ts';
+import { setAva } from '../../../../store/slices/AuthSlice/Auth.slice.ts';
+import { useSelector } from 'react-redux';
 
 const AvatarUploader: React.FC = () => {
-  const [avatar, setAvatar] = useState<ImageSourcePropType | null>(null);
-
+  const dispatch=useAppDispatch();
+  const {ava}=useSelector((state:RootState)=>state.auth);
   const requestCameraPermission = async (): Promise<boolean> => {
     if (Platform.OS === 'android') {
       try {
@@ -68,7 +71,7 @@ const AvatarUploader: React.FC = () => {
         const source: ImageSourcePropType = {
           uri: response.assets[0].uri as string,
         };
-        setAvatar(source);
+        dispatch(setAva(source));
       }
     });
   };
@@ -88,7 +91,7 @@ const AvatarUploader: React.FC = () => {
         const source: ImageSourcePropType = {
           uri: response.assets[0].uri as string,
         };
-        setAvatar(source);
+        dispatch(setAva(source));
       }
     });
   };
@@ -96,8 +99,8 @@ const AvatarUploader: React.FC = () => {
   return (
     <View style={styles.container}>
       <View style={styles.avatarContainer}>
-        {avatar ? (
-          <Image source={avatar} style={styles.avatar} />
+        {ava ? (
+          <Image source={ava} style={styles.avatar} />
         ) : (
           <EmptyAvatar />
         )}
@@ -107,6 +110,7 @@ const AvatarUploader: React.FC = () => {
         title="Выбрать из галереи"
         onClick={handleChooseFromLibrary}
       />
+      {ava&&<MainButton title="Удалить аватарку" onClick={()=>{dispatch(setAva(null))}}/>}
     </View>
   );
 };

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
-import { Animated, Easing, View, StyleSheet } from 'react-native';
-
+import { Animated, Easing, View } from 'react-native';
+import {styles} from "./Loader.ts"
 const CustomLoader = () => {
   const rotation = useRef(new Animated.Value(0)).current;
   useEffect(() => {
@@ -29,15 +29,6 @@ const CustomLoader = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  spinner: {
-    width: 50,
-    height: 50,
-    borderRadius: 30,
-    borderWidth: 5,
-    borderColor: '#5BFF6F',
-    borderTopColor: 'transparent',
-  },
-});
+
 
 export default CustomLoader;
