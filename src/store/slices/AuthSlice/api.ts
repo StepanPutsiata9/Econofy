@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { clearTokens, getTokens, storeTokens } from './AuthStorage.ts';
+import { clearTokens, getTokens, storeAvatar, storeTokens } from './AuthStorage.ts';
 
 const api = axios.create({
   baseURL: 'https://econofy-backend.onrender.com/',
@@ -30,9 +30,9 @@ api.interceptors.response.use(
           'https://econofy-backend.onrender.com/auth/refresh',
           { refreshToken: tokens.refreshToken }
         );
-        const { accessToken, refreshToken } = response.data;
+        const { accessToken, refreshToken,avatar } = response.data;
         await storeTokens({accessToken, refreshToken});
-
+        await storeAvatar(avatar);
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
         return axios(originalRequest);
       } catch (refreshError) {

@@ -63,7 +63,7 @@ export const clearTokens = async (): Promise<boolean> => {
 };
 
 export const storeAvatar = async (
-  avatar: ImageSourcePropType,
+  avatar: ImageSourcePropType|null,
 ): Promise<boolean> => {
   try {
     await AsyncStorage.setItem('avatar', JSON.stringify(avatar));
@@ -74,7 +74,7 @@ export const storeAvatar = async (
   }
 };
 
-export const getAvatar = async (): Promise<ImageSourcePropType> => {
+export const getAvatar = async (): Promise<ImageSourcePropType|null> => {
   const storedData = await AsyncStorage.getItem('avatar');
   const parsedImageSource = storedData ? JSON.parse(storedData) : null;
   return parsedImageSource;

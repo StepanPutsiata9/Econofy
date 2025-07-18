@@ -15,7 +15,7 @@ import { useEffect, useRef, useState } from 'react';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '../../../types/navigation.types.ts';
 import { useNavigation } from '@react-navigation/native';
-import { login } from '../../../store/slices/AuthSlice/Auth.slice.ts';
+import { login, setAva } from '../../../store/slices/AuthSlice/Auth.slice.ts';
 import api from '../../../store/slices/AuthSlice/api.ts';
 import { useAppDispatch } from '../../../store/store.ts';
 import { setLoading } from '../../../store/slices/AuthSlice/Auth.slice.ts';
@@ -73,6 +73,7 @@ function RegistrationScreen() {
       });
       const { accessToken, refreshToken } = response.data;
       await dispatch(login({ accessToken, refreshToken }));
+      dispatch(setAva(null));
       setNullInputs();
     } catch (err: unknown) {
       checkError();

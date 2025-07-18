@@ -81,6 +81,7 @@ const AvatarUploader: React.FC = () => {
       mediaType: 'photo',
       quality: 0.8,
     };
+    
 
     launchImageLibrary(options, response => {
       if (response.didCancel) {

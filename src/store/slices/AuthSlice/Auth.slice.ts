@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { getTokens, clearTokens, storeTokens } from './AuthStorage';
+import { getTokens, clearTokens, storeTokens, storeAvatar, getAvatar } from './AuthStorage';
 import { jwtDecode } from 'jwt-decode';
 import { Tokens } from './AuthStorage';
 import { ImageSourcePropType } from 'react-native';
@@ -114,6 +114,21 @@ export const logout = createAsyncThunk(
   },
 );
 
+
+export const setAva = createAsyncThunk(
+  'auth/setavatar',
+  async (avatar:ImageSourcePropType|null, { rejectWithValue }) => {
+      try {
+        await storeAvatar(avatar);
+        const userAva = await getAvatar();
+        return userAva;
+    } catch (error) {
+      return rejectWithValue(
+        error instanceof Error ? error.message : 'Unknown error',
+      );
+    }
+  }
+);
 const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -121,9 +136,6 @@ const authSlice = createSlice({
     setLoading(state,action){
       state.isLoadinng=action.payload;
     },
-    setAva(state,action){
-      state.ava=action.payload;
-    }
   },
   extraReducers: builder => {
     builder
@@ -159,10 +171,15 @@ const authSlice = createSlice({
       .addCase(logout.fulfilled, state => {
         state.user = null;
         state.isLoadinng = false;
-      });
+      })
+
+      
+      .addCase(setAva.fulfilled,(state,action)=>{
+        state.ava=action.payload;
+      })
   },
 });
 
 
-export const { setLoading,setAva } = authSlice.actions
+export const { setLoading } = authSlice.actions
 export default authSlice.reducer;

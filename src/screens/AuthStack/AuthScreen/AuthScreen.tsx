@@ -15,11 +15,11 @@ import EyeOpened from '../../../components/SvgComponents/EyeOpened.tsx';
 import { useNavigation } from '@react-navigation/native';
 import { AuthStackParamList } from '../../../types/navigation.types.ts';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { login } from '../../../store/slices/AuthSlice/Auth.slice.ts';
+import { login, setAva } from '../../../store/slices/AuthSlice/Auth.slice.ts';
 import api from '../../../store/slices/AuthSlice/api.ts';
 import { useAppDispatch } from '../../../store/store.ts';
 import { setLoading } from '../../../store/slices/AuthSlice/Auth.slice.ts';
-import { checkError, errorInputs } from './AuthValidation.ts'
+import { checkError, errorInputs } from './AuthValidation.ts';
 function AuthScreen() {
   const [isSecure, setIsSecure] = useState<boolean>(false);
   const [loginText, setLoginText] = useState<string>('');
@@ -66,8 +66,9 @@ function AuthScreen() {
         login: loginText,
         password: passwordText,
       });
-      const { accessToken, refreshToken } = response.data;
+      const { accessToken, refreshToken,avatar } = response.data;
       await dispatch(login({ accessToken, refreshToken }));
+      await dispatch(setAva(avatar));
       setNullInputs();
     } catch (err: unknown) {
       checkError(err, setError);
