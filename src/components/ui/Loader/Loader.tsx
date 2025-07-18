@@ -8,7 +8,7 @@ const CustomLoader = () => {
       Animated.loop(
         Animated.timing(rotation, {
           toValue: 1,
-          duration: 1000,
+          duration: 1500,
           easing: Easing.linear,
           useNativeDriver: true,
         })

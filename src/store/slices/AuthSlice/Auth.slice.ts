@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { getTokens, clearTokens, storeTokens } from './AuthStorage';
 import { jwtDecode } from 'jwt-decode';
 import { Tokens } from './AuthStorage';
+import { ImageSourcePropType } from 'react-native';
 interface JwtPayload {
   exp?: number; 
   iat?: number; 
@@ -36,11 +37,13 @@ const checkTokenExpiration = (token: string) => {
 interface AuthState {
   user: JwtPayload | null;
   isLoadinng: boolean;
+  avatar:ImageSourcePropType | null;
 }
 
 const initialState: AuthState = {
   user: null,
   isLoadinng: false,
+  avatar:null,
 };
 export const loadUser = createAsyncThunk(
   'auth/loadUser',
@@ -117,6 +120,9 @@ const authSlice = createSlice({
   reducers: {
     setLoading(state,action){
       state.isLoadinng=action.payload;
+    },
+    setAva(state,action){
+      state.avatar=action.payload
     }
   },
   extraReducers: builder => {

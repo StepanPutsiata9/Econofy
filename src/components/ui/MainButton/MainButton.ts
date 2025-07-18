@@ -7,7 +7,7 @@ export const styles = StyleSheet.create({
     height:48,
     borderRadius:10,
     justifyContent:'center',
-    
+    marginBottom:10,
   },
   btnText:{
     textAlign:'center',
