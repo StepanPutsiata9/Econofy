@@ -73,7 +73,7 @@ function RegistrationScreen() {
       });
       const { accessToken, refreshToken } = response.data;
       await dispatch(login({ accessToken, refreshToken }));
-      dispatch(setAva(null));
+      await dispatch(setAva(null));
       setNullInputs();
     } catch (err: unknown) {
       checkError();

@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { getTokens, clearTokens, storeTokens, storeAvatar, getAvatar } from './AuthStorage';
 import { jwtDecode } from 'jwt-decode';
 import { Tokens } from './AuthStorage';
-import { ImageSourcePropType } from 'react-native';
+// import { ImageSourcePropType } from 'react-native';
 interface JwtPayload {
   exp?: number; 
   iat?: number; 
@@ -37,7 +37,9 @@ const checkTokenExpiration = (token: string) => {
 interface AuthState {
   user: JwtPayload | null;
   isLoadinng: boolean;
-  ava:ImageSourcePropType | null;
+  // ava:ImageSourcePropType | null;
+  ava:string | null;
+
 }
 
 const initialState: AuthState = {
@@ -52,11 +54,14 @@ export const loadUser = createAsyncThunk(
     try {
       const tokens = await getTokens();
       if (tokens?.accessToken && checkTokenExpiration(tokens.accessToken)) {
+        const avatarkaString=await getAvatar();
+        const avatarka=avatarkaString==="empty"?null:avatarkaString
         const decoded = jwtDecode(tokens.accessToken);
-        return decoded;
+        return {decoded,avatarka};
       } else {
         const decoded = null;
-        return decoded;
+        const avatarka=null;
+        return {decoded,avatarka};
       }
     } catch (error) {
       return rejectWithValue(
@@ -117,9 +122,10 @@ export const logout = createAsyncThunk(
 
 export const setAva = createAsyncThunk(
   'auth/setavatar',
-  async (avatar:ImageSourcePropType|null, { rejectWithValue }) => {
+  async (avatar:string|null, { rejectWithValue }) => {
       try {
-        await storeAvatar(avatar);
+        console.log("tyr to set ava", avatar);
+        await storeAvatar(avatar||"empty");
         const userAva = await getAvatar();
         return userAva;
     } catch (error) {
@@ -143,7 +149,8 @@ const authSlice = createSlice({
         state.isLoadinng = true;
       })
       .addCase(loadUser.fulfilled, (state, action) => {
-        state.user = action.payload;
+        state.user = action.payload.decoded;
+        state.ava=action.payload.avatarka;
         state.isLoadinng = false;
       })
       .addCase(loadUser.rejected, state => {
@@ -170,10 +177,10 @@ const authSlice = createSlice({
       })
       .addCase(logout.fulfilled, state => {
         state.user = null;
+        state.ava=null;
         state.isLoadinng = false;
       })
 
-      
       .addCase(setAva.fulfilled,(state,action)=>{
         state.ava=action.payload;
       })

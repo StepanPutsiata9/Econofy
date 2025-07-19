@@ -1,28 +1,22 @@
 import React from 'react';
-import {
-  View,
-  Image,
-  PermissionsAndroid,
-  Platform,
-  Alert,
-  ImageSourcePropType,
-} from 'react-native';
+import { View, Image, PermissionsAndroid, Platform, Alert } from 'react-native';
 import {
   launchCamera,
   launchImageLibrary,
   CameraOptions,
   ImageLibraryOptions,
 } from 'react-native-image-picker';
-import {styles} from "./AvatarUploader.ts"
+import { styles } from './AvatarUploader.ts';
 import EmptyAvatar from '../../../../components/SvgComponents/EmptyAvatar.tsx';
 import MainButton from '../../../../components/ui/MainButton/MainButton.tsx';
 import { RootState, useAppDispatch } from '../../../../store/store.ts';
 import { setAva } from '../../../../store/slices/AuthSlice/Auth.slice.ts';
 import { useSelector } from 'react-redux';
+import api from '../../../../store/slices/AuthSlice/api.ts';
 
 const AvatarUploader: React.FC = () => {
-  const dispatch=useAppDispatch();
-  const {ava}=useSelector((state:RootState)=>state.auth);
+  const dispatch = useAppDispatch();
+  const { ava } = useSelector((state: RootState) => state.auth);
   const requestCameraPermission = async (): Promise<boolean> => {
     if (Platform.OS === 'android') {
       try {
@@ -43,7 +37,7 @@ const AvatarUploader: React.FC = () => {
       }
     }
     if (Platform.OS === 'ios') {
-        return true;
+      return true;
     }
     return true;
   };
@@ -68,10 +62,15 @@ const AvatarUploader: React.FC = () => {
       } else if (response.errorCode) {
         console.log('Camera Error: ', response.errorMessage);
       } else if (response.assets && response.assets.length > 0) {
-        const source: ImageSourcePropType = {
-          uri: response.assets[0].uri as string,
+        const source = response.assets[0].uri as string;
+        const setAvatarFunc = async () => {
+          const { data } = await api.post('setAvatar', { uri: source });
+          console.log(data);
+          if (data) {
+            dispatch(setAva(source));
+          }
         };
-        dispatch(setAva(source));
+        setAvatarFunc();
       }
     });
   };
@@ -81,7 +80,6 @@ const AvatarUploader: React.FC = () => {
       mediaType: 'photo',
       quality: 0.8,
     };
-    
 
     launchImageLibrary(options, response => {
       if (response.didCancel) {
@@ -89,19 +87,29 @@ const AvatarUploader: React.FC = () => {
       } else if (response.errorCode) {
         console.log('ImagePicker Error: ', response.errorMessage);
       } else if (response.assets && response.assets.length > 0) {
-        const source: ImageSourcePropType = {
-          uri: response.assets[0].uri as string,
+        const source = response.assets[0].uri as string;
+        const setAvatarFunc = async () => {
+          const { data } = await api.post('setAvatar', { uri: source });
+
+          if (data) {
+            dispatch(setAva(source));
+          }
         };
-        dispatch(setAva(source));
+        setAvatarFunc();
       }
     });
   };
-
+  const delPhoto = async (): Promise<void> => {
+    const { data } = await api.post('delAvatar');
+    if (data) {
+      dispatch(setAva(null));
+    }
+  };
   return (
     <View style={styles.container}>
       <View style={styles.avatarContainer}>
-        {ava ? (
-          <Image source={ava} style={styles.avatar} />
+        {(ava!=="empty")&&ava ? (
+          <Image source={{ uri: ava }} style={styles.avatar} />
         ) : (
           <EmptyAvatar />
         )}
@@ -111,10 +119,9 @@ const AvatarUploader: React.FC = () => {
         title="Выбрать из галереи"
         onClick={handleChooseFromLibrary}
       />
-      {ava&&<MainButton title="Удалить аватарку" onClick={()=>{dispatch(setAva(null))}}/>}
+      {(ava!=="empty")&&ava && <MainButton title="Удалить аватарку" onClick={delPhoto} />}
     </View>
   );
 };
-
 
 export default AvatarUploader;

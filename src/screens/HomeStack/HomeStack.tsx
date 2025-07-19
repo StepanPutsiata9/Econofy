@@ -9,9 +9,9 @@ export function Home() {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center',}}>
       <Text>Home</Text>
-      {ava ? (
+      {(ava!=="empty")&&ava ? (
         <Image
-          source={ava}
+          source={{uri:ava}}
           style={{
             width: 96,
             height: 96,

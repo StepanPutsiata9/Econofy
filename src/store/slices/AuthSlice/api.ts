@@ -30,9 +30,10 @@ api.interceptors.response.use(
           'https://econofy-backend.onrender.com/auth/refresh',
           { refreshToken: tokens.refreshToken }
         );
-        const { accessToken, refreshToken,avatar } = response.data;
+        const { accessToken, refreshToken,uri } = response.data;
+        console.log("refresh");
         await storeTokens({accessToken, refreshToken});
-        await storeAvatar(avatar);
+        await storeAvatar(uri||'empty');
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
         return axios(originalRequest);
       } catch (refreshError) {

@@ -66,9 +66,10 @@ function AuthScreen() {
         login: loginText,
         password: passwordText,
       });
-      const { accessToken, refreshToken,avatar } = response.data;
+      const { accessToken, refreshToken,uri } = response.data;
       await dispatch(login({ accessToken, refreshToken }));
-      await dispatch(setAva(avatar));
+      console.log("avatar from api ",uri);
+      await dispatch(setAva(uri||null));
       setNullInputs();
     } catch (err: unknown) {
       checkError(err, setError);

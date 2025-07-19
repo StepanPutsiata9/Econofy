@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ImageSourcePropType } from 'react-native';
+// import { ImageSourcePropType } from 'react-native';
 import * as Keychain from 'react-native-keychain';
 
 export interface Tokens {
@@ -62,11 +62,19 @@ export const clearTokens = async (): Promise<boolean> => {
   }
 };
 
+
 export const storeAvatar = async (
-  avatar: ImageSourcePropType|null,
+  avatar: string | null, 
 ): Promise<boolean> => {
   try {
-    await AsyncStorage.setItem('avatar', JSON.stringify(avatar));
+    if (avatar === null || avatar === undefined) {
+      console.log("avatar ",avatar);
+      await AsyncStorage.removeItem('avatar'); 
+    } else {
+      await AsyncStorage.setItem('avatar', JSON.stringify(avatar));
+      console.log("avatar not ",avatar);
+
+    }
     return true;
   } catch (error) {
     console.error('Error storing avatar', error);
@@ -74,8 +82,12 @@ export const storeAvatar = async (
   }
 };
 
-export const getAvatar = async (): Promise<ImageSourcePropType|null> => {
-  const storedData = await AsyncStorage.getItem('avatar');
-  const parsedImageSource = storedData ? JSON.parse(storedData) : null;
-  return parsedImageSource;
+export const getAvatar = async (): Promise<string | null> => {
+  try {
+    const storedData = await AsyncStorage.getItem('avatar');
+    return storedData ? JSON.parse(storedData) : null;
+  } catch (error) {
+    console.error('Error reading avatar', error);
+    return null;
+  }
 };
