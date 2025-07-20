@@ -28,7 +28,7 @@ export const styles = StyleSheet.create({
     alignItems:'baseline',
   },
   savedMoney: {
-    fontSize: 22,
+    fontSize: 24,
     color: '#fff',
     fontFamily: 'MontserratBold',
   },
@@ -37,5 +37,4 @@ export const styles = StyleSheet.create({
     color: '#B2B2B2',
     fontFamily: 'MontserratBold',
   },
-
 });

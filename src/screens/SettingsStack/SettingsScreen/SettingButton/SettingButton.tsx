@@ -27,16 +27,18 @@ function SettingButton() {
         transparent={true}
         visible={modalVisible}
         statusBarTranslucent={true}
-        onRequestClose={() => {
-          setModalVisible(false);
-        }}
+        onRequestClose={() => setModalVisible(false)}
       >
         <StatusBar backgroundColor="rgba(0, 0, 0, 0.5)" />
         <TouchableOpacity
+          activeOpacity={1}
           style={[styles.fullScreenModal, { marginTop: -insets.top }]}
           onPress={() => setModalVisible(false)}
         >
-          <View style={styles.modalContent}>
+          <View
+            style={styles.modalContent}
+            onStartShouldSetResponder={() => true}
+          >
             <AvatarUploader />
           </View>
         </TouchableOpacity>

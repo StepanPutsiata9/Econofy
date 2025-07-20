@@ -9,9 +9,9 @@ import { useAppDispatch } from '../../../../store/store.ts';
 function LogoutButton() {
   const [modalVisible, setModalVisible] = React.useState(false);
   const insets = useSafeAreaInsets();
-    const dispatch = useAppDispatch();
-  
-  const handleLogout = async() => {
+  const dispatch = useAppDispatch();
+
+  const handleLogout = async () => {
     await dispatch(logout());
     setModalVisible(false);
   };
@@ -33,13 +33,19 @@ function LogoutButton() {
         transparent={true}
         visible={modalVisible}
         statusBarTranslucent={true}
-        onRequestClose={() => {
-          setModalVisible(false);
-        }}
+        onRequestClose={() => setModalVisible(false)}
       >
         <StatusBar backgroundColor="rgba(0, 0, 0, 0.5)" />
-        <View style={[styles.fullScreenModal,{marginTop:-insets.top}]}>
-          <View style={styles.modalContent}>
+        <TouchableOpacity
+          activeOpacity={1} 
+          onPress={() => setModalVisible(false)}
+          style={[styles.fullScreenModal, { marginTop: -insets.top }]}
+        >
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={e => e.stopPropagation()} 
+            style={styles.modalContent}
+          >
             <Text style={styles.modalTitle}>Подтверждение действия</Text>
             <Text style={styles.modalText}>
               Вы действительно хотите выйти из аккаунта?
@@ -60,8 +66,8 @@ function LogoutButton() {
                 <Text style={styles.buttonText}>Выйти</Text>
               </TouchableOpacity>
             </View>
-          </View>
-        </View>
+          </TouchableOpacity>
+        </TouchableOpacity>
       </Modal>
     </>
   );

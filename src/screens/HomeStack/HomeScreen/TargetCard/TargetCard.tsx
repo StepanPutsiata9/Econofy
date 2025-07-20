@@ -1,5 +1,8 @@
 import { Text, View } from 'react-native';
 import { styles } from './TargetCard.ts';
+import ModalForCard from '../ModalForCard/ModalForCard.tsx';
+import { useState } from 'react';
+import { TouchableOpacity } from 'react-native';
 // @ts-ignore
 
 interface INearTargetProps {
@@ -9,17 +12,25 @@ interface INearTargetProps {
   allMoney: number;
 }
 function TargetCard(props: INearTargetProps) {
+  const [modalVisible, setModalVisible] = useState(false);
+
   return (
-    <View style={styles.targetView}>
-      <View style={styles.infoLine}>
-        <Text style={styles.title}>{props.title}</Text>
-        <Text style={styles.date}>{props.date}</Text>
-      </View>
-      <View style={styles.moneyView}>
-        <Text style={styles.savedMoney}>{props.savedMoney}</Text>
-        <Text style={styles.allMoney}>/{props.allMoney}</Text>
-      </View>
-    </View>
+    <>
+      <ModalForCard
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+      />
+      <TouchableOpacity style={styles.targetView} onPress={()=>setModalVisible(true)}>
+        <View style={styles.infoLine}>
+          <Text style={styles.title}>{props.title}</Text>
+          <Text style={styles.date}>{props.date}</Text>
+        </View>
+        <View style={styles.moneyView}>
+          <Text style={styles.savedMoney}>{props.savedMoney}</Text>
+          <Text style={styles.allMoney}>/{props.allMoney}</Text>
+        </View>
+      </TouchableOpacity>
+    </>
   );
 }
 export default TargetCard;

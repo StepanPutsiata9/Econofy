@@ -1,7 +1,9 @@
-import { Text, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import { styles } from './NearestTarget.ts';
+import ModalForCard from "../ModalForCard/ModalForCard.tsx"
 // @ts-ignore
 import ProgressBar from 'react-native-progress/Bar';
+import { useState } from 'react';
 
 interface INearTargetProps {
   title: string;
@@ -11,8 +13,12 @@ interface INearTargetProps {
 }
 function NearestTarget(props: INearTargetProps) {
   const progress = props.savedMoney / props.allMoney;
+    const [modalVisible, setModalVisible] = useState(false);
+  
   return (
-    <View style={styles.nearestTargetView}>
+    <>
+    <ModalForCard modalVisible={modalVisible} setModalVisible={setModalVisible}/>
+    <TouchableOpacity style={styles.nearestTargetView} onPress={()=>setModalVisible(true)}>
       <View style={styles.infoLine}>
         <Text style={styles.title}>{props.title}</Text>
         <Text style={styles.date}>{props.date}</Text>
@@ -37,7 +43,9 @@ function NearestTarget(props: INearTargetProps) {
           duration: 500,
         }}
       />
-    </View>
+    </TouchableOpacity>
+    </>
+
   );
 }
 export default NearestTarget;

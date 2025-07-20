@@ -28,6 +28,6 @@ export const styles = StyleSheet.create({
     backgroundColor: '#2D2D2D',
     borderRadius: 15,
     padding: 25,
-    // alignItems: 'center',
+
   },
 });

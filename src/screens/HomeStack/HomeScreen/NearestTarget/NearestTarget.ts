@@ -9,12 +9,12 @@ export const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: 14,
+    fontSize: 16,
     color: '#fff',
     fontFamily: 'MontserratBold',
   },
   date: {
-    fontSize: 14,
+    fontSize: 16,
     color: '#fff',
     fontFamily: 'Montserrat',
   },
@@ -29,7 +29,7 @@ export const styles = StyleSheet.create({
     marginBottom:19,
   },
   savedMoney: {
-    fontSize: 28,
+    fontSize: 30,
     color: '#5BFF6F',
     fontFamily: 'MontserratBold',
   },
