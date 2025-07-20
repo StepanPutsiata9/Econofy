@@ -1,11 +1,16 @@
 import axios from 'axios';
-import { clearTokens, getTokens, storeAvatar, storeTokens } from './AuthStorage.ts';
+import {
+  clearTokens,
+  getTokens,
+  storeAvatar,
+  storeTokens,
+} from './AuthStorage.ts';
 
 const api = axios.create({
   baseURL: 'https://econofy-backend.onrender.com/',
 });
 
-api.interceptors.request.use(async (config) => {
+api.interceptors.request.use(async config => {
   const tokens = await getTokens();
   if (tokens?.accessToken) {
     config.headers.Authorization = `Bearer ${tokens.accessToken}`;
@@ -14,11 +19,14 @@ api.interceptors.request.use(async (config) => {
 });
 
 api.interceptors.response.use(
-  (response) => response,
-  async (error) => {
+  response => response,
+  async error => {
     const originalRequest = error.config;
     const tokens = await getTokens();
-
+    if (error.response?.status === 404) {
+      console.log("404 error");
+      await clearTokens();
+    }
     if (
       error.response?.status === 401 &&
       tokens?.refreshToken &&
@@ -28,12 +36,12 @@ api.interceptors.response.use(
       try {
         const response = await axios.post(
           'https://econofy-backend.onrender.com/auth/refresh',
-          { refreshToken: tokens.refreshToken }
+          { refreshToken: tokens.refreshToken },
         );
-        const { accessToken, refreshToken,uri } = response.data;
-        console.log("refresh");
-        await storeTokens({accessToken, refreshToken});
-        await storeAvatar(uri||'empty');
+        const { accessToken, refreshToken, uri } = response.data;
+        console.log('refresh');
+        await storeTokens({ accessToken, refreshToken });
+        await storeAvatar(uri || 'empty');
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
         return axios(originalRequest);
       } catch (refreshError) {
@@ -42,7 +50,7 @@ api.interceptors.response.use(
       }
     }
     return Promise.reject(error);
-  }
+  },
 );
 
 export default api;

@@ -98,6 +98,7 @@ function Tabs() {
   const dispatch=useAppDispatch();
   useEffect(() => {
     dispatch(loadUser());
+
   }, [dispatch]);
   if (isLoadinng) {
     return <Load />;

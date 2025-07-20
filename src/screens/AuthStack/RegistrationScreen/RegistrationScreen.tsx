@@ -21,6 +21,7 @@ import { useAppDispatch } from '../../../store/store.ts';
 import { setLoading } from '../../../store/slices/AuthSlice/Auth.slice.ts';
 import { checkError, errorInputs } from './RegistrationValidation.ts';
 function RegistrationScreen() {
+  
   const [isSecure, setIsSecure] = useState<boolean>(false);
   const [loginText, setLoginText] = useState<string>('');
   const [passwordText, setPasswordText] = useState<string>('');

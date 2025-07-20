@@ -90,7 +90,6 @@ const AvatarUploader: React.FC = () => {
         const source = response.assets[0].uri as string;
         const setAvatarFunc = async () => {
           const { data } = await api.post('setAvatar', { uri: source });
-
           if (data) {
             dispatch(setAva(source));
           }
