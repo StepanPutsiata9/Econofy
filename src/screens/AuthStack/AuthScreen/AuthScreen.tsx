@@ -5,7 +5,6 @@ import {
   TextInput,
   TouchableOpacity,
   Animated,
-  Alert,
 } from 'react-native';
 import Header from '../../../components/ui/Header/Header.tsx';
 import { styles } from './AuthScreen.ts';
@@ -16,17 +15,24 @@ import EyeOpened from '../../../components/SvgComponents/EyeOpened.tsx';
 import { useNavigation } from '@react-navigation/native';
 import { AuthStackParamList } from '../../../types/navigation.types.ts';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { login, setAva } from '../../../store/slices/AuthSlice/Auth.slice.ts';
+import {
+  login,
+  setAva,
+  setNetworkError,
+} from '../../../store/slices/AuthSlice/Auth.slice.ts';
 import api from '../../../store/slices/AuthSlice/api.ts';
-import { useAppDispatch } from '../../../store/store.ts';
+import { RootState, useAppDispatch } from '../../../store/store.ts';
 import { setLoading } from '../../../store/slices/AuthSlice/Auth.slice.ts';
 import { checkError, errorInputs } from './AuthValidation.ts';
+import { useSelector } from 'react-redux';
 function AuthScreen() {
   const [isSecure, setIsSecure] = useState<boolean>(false);
   const [loginText, setLoginText] = useState<string>('');
   const [passwordText, setPasswordText] = useState<string>('');
   const [error, setError] = useState<string>('');
   const dispatch = useAppDispatch();
+  const { networkError } = useSelector((state: RootState) => state.auth);
+
   const authNavigation =
     useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -37,10 +43,17 @@ function AuthScreen() {
         duration: 300,
         useNativeDriver: true,
       }).start();
+    } 
+    else if (networkError) {
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
     } else {
       fadeAnim.setValue(0);
     }
-  }, [error, fadeAnim]);
+  }, [error, fadeAnim, networkError]);
 
   const setNullInputs = () => {
     setLoginText('');
@@ -68,15 +81,16 @@ function AuthScreen() {
       });
       if (response.data === null) {
         dispatch(setLoading(false));
-        Alert.alert('Пользователь не найден');
-        return;
+        dispatch(setNetworkError('Пользователь не найден'));
+        console.log(networkError);
       }
       const { accessToken, refreshToken, uri } = response.data;
-
-      await dispatch(login({ accessToken, refreshToken }));
-      console.log('avatar from api ', uri);
-      await dispatch(setAva(uri || null));
-      setNullInputs();
+      if (accessToken && refreshToken) {
+        await dispatch(login({ accessToken, refreshToken }));
+        console.log('avatar from api ', uri);
+        await dispatch(setAva(uri || null));
+        setNullInputs();
+      }
     } catch (err: unknown) {
       dispatch(setLoading(false));
       checkError(err, setError);
@@ -85,12 +99,19 @@ function AuthScreen() {
   };
 
   const setLogin = (text: string) => {
+    if (text.length === 1) {
+      setError('');
+      dispatch(setNetworkError(null)) 
+    }
     setLoginText(text);
-    setError('');
   };
   const setPassword = (text: string) => {
+     if (text.length === 1) {
+      setError('');
+      dispatch(setNetworkError(null));
+    }
     setPasswordText(text);
-    setError('');
+    
   };
 
   return (
@@ -102,7 +123,7 @@ function AuthScreen() {
           <TextInput
             value={loginText}
             placeholder="Login"
-            style={[styles.loginInput, error && styles.errorInput]}
+            style={[styles.loginInput, (error||networkError) && styles.errorInput]}
             onChangeText={setLogin}
             keyboardType="email-address"
             autoCapitalize="none"
@@ -112,7 +133,7 @@ function AuthScreen() {
             <TextInput
               value={passwordText}
               placeholder="Пароль"
-              style={[styles.passwordInput, error && styles.errorInput]}
+              style={[styles.passwordInput, (error||networkError) && styles.errorInput]}
               onChangeText={setPassword}
               placeholderTextColor="#fff"
               secureTextEntry={!isSecure}
@@ -120,9 +141,9 @@ function AuthScreen() {
             <View style={styles.eye}>
               <TouchableOpacity onPress={() => setIsSecure(!isSecure)}>
                 {isSecure ? (
-                  <EyeClosed color={error ? '#FF1B44' : '#5BFF6F'} />
+                  <EyeClosed color={(error||networkError) ? '#FF1B44' : '#5BFF6F'} />
                 ) : (
-                  <EyeOpened color={error ? '#FF1B44' : '#5BFF6F'} />
+                  <EyeOpened color={(error||networkError) ? '#FF1B44' : '#5BFF6F'} />
                 )}
               </TouchableOpacity>
             </View>
@@ -131,6 +152,11 @@ function AuthScreen() {
         {error ? (
           <Animated.View style={{ opacity: fadeAnim }}>
             <Text style={styles.errorText}>{error}</Text>
+          </Animated.View>
+        ) : null}
+        {networkError ? (
+          <Animated.View style={{ opacity: fadeAnim }}>
+            <Text style={styles.errorText}>{networkError}</Text>
           </Animated.View>
         ) : null}
         <TouchableOpacity
