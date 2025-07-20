@@ -38,9 +38,9 @@ export const errorInputs: any = (
       setRepitPasswordText('');
       return false;
     }
-    if (loginText.trim().length < 6 || passwordText.trim().length < 6) {
+    if (loginText.trim().length < 8 || passwordText.trim().length < 8) {
       dispatch(setLoading(false));
-      setError('Логин и пароль должны состоять минимум из 6 символов');
+      setError('Логин и пароль должны состоять минимум из 8 символов');
       setLoginText('');
       setPasswordText('');
       setRepitPasswordText('');

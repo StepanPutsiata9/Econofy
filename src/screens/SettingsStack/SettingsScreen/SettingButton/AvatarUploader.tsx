@@ -101,6 +101,8 @@ const AvatarUploader: React.FC = () => {
   };
   const delPhoto = async (): Promise<void> => {
     const { data } = await api.post('delAvatar');
+    console.log("null avatar ",data);
+    
     if (data) {
       dispatch(setAva(null));
     }
