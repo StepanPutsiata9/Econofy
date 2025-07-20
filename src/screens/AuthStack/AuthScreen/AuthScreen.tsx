@@ -29,7 +29,6 @@ function AuthScreen() {
   const authNavigation =
     useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
   const fadeAnim = useRef(new Animated.Value(0)).current;
-
   useEffect(() => {
     if (error) {
       Animated.timing(fadeAnim, {
@@ -66,10 +65,13 @@ function AuthScreen() {
         login: loginText,
         password: passwordText,
       });
-      const { accessToken, refreshToken, uri } = response.data;
-      if (!accessToken || !refreshToken) {
+      if (response.data === null) {
         dispatch(setLoading(false));
+        setError('eee');
+        return;
       }
+      const { accessToken, refreshToken, uri } = response.data;
+
       await dispatch(login({ accessToken, refreshToken }));
       console.log('avatar from api ', uri);
       await dispatch(setAva(uri || null));

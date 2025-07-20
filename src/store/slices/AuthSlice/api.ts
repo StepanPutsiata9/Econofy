@@ -23,10 +23,11 @@ api.interceptors.response.use(
   async error => {
     const originalRequest = error.config;
     const tokens = await getTokens();
-    if (error.response?.status === 404) {
-      console.log("404 error");
-      await clearTokens();
-    }
+    // if (error.response?.status === 404) {
+    //   console.log("404 error");
+    //   await clearTokens();
+    //   // return null
+    // }
     if (
       error.response?.status === 401 &&
       tokens?.refreshToken &&
@@ -48,6 +49,10 @@ api.interceptors.response.use(
         await clearTokens();
         return Promise.reject(refreshError);
       }
+    }
+    if(error.response?.status===404){
+      console.log("null");
+      return {data:null};
     }
     return Promise.reject(error);
   },

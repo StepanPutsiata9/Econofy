@@ -91,3 +91,16 @@ export const getAvatar = async (): Promise<string | null> => {
     return null;
   }
 };
+
+
+
+
+
+export const setAppLaunched = async () => {
+  await AsyncStorage.setItem("first_launch", 'false');
+};
+
+export const isFirstLaunch = async () => {
+  const value = await AsyncStorage.getItem("first_launch");
+  return value === null;
+};

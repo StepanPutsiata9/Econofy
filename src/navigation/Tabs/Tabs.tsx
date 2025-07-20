@@ -14,7 +14,14 @@ import { useSelector } from 'react-redux';
 import { RootState, useAppDispatch } from '../../store/store.ts';
 import Load from '../../screens/LoadScreen/LoadScreen.tsx';
 import { useEffect } from 'react';
-import { loadUser } from '../../store/slices/AuthSlice/Auth.slice.ts';
+import {
+  loadUser,
+  setIsFirstLaunch,
+} from '../../store/slices/AuthSlice/Auth.slice.ts';
+import {
+  isFirstLaunch,
+  setAppLaunched,
+} from '../../store/slices/AuthSlice/AuthStorage.ts';
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
 
@@ -95,10 +102,18 @@ function MainTabs() {
 }
 function Tabs() {
   const { isLoadinng, user } = useSelector((state: RootState) => state.auth);
-  const dispatch=useAppDispatch();
+  const dispatch = useAppDispatch();
+
   useEffect(() => {
     dispatch(loadUser());
-
+    const checkFirstLaunch = async () => {
+      const firstLaunch = await isFirstLaunch();
+      dispatch(setIsFirstLaunch(firstLaunch));
+      if (firstLaunch) {
+        await setAppLaunched();
+      }
+    };
+    checkFirstLaunch();
   }, [dispatch]);
   if (isLoadinng) {
     return <Load />;

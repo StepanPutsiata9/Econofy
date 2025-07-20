@@ -39,6 +39,7 @@ interface AuthState {
   isLoadinng: boolean;
   // ava:ImageSourcePropType | null;
   ava:string | null;
+  isFirstLaunch:boolean;
 
 }
 
@@ -46,6 +47,7 @@ const initialState: AuthState = {
   user: null,
   isLoadinng: false,
   ava:null,
+  isFirstLaunch:true,
 };
 
 export const loadUser = createAsyncThunk(
@@ -142,6 +144,9 @@ const authSlice = createSlice({
     setLoading(state,action){
       state.isLoadinng=action.payload;
     },
+    setIsFirstLaunch(state,action){
+      state.isFirstLaunch=action.payload;
+    }
   },
   extraReducers: builder => {
     builder
@@ -188,5 +193,5 @@ const authSlice = createSlice({
 });
 
 
-export const { setLoading } = authSlice.actions
+export const { setLoading,setIsFirstLaunch } = authSlice.actions
 export default authSlice.reducer;
