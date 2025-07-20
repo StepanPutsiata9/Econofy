@@ -5,6 +5,7 @@ import {
   TextInput,
   TouchableOpacity,
   Animated,
+  Alert,
 } from 'react-native';
 import Header from '../../../components/ui/Header/Header.tsx';
 import { styles } from './AuthScreen.ts';
@@ -67,7 +68,7 @@ function AuthScreen() {
       });
       if (response.data === null) {
         dispatch(setLoading(false));
-        setError('eee');
+        Alert.alert('Пользователь не найден');
         return;
       }
       const { accessToken, refreshToken, uri } = response.data;
