@@ -62,6 +62,7 @@ function AuthScreen() {
   const handleLogin = async () => {
     dispatch(setLoading(true));
     setError('');
+    dispatch(setNetworkError(null));
     if (
       !errorInputs(
         loginText,
@@ -81,8 +82,7 @@ function AuthScreen() {
       });
       if (response.data === null) {
         dispatch(setLoading(false));
-        dispatch(setNetworkError('Пользователь не найден'));
-        console.log(networkError);
+        dispatch(setNetworkError('Неверный login или пароль'));
       }
       const { accessToken, refreshToken, uri } = response.data;
       if (accessToken && refreshToken) {
