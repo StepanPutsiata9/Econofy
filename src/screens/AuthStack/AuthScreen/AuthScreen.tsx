@@ -18,7 +18,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {
   login,
   setAva,
-  setNetworkError,
+  setAuthError,
 } from '../../../store/slices/AuthSlice/Auth.slice.ts';
 import api from '../../../store/slices/AuthSlice/api.ts';
 import { RootState, useAppDispatch } from '../../../store/store.ts';
@@ -29,22 +29,14 @@ function AuthScreen() {
   const [isSecure, setIsSecure] = useState<boolean>(false);
   const [loginText, setLoginText] = useState<string>('');
   const [passwordText, setPasswordText] = useState<string>('');
-  const [error, setError] = useState<string>('');
   const dispatch = useAppDispatch();
-  const { networkError } = useSelector((state: RootState) => state.auth);
+  const { authError } = useSelector((state: RootState) => state.auth);
 
   const authNavigation =
     useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
   const fadeAnim = useRef(new Animated.Value(0)).current;
   useEffect(() => {
-    if (error) {
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 300,
-        useNativeDriver: true,
-      }).start();
-    } 
-    else if (networkError) {
+    if (authError) {
       Animated.timing(fadeAnim, {
         toValue: 1,
         duration: 300,
@@ -53,7 +45,7 @@ function AuthScreen() {
     } else {
       fadeAnim.setValue(0);
     }
-  }, [error, fadeAnim, networkError]);
+  }, [fadeAnim, authError]);
 
   const setNullInputs = () => {
     setLoginText('');
@@ -61,13 +53,11 @@ function AuthScreen() {
   };
   const handleLogin = async () => {
     dispatch(setLoading(true));
-    setError('');
-    dispatch(setNetworkError(null));
+    dispatch(setAuthError(null));
     if (
       !errorInputs(
         loginText,
         passwordText,
-        setError,
         setLoginText,
         setPasswordText,
         dispatch,
@@ -82,36 +72,36 @@ function AuthScreen() {
       });
       if (response.data === null) {
         dispatch(setLoading(false));
-        dispatch(setNetworkError('Неверный login или пароль'));
+        console.log("data null");
+        dispatch(setAuthError('Неверный login или пароль'));
+        return;
       }
       const { accessToken, refreshToken, uri } = response.data;
       if (accessToken && refreshToken) {
         await dispatch(login({ accessToken, refreshToken }));
-        console.log('avatar from api ', uri);
         await dispatch(setAva(uri || null));
         setNullInputs();
       }
     } catch (err: unknown) {
       dispatch(setLoading(false));
-      checkError(err, setError);
+        console.log("check error");
+
+      checkError(err, dispatch);
       setNullInputs();
     }
   };
 
   const setLogin = (text: string) => {
     if (text.length === 1) {
-      setError('');
-      dispatch(setNetworkError(null)) 
+      dispatch(setAuthError(null));
     }
     setLoginText(text);
   };
   const setPassword = (text: string) => {
-     if (text.length === 1) {
-      setError('');
-      dispatch(setNetworkError(null));
+    if (text.length === 1) {
+      dispatch(setAuthError(null));
     }
     setPasswordText(text);
-    
   };
 
   return (
@@ -123,7 +113,10 @@ function AuthScreen() {
           <TextInput
             value={loginText}
             placeholder="Login"
-            style={[styles.loginInput, (error||networkError) && styles.errorInput]}
+            style={[
+              styles.loginInput,
+              authError && styles.errorInput,
+            ]}
             onChangeText={setLogin}
             keyboardType="email-address"
             autoCapitalize="none"
@@ -133,7 +126,10 @@ function AuthScreen() {
             <TextInput
               value={passwordText}
               placeholder="Пароль"
-              style={[styles.passwordInput, (error||networkError) && styles.errorInput]}
+              style={[
+                styles.passwordInput,
+                authError && styles.errorInput,
+              ]}
               onChangeText={setPassword}
               placeholderTextColor="#fff"
               secureTextEntry={!isSecure}
@@ -141,22 +137,21 @@ function AuthScreen() {
             <View style={styles.eye}>
               <TouchableOpacity onPress={() => setIsSecure(!isSecure)}>
                 {isSecure ? (
-                  <EyeClosed color={(error||networkError) ? '#FF1B44' : '#5BFF6F'} />
+                  <EyeClosed
+                    color={authError ? '#FF1B44' : '#5BFF6F'}
+                  />
                 ) : (
-                  <EyeOpened color={(error||networkError) ? '#FF1B44' : '#5BFF6F'} />
+                  <EyeOpened
+                    color={authError ? '#FF1B44' : '#5BFF6F'}
+                  />
                 )}
               </TouchableOpacity>
             </View>
           </View>
         </View>
-        {error ? (
+        {authError ? (
           <Animated.View style={{ opacity: fadeAnim }}>
-            <Text style={styles.errorText}>{error}</Text>
-          </Animated.View>
-        ) : null}
-        {networkError ? (
-          <Animated.View style={{ opacity: fadeAnim }}>
-            <Text style={styles.errorText}>{networkError}</Text>
+            <Text style={styles.errorText}>{authError}</Text>
           </Animated.View>
         ) : null}
         <TouchableOpacity

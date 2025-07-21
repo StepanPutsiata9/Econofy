@@ -52,7 +52,7 @@ export const errorInputs: any = (
       setLoginText('');
       setPasswordText('');
       setRepitPasswordText('');
-      return;
+      return false;
     }
   return true;
 };

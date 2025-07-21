@@ -40,7 +40,7 @@ interface AuthState {
   // ava:ImageSourcePropType | null;
   ava:string | null;
   isFirstLaunch:boolean;
-  networkError:string|null;
+  authError:string|null;
 }
 
 const initialState: AuthState = {
@@ -48,7 +48,7 @@ const initialState: AuthState = {
   isLoadinng: false,
   ava:null,
   isFirstLaunch:true,
-  networkError:null,
+  authError:null,
 };
 
 export const loadUser = createAsyncThunk(
@@ -148,8 +148,8 @@ const authSlice = createSlice({
     setIsFirstLaunch(state,action){
       state.isFirstLaunch=action.payload;
     },
-    setNetworkError(state,action){
-      state.networkError=action.payload;
+    setAuthError(state,action){
+      state.authError=action.payload;
     }
   },
   extraReducers: builder => {
@@ -197,5 +197,5 @@ const authSlice = createSlice({
 });
 
 
-export const { setLoading,setIsFirstLaunch,setNetworkError } = authSlice.actions
+export const { setLoading,setIsFirstLaunch,setAuthError} = authSlice.actions
 export default authSlice.reducer;
