@@ -127,7 +127,6 @@ export const setAva = createAsyncThunk(
   'auth/setavatar',
   async (avatar:string|null, { rejectWithValue }) => {
       try {
-        console.log("tyr to set ava", avatar);
         await storeAvatar(avatar||"empty");
         const userAva = await getAvatar();
         return userAva;

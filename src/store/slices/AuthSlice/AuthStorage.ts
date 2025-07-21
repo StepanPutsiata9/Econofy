@@ -68,12 +68,9 @@ export const storeAvatar = async (
 ): Promise<boolean> => {
   try {
     if (avatar === null || avatar === undefined) {
-      console.log("avatar ",avatar);
       await AsyncStorage.removeItem('avatar'); 
     } else {
       await AsyncStorage.setItem('avatar', JSON.stringify(avatar));
-      console.log("avatar not ",avatar);
-
     }
     return true;
   } catch (error) {

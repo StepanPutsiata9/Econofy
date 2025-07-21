@@ -65,7 +65,6 @@ const AvatarUploader: React.FC = () => {
         const source = response.assets[0].uri as string;
         const setAvatarFunc = async () => {
           const { data } = await api.post('setAvatar', { uri: source });
-          console.log(data);
           if (data) {
             dispatch(setAva(source));
           }
@@ -99,9 +98,7 @@ const AvatarUploader: React.FC = () => {
     });
   };
   const delPhoto = async (): Promise<void> => {
-    const { data } = await api.post('delAvatar');
-    console.log("null avatar ",data);
-    
+    const { data } = await api.post('delAvatar');    
     if (data) {
       dispatch(setAva(null));
     }

@@ -72,7 +72,6 @@ function AuthScreen() {
       });
       if (response.data === null) {
         dispatch(setLoading(false));
-        console.log("data null");
         dispatch(setAuthError('Неверный login или пароль'));
         return;
       }
@@ -84,8 +83,6 @@ function AuthScreen() {
       }
     } catch (err: unknown) {
       dispatch(setLoading(false));
-        console.log("check error");
-
       checkError(err, dispatch);
       setNullInputs();
     }
