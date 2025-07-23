@@ -3,15 +3,15 @@ import { styles } from './TargetCard.ts';
 import ModalForCard from '../ModalForCard/ModalForCard.tsx';
 import { useState } from 'react';
 import { TouchableOpacity } from 'react-native';
-// @ts-ignore
 
-interface INearTargetProps {
+
+interface ITargetProps {
   title: string;
   date: string;
   savedMoney: number;
   allMoney: number;
 }
-function TargetCard(props: INearTargetProps) {
+function TargetCard(props: ITargetProps) {
   const [modalVisible, setModalVisible] = useState(false);
 
   return (
