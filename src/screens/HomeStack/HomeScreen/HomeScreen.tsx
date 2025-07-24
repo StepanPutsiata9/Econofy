@@ -62,7 +62,7 @@ function Home() {
         <View>
           <Text style={styles.helloText}>Привет, {user?.login}!</Text>
           <Text style={styles.aimCount}>
-            У вас <Text style={styles.helloText}>{data?.length || 0}</Text>{' '}
+            У вас <Text style={styles.helloText}>{sortedData?.length || 0}</Text>{' '}
             целей
           </Text>
         </View>
@@ -81,6 +81,7 @@ function Home() {
                 date={item.date}
                 savedMoney={item.savedMoney}
                 allMoney={item.allMoney}
+                id={item.id}
               />
             ) : (
               <TargetCard
@@ -88,6 +89,7 @@ function Home() {
                 date={item.date}
                 savedMoney={item.savedMoney}
                 allMoney={item.allMoney}
+                id ={item.id}
               />
             )
           }

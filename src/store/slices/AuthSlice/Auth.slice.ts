@@ -36,7 +36,7 @@ const checkTokenExpiration = (token: string) => {
 };
 interface AuthState {
   user: JwtPayload | null;
-  isLoadinng: boolean;
+  isLoading: boolean;
   // ava:ImageSourcePropType | null;
   ava:string | null;
   isFirstLaunch:boolean;
@@ -45,7 +45,7 @@ interface AuthState {
 
 const initialState: AuthState = {
   user: null,
-  isLoadinng: false,
+  isLoading: false,
   ava:null,
   isFirstLaunch:true,
   authError:null,
@@ -142,7 +142,7 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     setLoading(state,action){
-      state.isLoadinng=action.payload;
+      state.isLoading=action.payload;
     },
     setIsFirstLaunch(state,action){
       state.isFirstLaunch=action.payload;
@@ -154,39 +154,39 @@ const authSlice = createSlice({
   extraReducers: builder => {
     builder
       .addCase(loadUser.pending, state => {
-        state.isLoadinng = true;
+        state.isLoading = true;
       })
       .addCase(loadUser.fulfilled, (state, action) => {
         state.user = action.payload.decoded;
         state.ava=action.payload.avatarka;
-        state.isLoadinng = false;
+        state.isLoading = false;
       })
       .addCase(loadUser.rejected, state => {
         state.user = null;
-        state.isLoadinng = false;
+        state.isLoading = false;
       })
 
 
       .addCase(login.pending, state => {
-        state.isLoadinng = true;
+        state.isLoading = true;
       })
       .addCase(login.fulfilled, (state, action) => {
         state.user = action.payload;
-        state.isLoadinng = false;
+        state.isLoading = false;
       })
       .addCase(login.rejected, state => {
         state.user = null;
-        state.isLoadinng = false;
+        state.isLoading = false;
       })
 
 
       .addCase(logout.pending, state => {
-        state.isLoadinng = true;
+        state.isLoading = true;
       })
       .addCase(logout.fulfilled, state => {
         state.user = null;
         state.ava=null;
-        state.isLoadinng = false;
+        state.isLoading = false;
       })
 
       .addCase(setAva.fulfilled,(state,action)=>{

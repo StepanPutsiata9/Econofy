@@ -7,6 +7,7 @@ export interface Target {
   date: string;
   savedMoney: number;
   allMoney: number;
+  id:string;
 }
 interface HomeState {
   data: Target[] | null;

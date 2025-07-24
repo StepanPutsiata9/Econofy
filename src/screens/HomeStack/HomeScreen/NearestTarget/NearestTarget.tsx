@@ -10,6 +10,7 @@ interface INearTargetProps {
   date: string;
   savedMoney: number;
   allMoney: number;
+  id:string;
 }
 function NearestTarget(props: INearTargetProps) {
   const progress = props.savedMoney / props.allMoney;

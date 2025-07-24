@@ -10,10 +10,10 @@ interface ITargetProps {
   date: string;
   savedMoney: number;
   allMoney: number;
+  id:string;
 }
 function TargetCard(props: ITargetProps) {
   const [modalVisible, setModalVisible] = useState(false);
-
   return (
     <>
       <ModalForCard

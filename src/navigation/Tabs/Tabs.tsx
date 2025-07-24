@@ -101,7 +101,7 @@ function MainTabs() {
   );
 }
 function Tabs() {
-  const { isLoadinng, user } = useSelector((state: RootState) => state.auth);
+  const { isLoading, user } = useSelector((state: RootState) => state.auth);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -115,13 +115,13 @@ function Tabs() {
     };
     checkFirstLaunch();
   }, [dispatch]);
-  if (isLoadinng) {
+  if (isLoading) {
     return <Load />;
   }
   if (!user) {
     return <AuthTabs />;
   }
-  if (user && !isLoadinng) {
+  if (user && !isLoading) {
     return <MainTabs />;
   }
 }
