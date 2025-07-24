@@ -11,7 +11,7 @@ import Plus from '../../../components/ui/Plus/Plus.tsx';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { LoadContainer } from '../../LoadScreen/LoadScreen.tsx';
 import ErrorMessage from '../../../components/ui/ErrorMessage/ErrorMessage.tsx';
-import { fetchAllGoal, Target } from '../../../store/slices/Home.slice.ts';
+import { fetchAllGoals, Target } from '../../../store/slices/Home.slice.ts';
 function Home() {
   const insets = useSafeAreaInsets();
   const { ava, user } = useSelector((state: RootState) => state.auth);
@@ -21,7 +21,7 @@ function Home() {
   const dispatch = useAppDispatch();
 
   const refreshData = useCallback(() => {
-    dispatch(fetchAllGoal());
+    dispatch(fetchAllGoals());
   }, [dispatch]);
 
   useEffect(() => {
@@ -35,7 +35,6 @@ function Home() {
           const [day, month, year] = dateStr.split('.').map(Number);
           return new Date(year, month - 1, day);
         };
-
         const dateA = parseDate(a.date);
         const dateB = parseDate(b.date);
         return dateA.getTime() - dateB.getTime();
@@ -62,7 +61,8 @@ function Home() {
         <View>
           <Text style={styles.helloText}>Привет, {user?.login}!</Text>
           <Text style={styles.aimCount}>
-            У вас <Text style={styles.helloText}>{sortedData?.length || 0}</Text>{' '}
+            У вас{' '}
+            <Text style={styles.helloText}>{sortedData?.length || 0}</Text>{' '}
             целей
           </Text>
         </View>
@@ -76,24 +76,12 @@ function Home() {
           data={sortedData}
           renderItem={({ item, index }) =>
             index === 0 ? (
-              <NearestTarget
-                title={item.title}
-                date={item.date}
-                savedMoney={item.savedMoney}
-                allMoney={item.allMoney}
-                id={item.id}
-              />
+              <NearestTarget item={item} />
             ) : (
-              <TargetCard
-                title={item.title}
-                date={item.date}
-                savedMoney={item.savedMoney}
-                allMoney={item.allMoney}
-                id ={item.id}
-              />
+              <TargetCard item={item} />
             )
           }
-          keyExtractor={item => item.title}
+          keyExtractor={item => item.id}
         />
       )}
       <Plus />

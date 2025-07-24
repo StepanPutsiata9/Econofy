@@ -4,29 +4,26 @@ import ModalForCard from "../ModalForCard/ModalForCard.tsx"
 // @ts-ignore
 import ProgressBar from 'react-native-progress/Bar';
 import { useState } from 'react';
+import { Target } from '../../../../store/slices/Home.slice.ts';
 
 interface INearTargetProps {
-  title: string;
-  date: string;
-  savedMoney: number;
-  allMoney: number;
-  id:string;
+  item:Target;
 }
-function NearestTarget(props: INearTargetProps) {
-  const progress = props.savedMoney / props.allMoney;
+function NearestTarget({item}: INearTargetProps) {
+  const progress = item.savedMoney / item.allMoney;
     const [modalVisible, setModalVisible] = useState(false);
   
   return (
     <>
-    <ModalForCard modalVisible={modalVisible} setModalVisible={setModalVisible}/>
+    <ModalForCard modalVisible={modalVisible} setModalVisible={setModalVisible} item={item}/>
     <TouchableOpacity style={styles.nearestTargetView} onPress={()=>setModalVisible(true)}>
       <View style={styles.infoLine}>
-        <Text style={styles.title}>{props.title}</Text>
-        <Text style={styles.date}>{props.date}</Text>
+        <Text style={styles.title}>{item.title}</Text>
+        <Text style={styles.date}>{item.date}</Text>
       </View>
       <View style={styles.moneyView}>
-        <Text style={styles.savedMoney}>{props.savedMoney}</Text>
-        <Text style={styles.allMoney}>/{props.allMoney}</Text>
+        <Text style={styles.savedMoney}>{item.savedMoney}</Text>
+        <Text style={styles.allMoney}>/{item.allMoney}</Text>
       </View>
       <ProgressBar
         progress={progress}

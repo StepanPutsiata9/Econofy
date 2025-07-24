@@ -7,7 +7,7 @@ export interface Target {
   date: string;
   savedMoney: number;
   allMoney: number;
-  id:string;
+  id: string;
 }
 interface HomeState {
   data: Target[] | null;
@@ -21,17 +21,31 @@ const initialState: HomeState = {
   error: null,
 };
 
-export const fetchAllGoal = createAsyncThunk(
-  'home/fetchAllGoal',
+export const fetchAllGoals = createAsyncThunk(
+  'home/fetchAllGoals',
   async (_, { rejectWithValue }) => {
     try {
       const { data } = await api.get('goal/all');
       console.log(data);
-      if(data===null){
-        return rejectWithValue("404");
+      if (data === null) {
+        return rejectWithValue('404');
       }
       return data;
-    
+    } catch (error) {
+      return rejectWithValue(
+        error instanceof Error ? error.message : 'Unknown error',
+      );
+    }
+  },
+);
+
+export const deleteGoal = createAsyncThunk(
+  'home/deleteGoal',
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const response = await api.post('goal/delete', { id: id });
+      console.log(response);
+      // return status;
     } catch (error) {
       return rejectWithValue(
         error instanceof Error ? error.message : 'Unknown error',
@@ -46,15 +60,15 @@ const homeSlice = createSlice({
   reducers: {},
   extraReducers: builder => {
     builder
-      .addCase(fetchAllGoal.pending, state => {
+      .addCase(fetchAllGoals.pending, state => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchAllGoal.fulfilled, (state, action) => {
+      .addCase(fetchAllGoals.fulfilled, (state, action) => {
         state.loading = false;
         state.data = action.payload;
       })
-      .addCase(fetchAllGoal.rejected, (state, action) => {
+      .addCase(fetchAllGoals.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });
