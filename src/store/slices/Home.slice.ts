@@ -10,11 +10,15 @@ export interface Target {
   id: string;
 }
 interface HomeState {
-  data: Target[] | null;
+  data: any[] | Target[] | null | undefined;
   loading: boolean;
   error: string | null;
 }
 
+interface UpdateGoal {
+  id: string;
+  savedMoney: number;
+}
 const initialState: HomeState = {
   data: null,
   loading: false,
@@ -26,7 +30,6 @@ export const fetchAllGoals = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const { data } = await api.get('goal/all');
-      console.log(data);
       if (data === null) {
         return rejectWithValue('404');
       }
@@ -43,9 +46,52 @@ export const deleteGoal = createAsyncThunk(
   'home/deleteGoal',
   async (id: string, { rejectWithValue }) => {
     try {
-      const response = await api.post('goal/delete', { id: id });
+      const { data } = await api.delete('goal/delete', {
+        data: { id: id },
+      });
+      if (data === null) {
+        return rejectWithValue('404');
+      }
+      return data;
+    } catch (error) {
+      return rejectWithValue(
+        error instanceof Error ? error.message : 'Unknown error',
+      );
+    }
+  },
+);
+
+export const updateGoal = createAsyncThunk(
+  'home/updateGoal',
+  async ({ id, savedMoney }: UpdateGoal, { rejectWithValue }) => {
+    try {
+      const response = await api.patch('goal/update', {
+        data: { id: id, savedMoney: savedMoney },
+      });
+      if (response.data === null) {
+        return rejectWithValue('404');
+      }
       console.log(response);
-      // return status;
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error instanceof Error ? error.message : 'Unknown error',
+      );
+    }
+  },
+);
+
+export const minusGoal = createAsyncThunk(
+  'home/minusGoal',
+  async ({ id, savedMoney }: UpdateGoal, { rejectWithValue }) => {
+    try {
+      const { data } = await api.patch('goal/minus', {
+        data: { id: id, savedMoney: savedMoney },
+      });
+      if (data === null) {
+        return rejectWithValue('404');
+      }
+      return data;
     } catch (error) {
       return rejectWithValue(
         error instanceof Error ? error.message : 'Unknown error',
@@ -69,6 +115,49 @@ const homeSlice = createSlice({
         state.data = action.payload;
       })
       .addCase(fetchAllGoals.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
+      .addCase(deleteGoal.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteGoal.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload;
+      })
+      .addCase(deleteGoal.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
+      .addCase(updateGoal.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateGoal.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = state.data?.map(item =>
+          item.id === action.payload.id ? action.payload : item,
+        );
+      })
+      .addCase(updateGoal.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
+      .addCase(minusGoal.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(minusGoal.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = state.data?.map(item =>
+          item.id === action.payload.id ? action.payload : item,
+        );
+      })
+      .addCase(minusGoal.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });

@@ -1,10 +1,11 @@
 import { Modal, StatusBar, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { styles } from './MinusMoneyModal.ts';
-import { Target } from '../../../../store/slices/Home.slice.ts';
+import { minusGoal, Target } from '../../../../store/slices/Home.slice.ts';
 import MainButton from '../../../../components/ui/MainButton/MainButton.tsx';
 import { useState } from 'react';
 import MoneyInput from '../MoneyInput/MoneyInput.tsx';
+import { useAppDispatch } from '../../../../store/store.ts';
 
 type IModalProps = {
   minusModalVisible: boolean;
@@ -18,7 +19,7 @@ function MinusMoneyModal({
 }: IModalProps) {
   const insets = useSafeAreaInsets();
   const [amount, setAmount] = useState<string>('0');
-
+  const dispatch = useAppDispatch();
   return (
     <>
       <Modal
@@ -38,8 +39,18 @@ function MinusMoneyModal({
             onStartShouldSetResponder={() => true}
           >
             <Text>Отнять {item.title}</Text>
-            <MoneyInput amount={amount} setAmount={setAmount}/>
-            <MainButton title={'Отнять'} onClick={() => {}} />
+            <MoneyInput amount={amount} setAmount={setAmount} />
+            <MainButton
+              title={'Отнять'}
+              onClick={() => {
+                dispatch(
+                  minusGoal({
+                    id: item.id,
+                    savedMoney: Number(amount),
+                  }),
+                );
+              }}
+            />
           </View>
         </TouchableOpacity>
       </Modal>

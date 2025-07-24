@@ -63,7 +63,7 @@ function Home() {
           <Text style={styles.aimCount}>
             У вас{' '}
             <Text style={styles.helloText}>{sortedData?.length || 0}</Text>{' '}
-            целей
+            цел(и/ей)
           </Text>
         </View>
         <PageCoin />
