@@ -9,7 +9,7 @@ export const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: 16,
+    fontSize: 20,
     color: '#fff',
     fontFamily: 'MontserratBold',
   },
@@ -22,6 +22,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom:10,
+    alignItems:'center',
   },
   moneyView: {
     flexDirection:'row',

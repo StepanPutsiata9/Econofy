@@ -49,6 +49,7 @@ export const deleteGoal = createAsyncThunk(
       const { data } = await api.delete('goal/delete', {
         data: { id: id },
       });
+
       if (data === null) {
         return rejectWithValue('404');
       }
@@ -65,9 +66,7 @@ export const updateGoal = createAsyncThunk(
   'home/updateGoal',
   async ({ id, savedMoney }: UpdateGoal, { rejectWithValue }) => {
     try {
-      const response = await api.patch('goal/update', {
-        data: { id: id, savedMoney: savedMoney },
-      });
+      const response = await api.patch('goal/update', JSON.stringify({ id: id, savedMoney: savedMoney}));
       if (response.data === null) {
         return rejectWithValue('404');
       }
@@ -85,9 +84,7 @@ export const minusGoal = createAsyncThunk(
   'home/minusGoal',
   async ({ id, savedMoney }: UpdateGoal, { rejectWithValue }) => {
     try {
-      const { data } = await api.patch('goal/minus', {
-        data: { id: id, savedMoney: savedMoney },
-      });
+      const { data } = await api.patch('goal/minus',JSON.stringify({ id: id, savedMoney: savedMoney}));
       if (data === null) {
         return rejectWithValue('404');
       }
