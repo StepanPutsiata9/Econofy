@@ -10,6 +10,7 @@ export type AuthStackParamList = {
 };
 export type HomeStackParamList={
   HomeScreen:undefined;
+  AddGoalScreen:undefined;
 }
 export type SettingsStackParamList={
   SettingsScreen:undefined,

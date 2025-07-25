@@ -1,7 +1,7 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import { HomeStackParamList } from '../../types/navigation.types.ts';
 import Home from "./HomeScreen/HomeScreen.tsx";
-
+import AddGoalScreen from "./AddGoalScreen/AddGoalScreen.tsx"
 
 
 const HomeStack = createStackNavigator<HomeStackParamList>();
@@ -13,6 +13,7 @@ function HomeStackScreen() {
       }}
     >
       <HomeStack.Screen name="HomeScreen" component={Home} />
+      <HomeStack.Screen name="AddGoalScreen" component={AddGoalScreen}/>
     </HomeStack.Navigator>
   );
 }

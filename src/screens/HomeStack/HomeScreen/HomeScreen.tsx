@@ -12,6 +12,9 @@ import React, { useCallback, useEffect, useMemo } from 'react';
 import { LoadContainer } from '../../LoadScreen/LoadScreen.tsx';
 import ErrorMessage from '../../../components/ui/ErrorMessage/ErrorMessage.tsx';
 import { fetchAllGoals, Target } from '../../../store/slices/Home.slice.ts';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { HomeStackParamList } from '../../../types/navigation.types.ts';
 function Home() {
   const insets = useSafeAreaInsets();
   const { ava, user } = useSelector((state: RootState) => state.auth);
@@ -19,7 +22,7 @@ function Home() {
     (state: RootState) => state.home,
   );
   const dispatch = useAppDispatch();
-
+   const homeNavigate=useNavigation<NativeStackNavigationProp<HomeStackParamList>>()
   const refreshData = useCallback(() => {
     dispatch(fetchAllGoals());
   }, [dispatch]);
@@ -84,7 +87,8 @@ function Home() {
           keyExtractor={item => item.id}
         />
       )}
-      <Plus />
+
+      <Plus onPress={()=>homeNavigate.navigate('AddGoalScreen')}/>
     </View>
   );
 }
