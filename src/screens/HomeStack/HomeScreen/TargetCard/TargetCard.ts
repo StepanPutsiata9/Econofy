@@ -8,7 +8,7 @@ export const styles = StyleSheet.create({
     marginBottom: 16,
   },
   completedTargetView: {
-    backgroundColor: '#242424',
+    backgroundColor: '#172419',
     borderRadius: 20,
     padding: 16,
     marginBottom: 16,
@@ -20,8 +20,8 @@ export const styles = StyleSheet.create({
       height: 0,
     },
     shadowOpacity: 0.5,
-    shadowRadius: 8,
-    elevation: 6,
+    shadowRadius: 20,
+    elevation: 7,
   },
   title: {
     fontSize: 16,

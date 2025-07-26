@@ -20,9 +20,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 17,
     marginBottom: 25,
     fontSize: 16,
-    borderColor: '#5BFF6F',
-    borderWidth: 2,
-    backgroundColor: '#121212',
+    backgroundColor: '#242424',
     fontFamily: 'Montserrat',
     color: '#ffffff',
   },
@@ -33,14 +31,13 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 17,
     marginBottom: 12,
     fontSize: 16,
-    borderColor: '#5BFF6F',
-    borderWidth: 2,
-    backgroundColor: '#121212',
+    backgroundColor: '#242424',
     fontFamily: 'Montserrat',
     color: '#ffffff',
   },
-    errorInput:{
-    borderColor:'#FF1B44',
+  errorInput: {
+    borderColor: '#FF1B44',
+    borderWidth: 2,
   },
   touchOpacity: {
     alignSelf: 'flex-end',
@@ -55,17 +52,17 @@ export const styles = StyleSheet.create({
   eye: {
     position: 'absolute',
     right: 17,
-    top: 13
+    top: 13,
   },
   inputView: {
-    position: 'relative'
+    position: 'relative',
   },
-    errorText: {
+  errorText: {
     color: '#FF1B44',
     fontSize: 14,
     textAlign: 'left',
     marginBottom: 5,
     paddingVertical: 3,
-    fontFamily:'Montserrat'
+    fontFamily: 'Montserrat',
   },
 });

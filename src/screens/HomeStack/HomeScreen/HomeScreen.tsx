@@ -22,7 +22,8 @@ function Home() {
     (state: RootState) => state.home,
   );
   const dispatch = useAppDispatch();
-   const homeNavigate=useNavigation<NativeStackNavigationProp<HomeStackParamList>>()
+  const homeNavigate =
+    useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
   const refreshData = useCallback(() => {
     dispatch(fetchAllGoals());
   }, [dispatch]);
@@ -88,8 +89,9 @@ function Home() {
         />
       )}
 
-      <Plus onPress={()=>homeNavigate.navigate('AddGoalScreen')}/>
+      <Plus onPress={() => homeNavigate.navigate('AddGoalScreen')} />
     </View>
   );
 }
 export default React.memo(Home);
+

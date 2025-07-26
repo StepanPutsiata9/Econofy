@@ -20,9 +20,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 17,
     marginBottom: 25,
     fontSize: 16,
-    borderColor:'#5BFF6F',
-    borderWidth:2,
-    backgroundColor: '#121212',
+    backgroundColor: '#242424',
     fontFamily:'Montserrat',
     color: '#ffffff'
   },
@@ -32,14 +30,13 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 17,
     marginBottom: 12,
     fontSize: 16,
-    borderColor:'#5BFF6F',
-    borderWidth:2,
-    backgroundColor: '#121212',
+    backgroundColor: '#242424',
     fontFamily:'Montserrat',
     color: '#ffffff'
   },
   errorInput:{
     borderColor:'#FF1B44',
+    borderWidth:2,
   },
   touchOpacity:{
      alignSelf: 'flex-end',

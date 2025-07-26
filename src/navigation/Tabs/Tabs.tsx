@@ -22,9 +22,9 @@ import {
   isFirstLaunch,
   setAppLaunched,
 } from '../../store/slices/AuthSlice/AuthStorage.ts';
+// import { getFocusedRouteNameFromRoute, Route } from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
-
 function AuthTabs() {
   return (
     <Tab.Navigator
