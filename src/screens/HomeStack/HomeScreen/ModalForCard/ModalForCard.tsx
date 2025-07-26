@@ -56,7 +56,7 @@ function ModalForCard({ modalVisible, setModalVisible, item }: IModalProps) {
             style={styles.modalContent}
             onStartShouldSetResponder={() => true}
           >
-            <Text>{item.title}</Text>
+            <Text style={styles.titleText}>{item.title}</Text>
 
             <View style={styles.addView}>
               <Text style={styles.infoText}>Добавить сумму</Text>

@@ -8,6 +8,7 @@ export const styles = StyleSheet.create({
     margin: 0,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
+
   modalContent: {
     backgroundColor: '#2D2D2D',
     borderRadius: 15,
@@ -19,6 +20,7 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'MontserratBold',
   },
+
   addView: {
     justifyContent: 'space-between',
     flexDirection: 'row',
@@ -26,6 +28,7 @@ export const styles = StyleSheet.create({
     marginBottom: 16,
     paddingRight:11,
   },
+
   minusView: {
     justifyContent: 'space-between',
     flexDirection: 'row',
@@ -39,9 +42,18 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+
   delText: {
     color: '#FF1B44',
     fontSize: 16,
     fontFamily: 'MontserratBold',
   },
+
+  titleText:{
+    fontFamily:'MontserratBold',
+    fontSize:24,
+    color:'white',
+    marginBottom:20,
+  }
+  
 });

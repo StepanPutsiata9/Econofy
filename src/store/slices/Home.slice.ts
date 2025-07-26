@@ -66,8 +66,12 @@ export const updateGoal = createAsyncThunk(
   'home/updateGoal',
   async ({ id, savedMoney }: UpdateGoal, { rejectWithValue }) => {
     try {
-      const response = await api.patch('goal/update', JSON.stringify({ id: id, savedMoney: savedMoney}));
+      const response = await api.patch(
+        'goal/update',
+        JSON.stringify({ id: id, savedMoney: savedMoney }),
+      );
       if (response.data === null) {
+        console.log(response);
         return rejectWithValue('404');
       }
       console.log(response);
@@ -84,11 +88,17 @@ export const minusGoal = createAsyncThunk(
   'home/minusGoal',
   async ({ id, savedMoney }: UpdateGoal, { rejectWithValue }) => {
     try {
-      const { data } = await api.patch('goal/minus',JSON.stringify({ id: id, savedMoney: savedMoney}));
-      if (data === null) {
+      const response = await api.patch(
+        'goal/minus',
+        JSON.stringify({ id: id, savedMoney: savedMoney }),
+      );
+      if (response.data === null) {
+        console.log(response);
         return rejectWithValue('404');
       }
-      return data;
+      console.log(response);
+
+      return response.data;
     } catch (error) {
       return rejectWithValue(
         error instanceof Error ? error.message : 'Unknown error',
@@ -103,6 +113,7 @@ const homeSlice = createSlice({
   reducers: {},
   extraReducers: builder => {
     builder
+
       .addCase(fetchAllGoals.pending, state => {
         state.loading = true;
         state.error = null;
@@ -116,6 +127,8 @@ const homeSlice = createSlice({
         state.error = action.payload as string;
       })
 
+
+
       .addCase(deleteGoal.pending, state => {
         state.loading = true;
         state.error = null;
@@ -128,6 +141,8 @@ const homeSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       })
+
+
 
       .addCase(updateGoal.pending, state => {
         state.loading = true;
@@ -144,6 +159,8 @@ const homeSlice = createSlice({
         state.error = action.payload as string;
       })
 
+
+    
       .addCase(minusGoal.pending, state => {
         state.loading = true;
         state.error = null;
@@ -156,9 +173,10 @@ const homeSlice = createSlice({
       })
       .addCase(minusGoal.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string;
+        state.error = action.payload as string;        
       });
-  },
+    
+  }
 });
 
 export const {} = homeSlice.actions;

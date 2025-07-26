@@ -5,9 +5,24 @@ export const styles = StyleSheet.create({
     backgroundColor: '#242424',
     borderRadius: 20,
     padding: 16,
-    marginBottom:16,
+    marginBottom: 16,
   },
-
+  completedTargetView: {
+    backgroundColor: '#242424',
+    borderRadius: 20,
+    padding: 16,
+    marginBottom: 16,
+    borderWidth:1,
+    borderColor:'#5BFF6F',
+    shadowColor: '#5BFF6F',
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 8,
+    elevation: 6,
+  },
   title: {
     fontSize: 16,
     color: '#fff',
@@ -21,12 +36,12 @@ export const styles = StyleSheet.create({
   infoLine: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom:10,
-    alignItems:'center',
+    marginBottom: 10,
+    alignItems: 'center',
   },
   moneyView: {
-    flexDirection:'row',
-    alignItems:'baseline',
+    flexDirection: 'row',
+    alignItems: 'baseline',
   },
   savedMoney: {
     fontSize: 24,

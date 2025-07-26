@@ -5,10 +5,9 @@ export const styles = StyleSheet.create({
     backgroundColor: '#1C331F',
     borderRadius: 20,
     padding: 16,
-    marginBottom:16,
+    marginBottom: 16,
   },
-
-  title: {
+   title: {
     fontSize: 20,
     color: '#fff',
     fontFamily: 'MontserratBold',
@@ -21,13 +20,13 @@ export const styles = StyleSheet.create({
   infoLine: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom:10,
-    alignItems:'center',
+    marginBottom: 10,
+    alignItems: 'center',
   },
   moneyView: {
-    flexDirection:'row',
-    alignItems:'baseline',
-    marginBottom:19,
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    marginBottom: 19,
   },
   savedMoney: {
     fontSize: 30,

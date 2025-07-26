@@ -1,4 +1,4 @@
-import { Modal, StatusBar, Text, TouchableOpacity, View } from 'react-native';
+import { Modal, StatusBar, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { styles } from './AddMoneyModal.ts';
 
@@ -35,7 +35,6 @@ function AddMoneyModal({ addModalVisible, closeAddModal, item }: IModalProps) {
             style={styles.modalContent}
             onStartShouldSetResponder={() => true}
           >
-            <Text>Добавить {item.title}</Text>
             <MoneyInput amount={amount} setAmount={setAmount} />
             <MainButton
               title={'Добавить'}

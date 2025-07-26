@@ -19,7 +19,7 @@ function TargetCard({item}: ITargetProps) {
         setModalVisible={setModalVisible}
         item={item}
       />
-      <TouchableOpacity style={styles.targetView} onPress={()=>setModalVisible(true)}>
+      <TouchableOpacity style={item.savedMoney>=item.allMoney?styles.completedTargetView:styles.targetView} onPress={()=>setModalVisible(true)}>
         <View style={styles.infoLine}>
           <Text style={styles.title}>{item.title}</Text>
           <Text style={styles.date}>{item.date}</Text>
