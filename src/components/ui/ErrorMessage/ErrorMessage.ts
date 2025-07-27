@@ -9,7 +9,7 @@ export const styles = StyleSheet.create({
   },
   errorText: {
     color: '#5BFF6F',
-    fontSize: 30,
+    fontSize: 26,
     fontFamily: 'MontserratBold',
     marginTop: 20,
   },

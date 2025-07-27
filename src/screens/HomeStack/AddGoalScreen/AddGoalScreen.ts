@@ -38,6 +38,11 @@ export const styles = StyleSheet.create({
     fontFamily: 'Montserrat',
     color: '#ffffff',
   },
+  errorInput:{
+    borderWidth:2,
+    borderColor:'#FF1B44',
+    borderRadius:18,
+  },
 
   dateView: {
     flexDirection: 'column',
@@ -48,5 +53,13 @@ export const styles = StyleSheet.create({
     position: 'absolute',
     right: 17,
     top:53,
+  },
+
+  errorText: {
+    color: '#FF1B44',
+    fontSize: 14,
+    textAlign: 'left',
+    paddingVertical: 3,
+    fontFamily:'Montserrat'
   },
 });

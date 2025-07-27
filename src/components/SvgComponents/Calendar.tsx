@@ -8,7 +8,7 @@ const Calendar = (props: SvgProps) => (
     {...props}
   >
     <G
-      stroke="#5BFF6F"
+      stroke={props.color}
       strokeLinecap="round"
       strokeLinejoin="round"
       strokeWidth={2}
