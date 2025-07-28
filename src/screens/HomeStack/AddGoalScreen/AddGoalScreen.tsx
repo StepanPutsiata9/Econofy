@@ -220,7 +220,12 @@ function AddGoalScreen({ navigation }: AddGoalScreenProps) {
         onClick={() => createGoal(goalName, date, Number(summ))}
         title="Создать цель"
       />
-      <DatePickerModal isVisible={isVisible} setIsVisible={setIsVisible} selectedDate={date} setSelectedDate={setDate} />
+      <DatePickerModal
+        isVisible={isVisible}
+        setIsVisible={setIsVisible}
+        selectedDate={date}
+        setSelectedDate={setDate}
+      />
     </View>
   );
 }

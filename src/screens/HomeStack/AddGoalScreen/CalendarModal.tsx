@@ -52,7 +52,6 @@ function DatePickerModal({
             }}
             markedDates={{ [selectedDate]: { selected: true } }}
           />
-          
         </View>
       </TouchableOpacity>
     </Modal>

@@ -15,16 +15,4 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-//   gradientBtn: {
-//     width: 60,
-//     height: 60,
-//     borderRadius: 30,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     shadowColor: '#4C82FF',
-//     shadowOffset: { width: 0, height: 4 },
-//     shadowOpacity: 0.3,
-//     shadowRadius: 6,
-//     elevation: 8,
-//   },
 });
