@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import currencySlice from './slices/Currency.slice'
 import authSlice from "./slices/AuthSlice/Auth.slice"
 import homeSlice from "./slices/Home.slice"
+import budgetsSlice from "./slices/Budget.slice.ts"
 import { useDispatch } from 'react-redux'
 
 export const store = configureStore({
@@ -9,6 +10,7 @@ export const store = configureStore({
     currency:currencySlice,
     auth:authSlice,
     home:homeSlice,
+    budgets:budgetsSlice
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat()
 })

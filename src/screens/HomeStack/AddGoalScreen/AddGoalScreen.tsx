@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   TextInput,
   Animated,
+  ScrollView
 } from 'react-native';
 import { styles } from './AddGoalScreen.ts';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -21,7 +22,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import Calendar from '../../../components/SvgComponents/Calendar.tsx';
 import { useAppDispatch } from '../../../store/store.ts';
 import { createNewGaol } from '../../../store/slices/Home.slice.ts';
-import DatePickerModal from './CalendarModal.tsx';
+import DatePickerModal from '../../../components/ui/CalendarModal/CalendarModal.tsx';
 type AddGoalScreenProps = {
   navigation: StackNavigationProp<HomeStackParamList, 'AddGoalScreen'>;
   route: RouteProp<HomeStackParamList, 'AddGoalScreen'>;
@@ -127,25 +128,25 @@ function AddGoalScreen({ navigation }: AddGoalScreenProps) {
     if (!/^\d{2}\.\d{2}\.\d{4}$/.test(dateStr)) return false;
 
     const [day, month, year] = dateStr.split('.').map(Number);
-    const date = new Date(year, month - 1, day);
+    const nowDate = new Date(year, month - 1, day);
     return (
-      date.getFullYear() === year &&
-      date.getMonth() === month - 1 &&
-      date.getDate() === day
+      nowDate.getFullYear() === year &&
+      nowDate.getMonth() === month - 1 &&
+      nowDate.getDate() === day
     );
   }
-  const createGoal = (title: string, date: string, summ: number) => {
-    if (!checkError(title, date, summ)) {
+  const createGoal = (title: string, dateString: string, summNum: number) => {
+    if (!checkError(title, dateString, summNum)) {
       return;
     }
     homeNavigate.goBack();
     async function postGoal() {
-      await dispatch(createNewGaol({ title, date, allMoney: summ }));
+      await dispatch(createNewGaol({ title, date:dateString, allMoney: summNum }));
     }
     postGoal();
   };
   return (
-    <View
+    <ScrollView
       style={[
         styles.container,
         {
@@ -226,7 +227,7 @@ function AddGoalScreen({ navigation }: AddGoalScreenProps) {
         selectedDate={date}
         setSelectedDate={setDate}
       />
-    </View>
+    </ScrollView>
   );
 }
 
