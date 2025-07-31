@@ -5,7 +5,7 @@ import { styles } from './AddMoneyModal.ts';
 import { Target, updateGoal } from '../../../../store/slices/Home.slice.ts';
 import MainButton from '../../../../components/ui/MainButton/MainButton.tsx';
 import React, { useState } from 'react';
-import MoneyInput from '../MoneyInput/MoneyInput.tsx';
+import MoneyInput from '../../../../components/ui/MoneyInput/MoneyInput.tsx';
 import { useAppDispatch } from '../../../../store/store.ts';
 
 type IModalProps = {

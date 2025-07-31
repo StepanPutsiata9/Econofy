@@ -2,8 +2,8 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { styles } from './BudgetPlan';
 // @ts-ignore
 import ProgressBar from 'react-native-progress/Bar';
-import { useMemo } from 'react';
-
+import { useMemo, useState } from 'react';
+import AddSpendingModal from "./AddSpendingModal/AddSpendingModal.tsx"
 interface IBudgetPlanItem {
   title: string;
   date: string;
@@ -27,7 +27,10 @@ function BudgetPlan({item}: IBudgetPlanProps) {
     }
     return '';
   }, [progress]);
+  const [addModalVisible,setAddModalVisible]=useState<boolean>(false);
   return (
+    <>
+    <AddSpendingModal addModalVisible={addModalVisible} setAddModalVisible={setAddModalVisible}/>
     <View style={styles.budgetPlan}>
       <View style={styles.titleLine}>
         <Text style={styles.titleText}>{item.title}</Text>
@@ -68,11 +71,13 @@ function BudgetPlan({item}: IBudgetPlanProps) {
         />
       </View>
       <View style={styles.addConsumption}>
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity onPress={() => {setAddModalVisible(true)}}>
           <Text style={styles.addConsumptionText}>Добавить расход+</Text>
         </TouchableOpacity>
       </View>
     </View>
+    </>
+
   );
 }
 

@@ -22,7 +22,6 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import Calendar from '../../../components/SvgComponents/Calendar.tsx';
 import DatePickerModal from '../../../components/ui/CalendarModal/CalendarModal.tsx';
 
-
 type AddBudgetPlanScreenProps = {
   navigation: StackNavigationProp<BudgetStackParamList, 'AddBudgetPlan'>;
   route: RouteProp<BudgetStackParamList, 'AddBudgetPlan'>;
@@ -57,7 +56,6 @@ function AddBudgetPlanScreen({ navigation }: AddBudgetPlanScreenProps) {
   const [safeSummError, setSafeSummError] = useState<string>('');
   const [dateError, setDateError] = useState<string>('');
 
-
   const [isVisible, setIsVisible] = useState(false);
   const handleChangeSalary = (value: string) => {
     if (/^\d*[,.]?\d{0,2}$/.test(value) || value === '') {
@@ -78,7 +76,7 @@ function AddBudgetPlanScreen({ navigation }: AddBudgetPlanScreenProps) {
   };
   const fadeAnim = useRef(new Animated.Value(0)).current;
   useEffect(() => {
-    if (titleError || salaryError || dateError|| safeSummError) {
+    if (titleError || salaryError || dateError || safeSummError) {
       Animated.timing(fadeAnim, {
         toValue: 1,
         duration: 300,
@@ -87,12 +85,12 @@ function AddBudgetPlanScreen({ navigation }: AddBudgetPlanScreenProps) {
     } else {
       fadeAnim.setValue(0);
     }
-  }, [fadeAnim, salaryError, dateError, titleError,safeSummError]);
+  }, [fadeAnim, salaryError, dateError, titleError, safeSummError]);
   const checkError = (
     title: string,
     dateCompleted: string,
     allMoney: number,
-    safeSummText:string,
+    safeSummText: string,
   ) => {
     let result = true;
     if (title.length === 0) {
@@ -110,10 +108,10 @@ function AddBudgetPlanScreen({ navigation }: AddBudgetPlanScreenProps) {
       setSalary('');
       result = false;
     }
-    if(!safeSummText){
-        setSafeSummError("Задайте процент накопления");
-        setSalary('');
-        result=false;
+    if (!safeSummText) {
+      setSafeSummError('Задайте процент накопления');
+      setSalary('');
+      result = false;
     }
 
     if (dateCompleted.length !== 0 && !isValidDate(dateCompleted)) {
@@ -138,7 +136,7 @@ function AddBudgetPlanScreen({ navigation }: AddBudgetPlanScreenProps) {
     handleChangeSafeSumm(text);
   };
   const setDateInput = (text: string) => {
-    if (text.length !==0) {
+    if (text.length !== 0) {
       setDateError('');
     }
     setDate(text);
@@ -266,7 +264,9 @@ function AddBudgetPlanScreen({ navigation }: AddBudgetPlanScreenProps) {
         />
       </View>
       <MainButton
-        onClick={() => {checkError(budgetName,date,Number(salary),safeSumm)}}
+        onClick={() => {
+          checkError(budgetName, date, Number(salary), safeSumm);
+        }}
         title="Далее"
       />
       <DatePickerModal
