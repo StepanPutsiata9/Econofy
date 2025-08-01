@@ -11,7 +11,17 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+  titleInfoView: {
     marginBottom: 20,
+  },
+  greenText: {
+    color: '#5BFF6F',
+  },
+  titleInfoText: {
+    fontSize: 16,
+    color: '#fff',
+    fontFamily: 'Montserrat',
   },
   title: {
     color: '#5BFF6F',
@@ -55,8 +65,8 @@ export const styles = StyleSheet.create({
     borderRadius: 18,
   },
 
-  dateView:{
-    marginBottom:50,
+  extraView: {
+    marginBottom: 55,
   },
   calendar: {
     position: 'absolute',
@@ -71,4 +81,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 3,
     fontFamily: 'Montserrat',
   },
+  btnView:{
+    marginBottom:100,
+  }
 });

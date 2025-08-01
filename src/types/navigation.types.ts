@@ -17,6 +17,7 @@ export type SettingsStackParamList={
 }
 export type BudgetStackParamList={
   BudgetScreen:undefined,
+  AddBudgetPlanSecondScreen:undefined,
   AddBudgetPlan:undefined,
 }
 export type CurrencyStackParamList={

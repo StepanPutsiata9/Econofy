@@ -4,10 +4,24 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { styles } from './BudgetScreen.ts';
 import BudgetPlan from './BudgetPlan/BudgetPlan.tsx';
 import Plus from '../../../components/ui/Plus/Plus.tsx';
-import { useNavigation } from '@react-navigation/native';
+import { RouteProp, useFocusEffect, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { BudgetStackParamList } from '../../../types/navigation.types.ts';
-function Budget() {
+import { StackNavigationProp } from '@react-navigation/stack';
+type BudgetScreenProps = {
+  navigation: StackNavigationProp<BudgetStackParamList, 'BudgetScreen'>;
+  route: RouteProp<BudgetStackParamList, 'BudgetScreen'>;
+};
+function Budget({navigation}:BudgetScreenProps) {
+   useFocusEffect(() => {  
+        navigation.getParent()?.setOptions({
+          tabBarStyle: {
+            display: 'flex',
+            transitionDuration: '0ms',
+            animationEnabled: true,
+          },
+        });
+    });
   const insets = useSafeAreaInsets();
   const budgetNavigate=useNavigation<NativeStackNavigationProp<BudgetStackParamList>>()
   const item = {

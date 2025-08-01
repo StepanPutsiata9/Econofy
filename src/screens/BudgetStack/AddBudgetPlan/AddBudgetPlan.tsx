@@ -29,16 +29,9 @@ type AddBudgetPlanScreenProps = {
 
 function AddBudgetPlanScreen({ navigation }: AddBudgetPlanScreenProps) {
   useFocusEffect(() => {
+    console.log('Экран1: скрыть таббар');
     navigation.getParent()?.setOptions({ tabBarStyle: { height: 0 } });
-    return () => {
-      navigation.getParent()?.setOptions({
-        tabBarStyle: {
-          display: 'flex',
-          transitionDuration: '0ms',
-          animationEnabled: true,
-        },
-      });
-    };
+    console.log(navigation.getParent());
   });
 
   const insets = useSafeAreaInsets();
@@ -49,7 +42,6 @@ function AddBudgetPlanScreen({ navigation }: AddBudgetPlanScreenProps) {
   const [salary, setSalary] = useState<string>('');
   const [date, setDate] = useState('');
   const [safeSumm, setSafeSumm] = useState<string>('');
-  const [extraSpending, setExtraSpending] = useState<string>('');
 
   const [titleError, setTitleError] = useState<string>('');
   const [salaryError, setSalaryError] = useState<string>('');
@@ -147,12 +139,7 @@ function AddBudgetPlanScreen({ navigation }: AddBudgetPlanScreenProps) {
     }
     setBudgetName(text);
   };
-  const setExtraSpendingInput = (text: string) => {
-    if (text.length === 1) {
-      setTitleError('');
-    }
-    setExtraSpending(text);
-  };
+
   function isValidDate(dateStr: string): boolean {
     if (!/^\d{2}\.\d{2}\.\d{4}$/.test(dateStr)) return false;
 
@@ -165,7 +152,7 @@ function AddBudgetPlanScreen({ navigation }: AddBudgetPlanScreenProps) {
     );
   }
   return (
-    <ScrollView
+    <View
       style={[
         styles.container,
         {
@@ -180,102 +167,95 @@ function AddBudgetPlanScreen({ navigation }: AddBudgetPlanScreenProps) {
           <Cross />
         </TouchableOpacity>
       </View>
-      <View style={styles.infoView}>
-        <Text style={styles.budgetNameText}>Название:</Text>
-        <TextInput
-          value={budgetName}
-          placeholder="Мой план"
-          style={[styles.input, titleError && styles.errorInput]}
-          onChangeText={setBudgetInput}
-          placeholderTextColor="#fff"
-        />
-        {titleError ? (
-          <Animated.View style={{ opacity: fadeAnim }}>
-            <Text style={styles.errorText}>{titleError}</Text>
-          </Animated.View>
-        ) : null}
-      </View>
-
-      <View style={styles.infoView}>
-        <Text style={styles.budgetNameText}>Уровень месячного дохода:</Text>
-        <TextInput
-          value={salary}
-          placeholder="1500-2500"
-          style={[styles.input, salaryError && styles.errorInput]}
-          onChangeText={setSalaryInput}
-          placeholderTextColor="#fff"
-        />
-        {salaryError ? (
-          <Animated.View style={{ opacity: fadeAnim }}>
-            <Text style={styles.errorText}>{salaryError}</Text>
-          </Animated.View>
-        ) : null}
-      </View>
-
-      <View style={styles.infoView}>
-        <Text style={styles.budgetNameText}>Процент накопления:</Text>
-        <TextInput
-          value={safeSumm}
-          placeholder="0-60"
-          style={[styles.input, safeSummError && styles.errorInput]}
-          onChangeText={setSafeSummInput}
-          placeholderTextColor="#fff"
-        />
-        {safeSummError ? (
-          <Animated.View style={{ opacity: fadeAnim }}>
-            <Text style={styles.errorText}>{safeSummError}</Text>
-          </Animated.View>
-        ) : null}
-      </View>
-      <View style={styles.infoView}>
-        <Text style={styles.budgetNameText}>Срок:</Text>
-        <TextInput
-          value={date}
-          placeholder="01.01.2025"
-          style={[styles.input, dateError && styles.errorInput]}
-          onChangeText={setDateInput}
-          placeholderTextColor="#fff"
-        />
-        {dateError ? (
-          <Animated.View style={{ opacity: fadeAnim }}>
-            <Text style={styles.errorText}>{dateError}</Text>
-          </Animated.View>
-        ) : null}
-        <View style={styles.calendar}>
-          <TouchableOpacity
-            onPress={() => {
-              setIsVisible(true);
-            }}
-          >
-            <Calendar color={dateError ? '#FF1B44' : '#5BFF6F'} />
-          </TouchableOpacity>
+      <ScrollView>
+        <View style={styles.infoView}>
+          <Text style={styles.budgetNameText}>Название:</Text>
+          <TextInput
+            value={budgetName}
+            placeholder="Мой план"
+            style={[styles.input, titleError && styles.errorInput]}
+            onChangeText={setBudgetInput}
+            placeholderTextColor="#fff"
+          />
+          {titleError ? (
+            <Animated.View style={{ opacity: fadeAnim }}>
+              <Text style={styles.errorText}>{titleError}</Text>
+            </Animated.View>
+          ) : null}
         </View>
-      </View>
-      <View style={styles.extraView}>
-        <Text style={styles.budgetNameText}>Дополнительные траты:</Text>
-        <TextInput
-          value={extraSpending}
-          placeholder="Доп. траты..."
-          multiline={true}
-          scrollEnabled={true}
-          style={styles.extraInput}
-          onChangeText={setExtraSpendingInput}
-          placeholderTextColor="#fff"
+
+        <View style={styles.infoView}>
+          <Text style={styles.budgetNameText}>Уровень месячного дохода:</Text>
+          <TextInput
+            value={salary}
+            placeholder="1500-2500"
+            style={[styles.input, salaryError && styles.errorInput]}
+            onChangeText={setSalaryInput}
+            placeholderTextColor="#fff"
+          />
+          {salaryError ? (
+            <Animated.View style={{ opacity: fadeAnim }}>
+              <Text style={styles.errorText}>{salaryError}</Text>
+            </Animated.View>
+          ) : null}
+        </View>
+
+        <View style={styles.infoView}>
+          <Text style={styles.budgetNameText}>Процент накопления:</Text>
+          <TextInput
+            value={safeSumm}
+            placeholder="0-60"
+            style={[styles.input, safeSummError && styles.errorInput]}
+            onChangeText={setSafeSummInput}
+            placeholderTextColor="#fff"
+          />
+          {safeSummError ? (
+            <Animated.View style={{ opacity: fadeAnim }}>
+              <Text style={styles.errorText}>{safeSummError}</Text>
+            </Animated.View>
+          ) : null}
+        </View>
+        <View style={styles.dateView}>
+          <Text style={styles.budgetNameText}>Срок:</Text>
+          <TextInput
+            value={date}
+            placeholder="01.01.2025"
+            style={[styles.input, dateError && styles.errorInput]}
+            onChangeText={setDateInput}
+            placeholderTextColor="#fff"
+          />
+          {dateError ? (
+            <Animated.View style={{ opacity: fadeAnim }}>
+              <Text style={styles.errorText}>{dateError}</Text>
+            </Animated.View>
+          ) : null}
+          <View style={styles.calendar}>
+            <TouchableOpacity
+              onPress={() => {
+                setIsVisible(true);
+              }}
+            >
+              <Calendar color={dateError ? '#FF1B44' : '#5BFF6F'} />
+            </TouchableOpacity>
+          </View>
+        </View>
+        <MainButton
+          onClick={() => {
+            if (!checkError(budgetName, date, Number(salary), safeSumm)) {
+              return;
+            }
+            budgetNavigate.navigate('AddBudgetPlanSecondScreen');
+          }}
+          title="Далее"
         />
-      </View>
-      <MainButton
-        onClick={() => {
-          checkError(budgetName, date, Number(salary), safeSumm);
-        }}
-        title="Далее"
-      />
-      <DatePickerModal
-        isVisible={isVisible}
-        setIsVisible={setIsVisible}
-        selectedDate={date}
-        setSelectedDate={setDateInput}
-      />
-    </ScrollView>
+        <DatePickerModal
+          isVisible={isVisible}
+          setIsVisible={setIsVisible}
+          selectedDate={date}
+          setSelectedDate={setDateInput}
+        />
+      </ScrollView>
+    </View>
   );
 }
 
