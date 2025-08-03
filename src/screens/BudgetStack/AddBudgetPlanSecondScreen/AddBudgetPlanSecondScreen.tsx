@@ -51,7 +51,6 @@ function AddBudgetPlanSecondScreen({
   const [creditsError, setCreditsError] = useState<string>('');
   const [hobbysError, setHobbysError] = useState<string>('');
 
-
   const handleChange1To15 = (value: string) => {
     if (/^([1-9]|1[0-5])?$/.test(value) || value === '') {
       setRoomCount(value);
@@ -67,17 +66,22 @@ function AddBudgetPlanSecondScreen({
       setTransferCount(value);
     }
   };
-  const handleChange = (value: string,setValue:(str:string)=>void) => {
-
-  if (/^\d*[,.]?\d{0,2}$/.test(value) || value === "") {
-    const normalizedValue = value.replace(',', '.');
-    setValue(normalizedValue);
-  }
-};
+  const handleChange = (value: string, setValue: (str: string) => void) => {
+    if (/^\d*[,.]?\d{0,2}$/.test(value) || value === '') {
+      const normalizedValue = value.replace(',', '.');
+      setValue(normalizedValue);
+    }
+  };
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
   useEffect(() => {
-    if (roomError || peopleError || transferError || creditsError || hobbysError) {
+    if (
+      roomError ||
+      peopleError ||
+      transferError ||
+      creditsError ||
+      hobbysError
+    ) {
       Animated.timing(fadeAnim, {
         toValue: 1,
         duration: 300,
@@ -86,13 +90,20 @@ function AddBudgetPlanSecondScreen({
     } else {
       fadeAnim.setValue(0);
     }
-  }, [fadeAnim, roomError, peopleError, transferError, creditsError, hobbysError]);
+  }, [
+    fadeAnim,
+    roomError,
+    peopleError,
+    transferError,
+    creditsError,
+    hobbysError,
+  ]);
   const checkError = (
     room: string,
-    people:string,
-    transfer:string,
-    creditsStr:string,
-    hobbysStr:string,
+    people: string,
+    transfer: string,
+    creditsStr: string,
+    hobbysStr: string,
   ) => {
     let result = true;
     if (room.length === 0) {
@@ -139,20 +150,20 @@ function AddBudgetPlanSecondScreen({
     if (text.length === 1) {
       setHobbysError('');
     }
-   handleChange(text,setHobbys);
+    handleChange(text, setHobbys);
   };
   const setCreditsInput = (text: string) => {
     if (text.length === 1) {
       setCreditsError('');
     }
-   handleChange(text,setCredits);
+    handleChange(text, setCredits);
   };
-  const setTransferInput = (text:string) => {
+  const setTransferInput = (text: string) => {
     if (text.length === 1) {
       setTransferError('');
     }
     handleChange0To20(text);
-  }
+  };
   const setExtraSpendingInput = (text: string) => {
     setExtraSpending(text);
   };
@@ -169,7 +180,9 @@ function AddBudgetPlanSecondScreen({
     >
       <View style={styles.titleView}>
         <Text style={styles.title}>Создать план</Text>
-        <TouchableOpacity onPress={() => budgetNavigate.goBack()}>
+        <TouchableOpacity
+          onPress={() => budgetNavigate.navigate('BudgetScreen')}
+        >
           <Cross />
         </TouchableOpacity>
       </View>
@@ -279,12 +292,27 @@ function AddBudgetPlanSecondScreen({
         <View style={styles.btnView}>
           <MainButton
             onClick={() => {
-              if (!checkError(roomCount,peopleCount,transferCount,credits,hobbys)) {
+              if (
+                !checkError(
+                  roomCount,
+                  peopleCount,
+                  transferCount,
+                  credits,
+                  hobbys,
+                )
+              ) {
                 return;
               }
+                budgetNavigate.navigate('AddBudgetPlanFinalScreen');
+
             }}
             title="Далее"
           />
+        </View>
+        <View style={styles.goBack}>
+          <TouchableOpacity style={styles.goBackBtn} onPress={() => budgetNavigate.goBack()}>
+            <Text style={styles.goBackText}>Вернуться назад</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </View>

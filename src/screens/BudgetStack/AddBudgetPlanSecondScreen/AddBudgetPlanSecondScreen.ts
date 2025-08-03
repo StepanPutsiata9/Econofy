@@ -81,7 +81,19 @@ export const styles = StyleSheet.create({
     paddingVertical: 3,
     fontFamily: 'Montserrat',
   },
-  btnView:{
-    marginBottom:100,
+  btnView: {
+    marginBottom: 10,
+  },
+  goBack: {
+    marginBottom: 30,
+  },
+  goBackBtn: {
+    alignSelf:'center',
+  },
+  goBackText:{
+    color:'#5BFF6F',
+    fontFamily: 'Montserrat',
+    fontSize:16,
+    textDecorationLine:'underline',
   }
 });

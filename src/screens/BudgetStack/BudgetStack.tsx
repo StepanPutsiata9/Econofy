@@ -4,7 +4,10 @@ import { BudgetStackParamList } from '../../types/navigation.types.ts';
 import Budget from "./BudgetScreen/BudgetScreen.tsx"
 import AddBudgetPlan from "./AddBudgetPlan/AddBudgetPlan.tsx"
 import AddBudgetPlanSecondScreen from "./AddBudgetPlanSecondScreen/AddBudgetPlanSecondScreen.tsx"
+import AddBudgetPlanFinalScreen from "./AddBudgetPlanFinalScreen/AddBudgetPlanFinalScreen.tsx"
+import BudgetPlanInfoScreen from "./BudgetPlanInfoScreen/BudgetPlanInfoScreen.tsx"
 const BudgetStack = createStackNavigator<BudgetStackParamList>();
+
 function BudgetStackScreen() {
   return (
     <BudgetStack.Navigator
@@ -15,7 +18,9 @@ function BudgetStackScreen() {
     >
       <BudgetStack.Screen name="BudgetScreen" component={Budget} />
       <BudgetStack.Screen name="AddBudgetPlanSecondScreen" component={AddBudgetPlanSecondScreen}/>
+      <BudgetStack.Screen name='AddBudgetPlanFinalScreen' component={AddBudgetPlanFinalScreen}/>
       <BudgetStack.Screen name="AddBudgetPlan" component={AddBudgetPlan} />
+      <BudgetStack.Screen name="BudgetPlanInfoScreen" component={BudgetPlanInfoScreen} />      
     </BudgetStack.Navigator>
   );
 }

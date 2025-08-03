@@ -4,6 +4,9 @@ import { styles } from './BudgetPlan';
 import ProgressBar from 'react-native-progress/Bar';
 import { useMemo, useState } from 'react';
 import AddSpendingModal from "./AddSpendingModal/AddSpendingModal.tsx"
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { BudgetStackParamList } from '../../../../types/navigation.types.ts';
 interface IBudgetPlanItem {
   title: string;
   date: string;
@@ -17,6 +20,7 @@ interface IBudgetPlanProps{
 }
 function BudgetPlan({item}: IBudgetPlanProps) {
   const progress = item.remainder/item.limitMoney;
+  const budgetNavigate= useNavigation<NativeStackNavigationProp<BudgetStackParamList>>();
   const colorProgressBar: string = useMemo((): string => {
     if (progress <= 1 && progress >= 0.6) {
       return '#5BFF6F';
@@ -31,7 +35,7 @@ function BudgetPlan({item}: IBudgetPlanProps) {
   return (
     <>
     <AddSpendingModal addModalVisible={addModalVisible} setAddModalVisible={setAddModalVisible}/>
-    <View style={styles.budgetPlan}>
+    <TouchableOpacity onPress={()=>{budgetNavigate.navigate('BudgetPlanInfoScreen')}} style={styles.budgetPlan}>
       <View style={styles.titleLine}>
         <Text style={styles.titleText}>{item.title}</Text>
         <Text style={styles.dateText}>{item.date}</Text>
@@ -75,7 +79,7 @@ function BudgetPlan({item}: IBudgetPlanProps) {
           <Text style={styles.addConsumptionText}>Добавить расход+</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </TouchableOpacity>
     </>
 
   );
