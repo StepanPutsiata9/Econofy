@@ -157,6 +157,12 @@ function BudgetPlanInfoScreen({ navigation }: BudgetPlanInfoScreenProps) {
             помощью ИИ. Возможны ошибки.
           </Text>
         </View>
+
+        <View style={styles.spendingGraf}>
+          <Text style={styles.spendingText}>
+            График расходов:
+          </Text>
+        </View>
       </ScrollView>
     </View>
   );

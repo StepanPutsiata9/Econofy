@@ -84,11 +84,22 @@ export const styles = StyleSheet.create({
     fontSize: 14,
   },
   contentView: {
-    marginBottom:20,
+    marginBottom: 20,
   },
   contentText: {
     fontSize: 14,
     color: '#fff',
     fontFamily: 'Montserrat',
+  },
+
+  spendingGraf: {
+    marginBottom: 20,
+  },
+
+  spendingText: {
+    fontSize: 18,
+    color: '#fff',
+    fontFamily: 'MontserratBold',
+    marginBottom:16,
   },
 });
