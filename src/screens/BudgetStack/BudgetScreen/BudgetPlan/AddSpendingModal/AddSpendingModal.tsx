@@ -6,6 +6,8 @@ import MainButton from '../../../../../components/ui/MainButton/MainButton.tsx';
 import React, { useState } from 'react';
 import MoneyInput from '../../../../../components/ui/MoneyInput/MoneyInput.tsx';
 import { Dropdown } from 'react-native-element-dropdown';
+// import { addSpendingToPlan } from '../../../../../store/slices/Budget.slice.ts';
+// import { useAppDispatch } from '../../../../../store/store.ts';
 
 type IModalProps = {
   addModalVisible: boolean;
@@ -40,7 +42,8 @@ function AddSpendingModal({
   const insets = useSafeAreaInsets();
   const [amount, setAmount] = useState<string>('0');
   const [selectedCategory, setSelectedCategory] = useState<string|null>(null);
-
+    // const dispatch = useAppDispatch();
+  
   return (
     <>
       <Modal
@@ -81,7 +84,14 @@ function AddSpendingModal({
               </View>
             </View>
             <MoneyInput amount={amount} setAmount={setAmount} />
-            <MainButton title={'Добавить'} onClick={() => {}} />
+            <MainButton title={'Добавить'} onClick={() => {
+              // dispatch(addSpendingToPlan(
+              //   {
+              //     id:id,
+              //     spendedMoney:Number(amount),
+              //     category:selectedCategory||"Непредвиденная трата"
+              //   }))
+            }} />
           </View>
         </TouchableOpacity>
       </Modal>

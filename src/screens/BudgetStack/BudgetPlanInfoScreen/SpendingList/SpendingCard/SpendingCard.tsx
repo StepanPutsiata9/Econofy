@@ -13,6 +13,9 @@ import Airbag from '../../../../../components/SvgComponents/Icons/Airbag.tsx';
 import Other from '../../../../../components/SvgComponents/Icons/Other.tsx';
 import UnforExpenses from '../../../../../components/SvgComponents/Icons/UnforExpenses.tsx';
 import { useMemo } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { BudgetStackParamList } from '../../../../../types/navigation.types.ts';
 
 type IconKey = keyof typeof componentsIcon;
 const componentsIcon = {
@@ -45,8 +48,10 @@ function SpendingCard({ item }: SpendingCardProps) {
   const logoConst = useMemo(() => {
     return item.logo;
   }, [item.logo]);
+    const budgetNavigate =
+      useNavigation<NativeStackNavigationProp<BudgetStackParamList>>();
   return (
-    <TouchableOpacity onPress={() => {}}>
+    <TouchableOpacity onPress={() => {budgetNavigate.navigate('CatygoryScreen')}}>
       <View style={styles.cardView}>
         <View style={styles.infoView}>
           {componentsIcon[logoConst as IconKey]}

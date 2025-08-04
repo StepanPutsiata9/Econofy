@@ -8,6 +8,11 @@ import { RouteProp, useFocusEffect, useNavigation } from '@react-navigation/nati
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { BudgetStackParamList } from '../../../types/navigation.types.ts';
 import { StackNavigationProp } from '@react-navigation/stack';
+// import { useCallback, useEffect } from 'react';
+// import { fetchAllPlans } from '../../../store/slices/Budget.slice.ts';
+// import { useAppDispatch, RootState} from '../../../store/store.ts';
+// import { useSelector } from 'react-redux';
+// import {IBudgetPlan} from "../../../store/slices/Budget.slice.ts"
 type BudgetScreenProps = {
   navigation: StackNavigationProp<BudgetStackParamList, 'BudgetScreen'>;
   route: RouteProp<BudgetStackParamList, 'BudgetScreen'>;
@@ -24,6 +29,17 @@ function Budget({navigation}:BudgetScreenProps) {
     });
   const insets = useSafeAreaInsets();
   const budgetNavigate=useNavigation<NativeStackNavigationProp<BudgetStackParamList>>()
+  // const refreshData = useCallback(() => {
+  //   dispatch(fetchAllPlans());
+  // }, [dispatch]);
+  // useEffect(() => {
+  //   refreshData();
+  // }, [refreshData]);
+  // const dispatch = useAppDispatch();
+  // const {data,loading,error}=useSelector((state:RootState)=>state.budgets)
+  //   const renderItem: ListRenderItem<IBudgetPlan> = ({ item }) => (
+  //     <BudgetPlan item={item} />
+  //   );
   const item = {
     title: 'Название плана 2',
     date: '10.06.2026',
@@ -48,12 +64,17 @@ function Budget({navigation}:BudgetScreenProps) {
       </View>
       {/* {loading && <LoadContainer />}
       {error && <ErrorMessage />} */}
-      {/* {!loading && !error && (
-        
-      )} */}
-
-      <Plus onPress={() =>{budgetNavigate.navigate('AddBudgetPlan')}} />
+        {/* {!loading && !error && (
+          <FlatList
+            style={[styles.budgetsView, { marginBottom: insets.bottom + 75 }]}
+            data={data}
+            renderItem={renderItem}
+            keyExtractor={itemKey => itemKey.id}
+          />
+        )} */}
+      
       <BudgetPlan item={item} />
+      <Plus onPress={() =>{budgetNavigate.navigate('AddBudgetPlan')}} />
     </View>
   );
 }

@@ -18,4 +18,7 @@ export const styles = StyleSheet.create({
     fontFamily: 'MontserratBold',
     fontSize: 34,
   },
+  budgetsView:{
+    paddingHorizontal:16,
+  }
 });
