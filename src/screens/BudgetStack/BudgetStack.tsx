@@ -14,6 +14,7 @@ function BudgetStackScreen() {
       screenOptions={{
         headerShown: false,
         animation:'fade_from_bottom',
+
       }}
     >
       <BudgetStack.Screen name="BudgetScreen" component={Budget} />

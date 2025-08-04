@@ -18,6 +18,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { BudgetStackParamList } from '../../../types/navigation.types.ts';
 import React, { useState, useRef } from 'react';
 import { StackNavigationProp } from '@react-navigation/stack';
+
+import SpendingList from "./SpendingList/SpendingList.tsx"
 import Arrow from '../../../components/SvgComponents/Arrow.tsx';
 import Pie from '../../../components/ui/Pie/Pie.tsx';
 
@@ -181,6 +183,7 @@ function BudgetPlanInfoScreen({ navigation }: BudgetPlanInfoScreenProps) {
 
         <View style={styles.spendingGraf}>
           <Text style={styles.spendingText}>График расходов:</Text>
+          <SpendingList/>
         </View>
       </ScrollView>
     </View>

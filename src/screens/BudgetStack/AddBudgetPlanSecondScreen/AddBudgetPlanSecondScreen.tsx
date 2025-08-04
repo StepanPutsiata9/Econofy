@@ -186,7 +186,10 @@ function AddBudgetPlanSecondScreen({
           <Cross />
         </TouchableOpacity>
       </View>
-      <ScrollView>
+      <ScrollView 
+       contentContainerStyle={styles.scrollContainer}
+  keyboardShouldPersistTaps="handled"
+  automaticallyAdjustKeyboardInsets={true}>
         <View style={styles.titleInfoView}>
           <Text style={styles.titleInfoText}>
             Эти данные необходимы для создания{' '}

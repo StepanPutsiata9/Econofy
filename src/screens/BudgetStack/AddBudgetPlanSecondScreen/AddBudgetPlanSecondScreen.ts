@@ -95,5 +95,8 @@ export const styles = StyleSheet.create({
     fontFamily: 'Montserrat',
     fontSize:16,
     textDecorationLine:'underline',
-  }
+  },
+  scrollContainer: {
+  paddingBottom: 100
+}
 });
