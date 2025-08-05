@@ -19,9 +19,10 @@ import { BudgetStackParamList } from '../../../types/navigation.types.ts';
 import React, { useState, useRef } from 'react';
 import { StackNavigationProp } from '@react-navigation/stack';
 
-import SpendingList from "./SpendingList/SpendingList.tsx"
+import SpendingList from './SpendingList/SpendingList.tsx';
 import Arrow from '../../../components/SvgComponents/Arrow.tsx';
 import Pie from '../../../components/ui/Pie/Pie.tsx';
+import TrashBin from '../../../components/SvgComponents/TrashBin.tsx';
 
 type BudgetPlanInfoScreenProps = {
   navigation: StackNavigationProp<BudgetStackParamList, 'BudgetPlanInfoScreen'>;
@@ -98,16 +99,15 @@ function BudgetPlanInfoScreen({ navigation }: BudgetPlanInfoScreenProps) {
       <View style={styles.titleView}>
         <Text style={styles.title}>План </Text>
         <TouchableOpacity
-          onPress={() => budgetNavigate.navigate('BudgetScreen')}
+          onPress={() => budgetNavigate.goBack()}
         >
           <Cross />
         </TouchableOpacity>
       </View>
       <ScrollView>
-
         <View style={styles.distributionView}>
           <Text style={styles.distributionText}>Распределение бюджета:</Text>
-          <Pie/>
+          <Pie />
         </View>
 
         <View style={styles.analysisView}>
@@ -183,7 +183,17 @@ function BudgetPlanInfoScreen({ navigation }: BudgetPlanInfoScreenProps) {
 
         <View style={styles.spendingGraf}>
           <Text style={styles.spendingText}>График расходов:</Text>
-          <SpendingList/>
+          <SpendingList />
+        </View>
+        <View >
+          <TouchableOpacity
+            onPress={() => {}}
+            style={styles.delView}
+            hitSlop={{ top: 5, bottom: 5, right: 5, left: 5 }}
+          >
+            <TrashBin />
+            <Text style={styles.delText}>Удалить план</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </View>

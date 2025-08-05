@@ -5,6 +5,7 @@ export const styles = StyleSheet.create({
     backgroundColor: '#242424',
     padding: 16,
     borderRadius: 20,
+    marginBottom:16,
   },
 
   titleLine: {

@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import api from './AuthSlice/api';
-
+import {Categories} from "../../screens/BudgetStack/BudgetScreen/BudgetPlan/AddSpendingModal/AddSpendingModal.tsx"
 export interface IBudgetPlan {
   title: string;
   date: string;
@@ -27,6 +27,8 @@ export const fetchAllPlans = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const { data } = await api.get('plan');
+      console.log("Budgets ",data);
+      
       if (data === null) {
         return rejectWithValue('404');
       }
@@ -42,15 +44,16 @@ export const fetchAllPlans = createAsyncThunk(
 interface addSpendItem {
   id: string;
   spendedMoney: number;
-  category:string;
+  category:Categories;
+  date:Date
 }
 export const addSpendingToPlan = createAsyncThunk(
   'budget/addSpendingToPlan',
-  async ({ id, spendedMoney,category}: addSpendItem, { rejectWithValue }) => {
+  async ({ id, spendedMoney,category,date}: addSpendItem, { rejectWithValue }) => {
     try {
       const response = await api.patch(
-        'plan/addSpending',
-        JSON.stringify({ id: id, spendedMoney: spendedMoney,category:category }),
+        `plan/addSpending/${id}`,
+        JSON.stringify({ spendedMoney: spendedMoney,category:category,date:date }),
       );
       if (response.data === null) {
         return rejectWithValue('404');
@@ -74,7 +77,7 @@ const budgetsSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchAllPlans.fulfilled, (state, action) => {
-        state.loading = false;
+        state.loading = false;       
         state.data = action.payload;
       })
       .addCase(fetchAllPlans.rejected, (state, action) => {

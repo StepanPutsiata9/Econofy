@@ -14,6 +14,7 @@ interface IBudgetPlanItem {
   limitMoney: number;
   remainder: number;
   term:string;
+  id:string;
 }
 interface IBudgetPlanProps{
     item:IBudgetPlanItem

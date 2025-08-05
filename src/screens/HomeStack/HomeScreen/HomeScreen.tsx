@@ -63,7 +63,7 @@ function Home() {
       <BackendError
         errorModalVisible={errorModalVisible}
         setErrorModalVisible={setErrorModalVisible}
-        onPress={()=>dispatch(fetchAllGoals())}
+        onPress={refreshData}
       />
       <View
         style={[

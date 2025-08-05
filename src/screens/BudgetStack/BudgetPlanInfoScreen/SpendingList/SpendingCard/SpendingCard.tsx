@@ -19,7 +19,7 @@ import { BudgetStackParamList } from '../../../../../types/navigation.types.ts';
 
 type IconKey = keyof typeof componentsIcon;
 const componentsIcon = {
-  STORE: <Products />,
+  STORE_AND_HOUSEHOLD: <Products />,
   COSMETICS: <Cosmetics />,
   HOUSEHOLD: <Products />,
   TRANSPORT: <Transport />,

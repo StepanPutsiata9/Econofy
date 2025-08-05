@@ -14,10 +14,9 @@ type IModalProps = {
   setAddModalVisible: (value: boolean) => void;
 };
 
-enum Categories {
-  STORE = 'Продукты',
+export enum Categories {
+  STORE_AND_HOUSEHOLD = 'Продукты, быт. товары',
   COSMETICS = 'Косметика',
-  HOUSEHOLD = 'Быт. товары',
   TRANSPORT = 'Общ. транспорт',
   HOUSING_AND_COMMUNAL_SERVICES = 'ЖКУ',
   HEALTH = 'Здоровье',
@@ -25,9 +24,9 @@ enum Categories {
   HOBBY = 'Хобби',
   LOANS = 'Кредиты',
   CLOTH = 'Одежда, быт',
-  UNFORESSEN_EXPENSES = 'Непредвиденная трата',
+  UNFORESSEN_EXPENSES = 'Непредвиденные расходы',
   AIRBAG = 'Подушка безопасности',
-  ADDITIONAL_EXPENSES = 'Доп.расходы',
+  ADDITIONAL_EXPENSES = 'Дополнительные расходы',
 }
 
 const data = Object.values(Categories).map(category => ({
@@ -41,9 +40,9 @@ function AddSpendingModal({
 }: IModalProps) {
   const insets = useSafeAreaInsets();
   const [amount, setAmount] = useState<string>('0');
-  const [selectedCategory, setSelectedCategory] = useState<string|null>(null);
-    // const dispatch = useAppDispatch();
-  
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  // const dispatch = useAppDispatch();
+
   return (
     <>
       <Modal
@@ -69,7 +68,7 @@ function AddSpendingModal({
                   data={data}
                   labelField="label"
                   valueField="value"
-                  placeholder='Выберите категорию'
+                  placeholder="Выберите категорию"
                   value={selectedCategory}
                   onChange={item => setSelectedCategory(item.value)}
                   style={styles.dropdown}
@@ -78,20 +77,23 @@ function AddSpendingModal({
                   containerStyle={styles.dropdownContainer}
                   itemTextStyle={styles.itemTextStyle}
                   activeColor="#242424"
-                  iconStyle={styles.hiddenIcon} 
+                  iconStyle={styles.hiddenIcon}
                   showsVerticalScrollIndicator={false}
                 />
               </View>
             </View>
             <MoneyInput amount={amount} setAmount={setAmount} />
-            <MainButton title={'Добавить'} onClick={() => {
-              // dispatch(addSpendingToPlan(
-              //   {
-              //     id:id,
-              //     spendedMoney:Number(amount),
-              //     category:selectedCategory||"Непредвиденная трата"
-              //   }))
-            }} />
+            <MainButton
+              title={'Добавить'}
+              onClick={() => {
+                // dispatch(addSpendingToPlan(
+                //   {
+                //     id:id,
+                //     spendedMoney:Number(amount),
+                //     category:selectedCategory||"Непредвиденная трата"
+                //   }))
+              }}
+            />
           </View>
         </TouchableOpacity>
       </Modal>

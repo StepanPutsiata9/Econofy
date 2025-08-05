@@ -19,6 +19,17 @@ export const styles = StyleSheet.create({
     fontSize: 34,
   },
   budgetsView:{
-    paddingHorizontal:16,
+    // marginBottom:10,
+  },
+  emptyView:{
+    flex:1,
+    justifyContent:'center',
+    alignItems:'center',
+  },
+  emptyText:{
+    fontSize:30,
+    textAlign:'center',
+    color: '#5BFF6F',
+    fontFamily: 'Montserrat',
   }
 });
