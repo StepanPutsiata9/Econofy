@@ -51,6 +51,8 @@ function AddBudgetPlanSecondScreen({
   const [creditsError, setCreditsError] = useState<string>('');
   const [hobbysError, setHobbysError] = useState<string>('');
 
+
+
   const handleChange1To15 = (value: string) => {
     if (/^([1-9]|1[0-5])?$/.test(value) || value === '') {
       setRoomCount(value);
@@ -181,15 +183,20 @@ function AddBudgetPlanSecondScreen({
       <View style={styles.titleView}>
         <Text style={styles.title}>Создать план</Text>
         <TouchableOpacity
-          onPress={() => budgetNavigate.navigate('BudgetScreen')}
+          onPress={() => budgetNavigate.popTo('BudgetScreen')}
+
+          // onPress={() =>
+          //   budgetNavigate.pop(2)
+          // }
         >
           <Cross />
         </TouchableOpacity>
       </View>
-      <ScrollView 
-       contentContainerStyle={styles.scrollContainer}
-  keyboardShouldPersistTaps="handled"
-  automaticallyAdjustKeyboardInsets={true}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContainer}
+        keyboardShouldPersistTaps="handled"
+        automaticallyAdjustKeyboardInsets={true}
+      >
         <View style={styles.titleInfoView}>
           <Text style={styles.titleInfoText}>
             Эти данные необходимы для создания{' '}
@@ -306,14 +313,16 @@ function AddBudgetPlanSecondScreen({
               ) {
                 return;
               }
-                budgetNavigate.navigate('AddBudgetPlanFinalScreen');
-
+              budgetNavigate.navigate('AddBudgetPlanFinalScreen');
             }}
             title="Далее"
           />
         </View>
         <View style={styles.goBack}>
-          <TouchableOpacity style={styles.goBackBtn} onPress={() => budgetNavigate.goBack()}>
+          <TouchableOpacity
+            style={styles.goBackBtn}
+            onPress={() => budgetNavigate.goBack()}
+          >
             <Text style={styles.goBackText}>Вернуться назад</Text>
           </TouchableOpacity>
         </View>

@@ -7,36 +7,26 @@ const data = [
     name: 'Еда',
     population: 35,
     color: '#FF6384',
-    legendFontColor: '#7F7F7F',
-    legendFontSize: 15,
   },
   {
     name: 'Транспорт',
     population: 20,
     color: '#36A2EB',
-    legendFontColor: '#7F7F7F',
-    legendFontSize: 15,
   },
   {
     name: 'Спорт',
     population: 35,
     color: '#63ff9fff',
-    legendFontColor: '#7F7F7F',
-    legendFontSize: 15,
   },
   {
     name: 'Медицина',
     population: 35,
     color: '#e00000ff',
-    legendFontColor: '#7F7F7F',
-    legendFontSize: 15,
   },
   {
     name: 'Косметика',
     population: 20,
     color: '#8836ebff',
-    legendFontColor: '#7F7F7F',
-    legendFontSize: 15,
   },
 ];
 

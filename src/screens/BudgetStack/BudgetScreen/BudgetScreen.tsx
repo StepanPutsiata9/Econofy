@@ -1,4 +1,10 @@
-import { View, Text, FlatList, ListRenderItem } from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  ListRenderItem,
+  RefreshControl,
+} from 'react-native';
 import PageCoin from '../../../components/SvgComponents/PageCoin';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { styles } from './BudgetScreen.ts';
@@ -26,24 +32,29 @@ type BudgetScreenProps = {
   route: RouteProp<BudgetStackParamList, 'BudgetScreen'>;
 };
 
-  const renderItem: ListRenderItem<IBudgetPlan> = ({ item }) => (
-    <BudgetPlan item={item} />
-  );
+const renderItem: ListRenderItem<IBudgetPlan> = ({ item }) => (
+  <BudgetPlan item={item} />
+);
 function Budget({ navigation }: BudgetScreenProps) {
   const insets = useSafeAreaInsets();
-  const budgetNavigate = useNavigation<NativeStackNavigationProp<BudgetStackParamList>>();
+  const budgetNavigate =
+    useNavigation<NativeStackNavigationProp<BudgetStackParamList>>();
   const dispatch = useAppDispatch();
-  const { data, loading, error } = useSelector((state: RootState) => state.budgets);
+  const { data, loading, error } = useSelector(
+    (state: RootState) => state.budgets,
+  );
 
   const refreshData = useCallback(() => {
-    console.log("refreshed data");
+
+    console.log('refreshed data');
+    setRefreshing(true)
     dispatch(fetchAllPlans());
+    setRefreshing(false)
   }, [dispatch]);
 
   useEffect(() => {
     refreshData();
   }, [refreshData]);
-
 
   useFocusEffect(
     useCallback(() => {
@@ -55,16 +66,14 @@ function Budget({ navigation }: BudgetScreenProps) {
         },
       });
       return () => {};
-    }, [navigation])
+    }, [navigation]),
   );
-
-
 
   const [errorModalVisible, setErrorModalVisible] = useState(false);
   useEffect(() => {
     setErrorModalVisible(!!error);
   }, [error]);
-  
+  const [refreshing, setRefreshing] = React.useState(false);
   return (
     <>
       <BackendError
@@ -72,43 +81,46 @@ function Budget({ navigation }: BudgetScreenProps) {
         setErrorModalVisible={setErrorModalVisible}
         onPress={refreshData}
       />
-    <View
-      style={[
-        styles.container,
-        {
-          paddingTop: insets.top,
-          paddingBottom: insets.bottom,
-        },
-      ]}
-    >
-      <View style={styles.titleView}>
-        <Text style={styles.title}>Бюджет</Text>
-        <PageCoin />
+      <View
+        style={[
+          styles.container,
+          {
+            paddingTop: insets.top,
+            paddingBottom: insets.bottom,
+          },
+        ]}
+      >
+        <View style={styles.titleView}>
+          <Text style={styles.title}>Бюджет</Text>
+          <PageCoin />
+        </View>
+        {loading && <LoadContainer />}
+        {error && <ErrorMessage />}
+        {!loading &&
+          !error &&
+          (data?.length !== 0 ? (
+            <FlatList
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={refreshData} 
+                tintColor={"#5BFF6F"} colors={["#5BFF6F"]}/>
+              }
+              style={[styles.budgetsView, { marginBottom: insets.bottom + 75 }]}
+              data={data}
+              renderItem={renderItem}
+              keyExtractor={itemKey => itemKey.id}
+            />
+          ) : (
+            <View style={styles.emptyView}>
+              <Text style={styles.emptyText}>Созданных планов пока нет</Text>
+            </View>
+          ))}
+        <Plus
+          onPress={() => {
+            budgetNavigate.navigate('AddBudgetPlan');
+          }}
+        />
       </View>
-      {loading && <LoadContainer />}
-      {error && <ErrorMessage />}
-      {!loading &&
-        !error &&
-        (data?.length !== 0 ? (
-          <FlatList
-            style={[styles.budgetsView, { marginBottom: insets.bottom + 75 }]}
-            data={data}
-            renderItem={renderItem}
-            keyExtractor={itemKey => itemKey.id}
-          />
-        ) : (
-          <View style={styles.emptyView}> 
-            <Text style={styles.emptyText}>Созданных планов пока нет</Text>
-          </View>
-        ))}
-      <Plus
-        onPress={() => {
-          budgetNavigate.navigate('AddBudgetPlan');
-        }}
-      />
-    </View>
     </>
-
   );
 }
 

@@ -6,12 +6,14 @@ import MainButton from '../../../../../components/ui/MainButton/MainButton.tsx';
 import React, { useState } from 'react';
 import MoneyInput from '../../../../../components/ui/MoneyInput/MoneyInput.tsx';
 import { Dropdown } from 'react-native-element-dropdown';
-// import { addSpendingToPlan } from '../../../../../store/slices/Budget.slice.ts';
-// import { useAppDispatch } from '../../../../../store/store.ts';
-
+import { addSpendingToPlan } from '../../../../../store/slices/Budget.slice.ts';
+import { useAppDispatch } from '../../../../../store/store.ts';
+import { IBudgetPlanItem } from '../BudgetPlan.tsx';
+import ErrorModal from '../ErrorModal/ErrorModal.tsx';
 type IModalProps = {
   addModalVisible: boolean;
   setAddModalVisible: (value: boolean) => void;
+  item: IBudgetPlanItem;
 };
 
 export enum Categories {
@@ -37,14 +39,22 @@ const data = Object.values(Categories).map(category => ({
 function AddSpendingModal({
   addModalVisible,
   setAddModalVisible,
+  item,
 }: IModalProps) {
   const insets = useSafeAreaInsets();
   const [amount, setAmount] = useState<string>('0');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  // const dispatch = useAppDispatch();
-
+  const dispatch = useAppDispatch();
+  const [errorModalVisible, setErrorModalVisible] = useState<boolean>(false);
+  const closeErrorModal = () => {
+    setErrorModalVisible(false);
+  };
   return (
     <>
+      <ErrorModal
+        errorModalVisible={errorModalVisible}
+        closeErrorModal={closeErrorModal}
+      />
       <Modal
         animationType="fade"
         transparent={true}
@@ -70,7 +80,9 @@ function AddSpendingModal({
                   valueField="value"
                   placeholder="Выберите категорию"
                   value={selectedCategory}
-                  onChange={item => setSelectedCategory(item.value)}
+                  onChange={selectedItem =>
+                    setSelectedCategory(selectedItem.value)
+                  }
                   style={styles.dropdown}
                   placeholderStyle={styles.placeholderStyle}
                   selectedTextStyle={styles.selectedTextStyle}
@@ -86,12 +98,17 @@ function AddSpendingModal({
             <MainButton
               title={'Добавить'}
               onClick={() => {
-                // dispatch(addSpendingToPlan(
-                //   {
-                //     id:id,
-                //     spendedMoney:Number(amount),
-                //     category:selectedCategory||"Непредвиденная трата"
-                //   }))
+                Number(amount) > Number(item.remainder)
+                  ? setErrorModalVisible(true)
+                  : dispatch(
+                      addSpendingToPlan({
+                        id: item.id,
+                        spendedMoney: Number(amount),
+                        category:
+                          (selectedCategory as Categories) ||
+                          ('Непредвиденные расходы' as Categories),
+                      }),
+                    );
               }}
             />
           </View>

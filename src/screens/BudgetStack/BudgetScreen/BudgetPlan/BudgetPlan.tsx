@@ -7,7 +7,7 @@ import AddSpendingModal from "./AddSpendingModal/AddSpendingModal.tsx"
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { BudgetStackParamList } from '../../../../types/navigation.types.ts';
-interface IBudgetPlanItem {
+export interface IBudgetPlanItem {
   title: string;
   date: string;
   spentMoney: number;
@@ -35,7 +35,9 @@ function BudgetPlan({item}: IBudgetPlanProps) {
   const [addModalVisible,setAddModalVisible]=useState<boolean>(false);
   return (
     <>
-    <AddSpendingModal addModalVisible={addModalVisible} setAddModalVisible={setAddModalVisible}/>
+    <AddSpendingModal addModalVisible={addModalVisible} setAddModalVisible={setAddModalVisible}
+      item={item}
+    />
     <TouchableOpacity onPress={()=>{budgetNavigate.navigate('BudgetPlanInfoScreen')}} style={styles.budgetPlan}>
       <View style={styles.titleLine}>
         <Text style={styles.titleText}>{item.title}</Text>

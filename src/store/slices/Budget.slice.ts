@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import api from './AuthSlice/api';
-import {Categories} from "../../screens/BudgetStack/BudgetScreen/BudgetPlan/AddSpendingModal/AddSpendingModal.tsx"
+import { Categories } from '../../screens/BudgetStack/BudgetScreen/BudgetPlan/AddSpendingModal/AddSpendingModal.tsx';
 export interface IBudgetPlan {
   title: string;
   date: string;
@@ -10,16 +10,24 @@ export interface IBudgetPlan {
   term: string;
   id: string;
 }
+export interface IFirstAddScreenData {
+  budgetName: string;
+  date: string;
+  salary: number;
+  safeSumm: number;
+}
 interface BudgetState {
   data: IBudgetPlan[] | null | undefined;
   loading: boolean;
   error: string | null;
+  firstAddScreenData: IFirstAddScreenData | null;
 }
 
 const initialState: BudgetState = {
   data: null,
   loading: false,
   error: null,
+  firstAddScreenData: null,
 };
 
 export const fetchAllPlans = createAsyncThunk(
@@ -27,8 +35,8 @@ export const fetchAllPlans = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const { data } = await api.get('plan');
-      console.log("Budgets ",data);
-      
+      console.log('Budgets ', data);
+
       if (data === null) {
         return rejectWithValue('404');
       }
@@ -44,17 +52,18 @@ export const fetchAllPlans = createAsyncThunk(
 interface addSpendItem {
   id: string;
   spendedMoney: number;
-  category:Categories;
-  date:Date
+  category: Categories;
 }
 export const addSpendingToPlan = createAsyncThunk(
   'budget/addSpendingToPlan',
-  async ({ id, spendedMoney,category,date}: addSpendItem, { rejectWithValue }) => {
+  async ({ id, spendedMoney, category }: addSpendItem, { rejectWithValue }) => {
     try {
+      console.log({ expenses: spendedMoney, category: category });
       const response = await api.patch(
-        `plan/addSpending/${id}`,
-        JSON.stringify({ spendedMoney: spendedMoney,category:category,date:date }),
+        `plan/${id}`,
+        JSON.stringify({ expenses: spendedMoney, category: category }),
       );
+
       if (response.data === null) {
         return rejectWithValue('404');
       }
@@ -69,7 +78,16 @@ export const addSpendingToPlan = createAsyncThunk(
 const budgetsSlice = createSlice({
   name: 'budgets',
   initialState,
-  reducers: {},
+  reducers: {
+    setDataFromFirstAddBudgetScreen(state, action) {
+      if (state.firstAddScreenData) {
+        state.firstAddScreenData.budgetName = action.payload?.budgetName;
+        state.firstAddScreenData.salary = action.payload?.salary;
+        state.firstAddScreenData.safeSumm = action.payload?.safeSumm;
+        state.firstAddScreenData.date = action.payload?.date;
+      }
+    },
+  },
   extraReducers: builder => {
     builder
       .addCase(fetchAllPlans.pending, state => {
@@ -77,15 +95,13 @@ const budgetsSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchAllPlans.fulfilled, (state, action) => {
-        state.loading = false;       
+        state.loading = false;
         state.data = action.payload;
       })
       .addCase(fetchAllPlans.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       })
-
-
 
       .addCase(addSpendingToPlan.pending, state => {
         state.loading = true;
@@ -100,9 +116,10 @@ const budgetsSlice = createSlice({
       .addCase(addSpendingToPlan.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
+        console.log(action.payload);
       });
   },
 });
 
-export const {} = budgetsSlice.actions;
+export const {setDataFromFirstAddBudgetScreen} = budgetsSlice.actions;
 export default budgetsSlice.reducer;

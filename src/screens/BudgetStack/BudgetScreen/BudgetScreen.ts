@@ -19,7 +19,8 @@ export const styles = StyleSheet.create({
     fontSize: 34,
   },
   budgetsView:{
-    // marginBottom:10,
+    // paddingBottom:100,
+
   },
   emptyView:{
     flex:1,

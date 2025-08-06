@@ -98,7 +98,8 @@ of Lorem Ipsum used since the 1500s is reproduced below for those interested.`;
       <View style={styles.titleView}>
         <Text style={styles.title}>Создать план </Text>
         <TouchableOpacity
-          onPress={() => budgetNavigate.navigate('BudgetScreen')}
+          // onPress={() => budgetNavigate.navigate('BudgetScreen')}
+          onPress={() => budgetNavigate.popTo('BudgetScreen')}
         >
           <Cross />
         </TouchableOpacity>

@@ -1,4 +1,4 @@
-import { View, Text, Image, FlatList } from 'react-native';
+import { View, Text, Image, FlatList, RefreshControl } from 'react-native';
 import PageCoin from '../../../components/SvgComponents/PageCoin';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { styles } from './HomeScreen.ts';
@@ -23,10 +23,14 @@ function Home() {
     (state: RootState) => state.home,
   );
   const dispatch = useAppDispatch();
+  const [refreshing,setRefreshing]=useState<boolean>(false);
   const homeNavigate =
     useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
   const refreshData = useCallback(() => {
+    setRefreshing(true);
     dispatch(fetchAllGoals());
+    setRefreshing(false);
+
   }, [dispatch]);
 
   useEffect(() => {
@@ -52,8 +56,7 @@ function Home() {
   useEffect(() => {
     if (error) {
       setErrorModalVisible(true);
-    }
-    else{
+    } else {
       setErrorModalVisible(false);
     }
   }, [error]);
@@ -94,6 +97,14 @@ function Home() {
         {error && <ErrorMessage />}
         {!loading && !error && (
           <FlatList
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={refreshData}
+                tintColor={'#5BFF6F'}
+                colors={['#5BFF6F']}
+              />
+            }
             style={[styles.cardsView, { marginBottom: insets.bottom + 75 }]}
             data={sortedData}
             renderItem={({ item, index }) =>
