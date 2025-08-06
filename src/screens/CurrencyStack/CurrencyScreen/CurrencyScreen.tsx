@@ -80,7 +80,7 @@ function Currency() {
           onChangeText={searchData}
           keyboardType="email-address"
           autoCapitalize="none"
-          placeholderTextColor="#B2B2B2"
+          placeholderTextColor="#9E9B9B"
         />
       </View>
       {loading && <LoadContainer />}

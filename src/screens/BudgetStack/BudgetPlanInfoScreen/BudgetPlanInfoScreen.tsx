@@ -108,7 +108,9 @@ function BudgetPlanInfoScreen({ navigation }: BudgetPlanInfoScreenProps) {
       <ScrollView>
         <View style={styles.distributionView}>
           <Text style={styles.distributionText}>Распределение бюджета:</Text>
-          <Pie />
+          <Pie
+          shouldAnimated={false}
+          data={[{name:'12',population:100,color:'#5BFF6F'}]} handleCircleComplete={()=>{}} />
         </View>
 
         <View style={styles.analysisView}>

@@ -19,6 +19,9 @@ import { BudgetStackParamList } from '../../../types/navigation.types.ts';
 import React, { useEffect, useRef, useState } from 'react';
 import MainButton from '../../../components/ui/MainButton/MainButton.tsx';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { RootState, useAppDispatch } from '../../../store/store.ts';
+import { useSelector } from 'react-redux';
+import { createBudgetPlan } from '../../../store/slices/Budget.slice.ts';
 
 type AddBudgetPlanSecondScreenProps = {
   navigation: StackNavigationProp<
@@ -51,8 +54,11 @@ function AddBudgetPlanSecondScreen({
   const [creditsError, setCreditsError] = useState<string>('');
   const [hobbysError, setHobbysError] = useState<string>('');
 
-
-
+  const dispatch = useAppDispatch();
+  const { firstAddScreenData } = useSelector(
+    (state: RootState) => state.budgets,
+  );
+  
   const handleChange1To15 = (value: string) => {
     if (/^([1-9]|1[0-5])?$/.test(value) || value === '') {
       setRoomCount(value);
@@ -182,13 +188,7 @@ function AddBudgetPlanSecondScreen({
     >
       <View style={styles.titleView}>
         <Text style={styles.title}>Создать план</Text>
-        <TouchableOpacity
-          onPress={() => budgetNavigate.popTo('BudgetScreen')}
-
-          // onPress={() =>
-          //   budgetNavigate.pop(2)
-          // }
-        >
+        <TouchableOpacity onPress={() => budgetNavigate.popTo('BudgetScreen')}>
           <Cross />
         </TouchableOpacity>
       </View>
@@ -213,7 +213,7 @@ function AddBudgetPlanSecondScreen({
             placeholder="1-15"
             style={[styles.input, roomError && styles.errorInput]}
             onChangeText={setRoomsInput}
-            placeholderTextColor="#fff"
+            placeholderTextColor="#9E9B9B"
           />
           {roomError ? (
             <Animated.View style={{ opacity: fadeAnim }}>
@@ -229,7 +229,7 @@ function AddBudgetPlanSecondScreen({
             placeholder="1-10"
             style={[styles.input, peopleError && styles.errorInput]}
             onChangeText={setPeopleInput}
-            placeholderTextColor="#fff"
+            placeholderTextColor="#9E9B9B"
           />
           {peopleError ? (
             <Animated.View style={{ opacity: fadeAnim }}>
@@ -247,7 +247,7 @@ function AddBudgetPlanSecondScreen({
             placeholder="0-20"
             style={[styles.input, transferError && styles.errorInput]}
             onChangeText={setTransferInput}
-            placeholderTextColor="#fff"
+            placeholderTextColor="#9E9B9B"
           />
           {transferError ? (
             <Animated.View style={{ opacity: fadeAnim }}>
@@ -262,7 +262,7 @@ function AddBudgetPlanSecondScreen({
             placeholder="600"
             style={[styles.input, creditsError && styles.errorInput]}
             onChangeText={setCreditsInput}
-            placeholderTextColor="#fff"
+            placeholderTextColor="#9E9B9B"
           />
           {creditsError ? (
             <Animated.View style={{ opacity: fadeAnim }}>
@@ -277,7 +277,7 @@ function AddBudgetPlanSecondScreen({
             placeholder="125"
             style={[styles.input, hobbysError && styles.errorInput]}
             onChangeText={setHobbysInput}
-            placeholderTextColor="#fff"
+            placeholderTextColor="#9E9B9B"
           />
           {hobbysError ? (
             <Animated.View style={{ opacity: fadeAnim }}>
@@ -296,14 +296,14 @@ function AddBudgetPlanSecondScreen({
             scrollEnabled={true}
             style={styles.extraInput}
             onChangeText={setExtraSpendingInput}
-            placeholderTextColor="#fff"
+            placeholderTextColor="#9E9B9B"
           />
         </View>
         <View style={styles.btnView}>
           <MainButton
             onClick={() => {
               if (
-                !checkError(
+                checkError(
                   roomCount,
                   peopleCount,
                   transferCount,
@@ -311,9 +311,23 @@ function AddBudgetPlanSecondScreen({
                   hobbys,
                 )
               ) {
-                return;
+               dispatch(
+                  createBudgetPlan({
+                    title: firstAddScreenData!.budgetName,
+                    income_min: Number(firstAddScreenData!.salary),
+                    income_max: Number(firstAddScreenData!.salary),
+                    percents: Number(firstAddScreenData!.safeSumm),
+                    date: firstAddScreenData!.date,
+                    trips: Number(transferCount),
+                    rooms: Number(roomCount),
+                    members: Number(peopleCount),
+                    credit: credits,
+                    hobby: hobbys,
+                    expences: extraSpending||"",
+                  }),
+                );
+                budgetNavigate.navigate('AddBudgetPlanFinalScreen');
               }
-              budgetNavigate.navigate('AddBudgetPlanFinalScreen');
             }}
             title="Далее"
           />

@@ -109,7 +109,7 @@ function AuthScreen() {
         <View>
           <TextInput
             value={loginText}
-            placeholder="Login"
+            placeholder="Логин"
             style={[
               styles.loginInput,
               authError && styles.errorInput,
@@ -117,7 +117,7 @@ function AuthScreen() {
             onChangeText={setLogin}
             keyboardType="email-address"
             autoCapitalize="none"
-            placeholderTextColor="#fff"
+            placeholderTextColor="#9E9B9B"
           />
           <View style={styles.inputView}>
             <TextInput
@@ -128,7 +128,7 @@ function AuthScreen() {
                 authError && styles.errorInput,
               ]}
               onChangeText={setPassword}
-              placeholderTextColor="#fff"
+              placeholderTextColor="#9E9B9B"
               secureTextEntry={!isSecure}
             />
             <View style={styles.eye}>

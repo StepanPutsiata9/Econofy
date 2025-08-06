@@ -13,6 +13,12 @@ import React, { useState, useEffect } from 'react';
 import MainButton from '../../../components/ui/MainButton/MainButton.tsx';
 import { StackNavigationProp } from '@react-navigation/stack';
 import Pie from '../../../components/ui/Pie/Pie.tsx';
+import { useSelector } from 'react-redux';
+import { RootState,
+  //  useAppDispatch 
+  } from '../../../store/store.ts';
+import { LoadContainer } from '../../LoadScreen/LoadScreen.tsx';
+import ErrorMessage from '../../../components/ui/ErrorMessage/ErrorMessage.tsx';
 
 type AddBudgetPlanFinalScreenProps = {
   navigation: StackNavigationProp<
@@ -22,7 +28,12 @@ type AddBudgetPlanFinalScreenProps = {
   route: RouteProp<BudgetStackParamList, 'AddBudgetPlanFinalScreen'>;
 };
 
-const TypewriterText = ({ text = "", speed = 30, style = {}, onComplete = () => {} }) => {
+const TypewriterText = ({
+  text = '',
+  speed = 30,
+  style = {},
+  onComplete = () => {},
+}) => {
   const [displayedText, setDisplayedText] = useState('');
   const [index, setIndex] = useState(0);
   useEffect(() => {
@@ -44,42 +55,40 @@ const TypewriterText = ({ text = "", speed = 30, style = {}, onComplete = () => 
 function AddBudgetPlanFinalScreen({
   navigation,
 }: AddBudgetPlanFinalScreenProps) {
-  const [currentStage, setCurrentStage] = useState<'analysis' | 'recommendations' | 'done'>('analysis');
+  const [currentStage, setCurrentStage] = useState<
+    'circle' | 'analysis' | 'recommendations' | 'done'
+  >('circle');
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [circleCompleted, setCircleCompleted] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [analysisComplete, setAnalysisComplete] = useState(false);
-  
+  const { creatingData, creatingLoading, creatingError } = useSelector(
+    (state: RootState) => state.budgets,
+  );
+  // const dispatch = useAppDispatch();
   useFocusEffect(
     React.useCallback(() => {
       navigation.getParent()?.setOptions({ tabBarStyle: { height: 0 } });
-      setCurrentStage('analysis');
+      setCurrentStage('circle');
       setAnalysisComplete(false);
-      
       return () => {
         setCurrentStage('done');
-
       };
-    }, [navigation])
+    }, [navigation]),
   );
 
   const insets = useSafeAreaInsets();
   const budgetNavigate =
     useNavigation<NativeStackNavigationProp<BudgetStackParamList>>();
 
-  const analysisText = `Contrary to popular belief, Lorem Ipsum is not simply random text.
-It has roots in a piece of classical Latin literature from 45 BC,
-making it over 2000 years old. Richard McClintock, a Latin professor
-at Hampden-Sydney College in Virginia, looked up one of the more
-obscure Latin words, consectetur, from a Lorem Ipsum passage, and
-going through the cites of the word in classical literature,
-discovered the undoubtable source. Lorem Ipsum comes from sections
-1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes
-of Good and Evil) by Cicero, written in 45 BC.`;
+  const recommendationsText = creatingData?.recommendations
+    .map((item, index) => ` ${index + 1}.${item}`)
+    .join('\n');
 
-  const recommendationsText = `This book is a treatise on the theory of ethics, very popular during the
-Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit
-amet..", comes from a line in section 1.10.32. The standard chunk
-of Lorem Ipsum used since the 1500s is reproduced below for those interested.`;
-
+  const handleCircleComplete = () => {
+    setCircleCompleted(true);
+    setCurrentStage('analysis');
+  };
   const handleAnalysisComplete = () => {
     setAnalysisComplete(true);
     setCurrentStage('recommendations');
@@ -97,68 +106,81 @@ of Lorem Ipsum used since the 1500s is reproduced below for those interested.`;
     >
       <View style={styles.titleView}>
         <Text style={styles.title}>Создать план </Text>
-        <TouchableOpacity
-          // onPress={() => budgetNavigate.navigate('BudgetScreen')}
-          onPress={() => budgetNavigate.popTo('BudgetScreen')}
-        >
+        <TouchableOpacity onPress={() => budgetNavigate.popTo('BudgetScreen')}>
           <Cross />
         </TouchableOpacity>
       </View>
-      <ScrollView>
-        <View style={styles.distributionView}>
-          <Text style={styles.distributionText}>Распределение бюджета:</Text>
-          <Pie/>
-        </View>
-        
-        <View style={styles.analysisView}>
-          <Text style={styles.analysisText}>Анализ плана:</Text>
-          {currentStage !== 'done' ? (
-            <TypewriterText 
-              text={analysisText} 
-              speed={10} 
-              style={styles.warningText}
-              onComplete={handleAnalysisComplete}
+      {creatingLoading && <LoadContainer />}
+      {creatingError && <ErrorMessage />}
+      {!creatingLoading && !creatingError && (
+        <ScrollView>
+          <View style={styles.distributionView}>
+            <Text style={styles.distributionText}>Распределение бюджета:</Text>
+            <Pie
+              data={creatingData!.budgetPlan}
+              handleCircleComplete={handleCircleComplete}
+              shouldAnimated={true}
             />
-          ) : (
-            <Text style={styles.warningText}>{analysisText}</Text>
+          </View>
+          {currentStage !== 'circle' && (
+            <View style={styles.analysisView}>
+              <Text style={styles.analysisText}>Анализ плана:</Text>
+              {(currentStage === 'analysis' && (
+                <TypewriterText
+                  text={creatingData?.analysis}
+                  speed={10}
+                  style={styles.warningText}
+                  onComplete={handleAnalysisComplete}
+                />
+              )) ||
+                ((currentStage === 'recommendations' ||
+                  currentStage === 'done') && (
+                  <Text style={styles.warningText}>
+                    {creatingData?.analysis}
+                  </Text>
+                ))}
+            </View>
           )}
-        </View>
-        
-        <View style={styles.recommendationsView}>
-          <Text style={styles.recommendationsText}>Рекомендации:</Text>
-          {currentStage === 'recommendations' ? (
-            <TypewriterText 
-              text={recommendationsText} 
-              speed={10} 
-              style={styles.warningText}
-              onComplete={() => setCurrentStage('done')}
-            />
-          ) : (
-            <Text style={styles.warningText}>
-              {currentStage === 'done' ? recommendationsText : ''}
-            </Text>
+          {currentStage !== 'circle' && currentStage !== 'analysis' && (
+            <View style={styles.recommendationsView}>
+              <Text style={styles.recommendationsText}>Рекомендации:</Text>
+              {currentStage === 'recommendations' ? (
+                <TypewriterText
+                  text={recommendationsText}
+                  speed={10}
+                  style={styles.warningText}
+                  onComplete={() => setCurrentStage('done')}
+                />
+              ) : (
+                <Text style={styles.warningText}>
+                  {currentStage === 'done' ? recommendationsText : ''}
+                </Text>
+              )}
+            </View>
           )}
-        </View>
-        
-        <View style={styles.warningView}>
-          <Text style={styles.warningText}>
-            <Text style={styles.greenText}>*</Text>Данный план был создан с
-            помощью ИИ. Возможны ошибки.
-          </Text>
-        </View>
 
-        <View style={styles.btnView}>
-          <MainButton onClick={() => {}} title="Создать" />
-        </View>
-        <View style={styles.goBack}>
-          <TouchableOpacity
-            style={styles.goBackBtn}
-            onPress={() => budgetNavigate.goBack()}
-          >
-            <Text style={styles.goBackText}>Вернуться назад</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
+          <View style={styles.warningView}>
+            <Text style={styles.warningText}>
+              <Text style={styles.greenText}>*</Text>Данный план был создан с
+              помощью ИИ. Возможны ошибки.
+            </Text>
+          </View>
+
+          {currentStage === 'done' && (
+            <View style={styles.btnView}>
+              <MainButton onClick={() => {}} title="Создать" />
+            </View>
+          )}
+          <View style={styles.goBack}>
+            <TouchableOpacity
+              style={styles.goBackBtn}
+              onPress={() => budgetNavigate.goBack()}
+            >
+              <Text style={styles.goBackText}>Вернуться назад</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      )}
     </View>
   );
 }

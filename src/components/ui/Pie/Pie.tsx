@@ -1,38 +1,70 @@
 import { PieChart } from 'react-native-chart-kit';
 import { Text, View, Animated, Easing } from 'react-native';
-import React, { useEffect, useRef } from 'react';
-import {styles} from "./Pie.ts"
-const data = [
-  {
-    name: 'Еда',
-    population: 35,
-    color: '#FF6384',
-  },
-  {
-    name: 'Транспорт',
-    population: 20,
-    color: '#36A2EB',
-  },
-  {
-    name: 'Спорт',
-    population: 35,
-    color: '#63ff9fff',
-  },
-  {
-    name: 'Медицина',
-    population: 35,
-    color: '#e00000ff',
-  },
-  {
-    name: 'Косметика',
-    population: 20,
-    color: '#8836ebff',
-  },
-];
+import React, { useEffect, useRef, useState } from 'react';
+import { styles } from './Pie.ts';
 
-export default function Pie() {
+interface ICircleItem {
+  name: string;
+  population: number;
+  color: string;
+}
+
+interface IPieProps {
+  data: ICircleItem[];
+  handleCircleComplete:()=>void;
+  shouldAnimated:boolean;
+}
+
+const TypewriterLegendItem = ({
+  item,
+  speed = 30,
+  startAnimation,
+  onComplete,
+}: {
+  item: ICircleItem;
+  speed?: number;
+  startAnimation: boolean;
+  onComplete: () => void;
+}) => {
+  const [displayedText, setDisplayedText] = useState('');
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [showItem, setShowItem] = useState(false);
+  const text = `${item.name}-${item.population} BYN`;
+
+  useEffect(() => {
+    if (startAnimation) {
+      setShowItem(true);
+
+      if (currentIndex < text.length) {
+        const timeout = setTimeout(() => {
+          setDisplayedText(prev => prev + text[currentIndex]);
+          setCurrentIndex(prev => prev + 1);
+
+          if (currentIndex + 1 >= text.length) {
+            onComplete();
+          }
+        }, speed);
+
+        return () => clearTimeout(timeout);
+      }
+    }
+  }, [currentIndex, text, speed, startAnimation, onComplete]);
+
+  return (
+    showItem && (
+      <View style={styles.legendItem}>
+        <View style={[styles.legendColor, { backgroundColor: item.color }]} />
+        <Text style={styles.legendText}>{displayedText}</Text>
+      </View>
+    )
+  );
+};
+
+export default function Pie({ data,handleCircleComplete,shouldAnimated }: IPieProps) {
   const rotationAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0)).current;
+  const [currentLegendIndex, setCurrentLegendIndex] = useState(0);
+  const [animationStarted, setAnimationStarted] = useState(false);
 
   useEffect(() => {
     Animated.parallel([
@@ -47,8 +79,10 @@ export default function Pie() {
         friction: 4,
         useNativeDriver: true,
       }),
-    ]).start();
-  }, [scaleAnim,rotationAnim]);
+    ]).start(() => {
+      setAnimationStarted(true);
+    });
+  }, [scaleAnim, rotationAnim]);
 
   const rotateInterpolate = rotationAnim.interpolate({
     inputRange: [0, 1],
@@ -59,6 +93,18 @@ export default function Pie() {
     inputRange: [0, 1],
     outputRange: [0.7, 1],
   });
+
+  const handleLegendItemComplete = () => {
+    if (
+      currentLegendIndex <
+      data.filter(item => item.population !== 0).length - 1
+    ) {
+      setCurrentLegendIndex(prev => prev + 1);
+    }else{
+      handleCircleComplete();
+    }
+
+  };
 
   return (
     <View>
@@ -91,14 +137,31 @@ export default function Pie() {
       </View>
 
       <View style={styles.legendContainer}>
-        {data.map((item, index) => (
-          <View key={index} style={styles.legendItem}>
-            <View style={[styles.legendColor, { backgroundColor: item.color }]} />
-            <Text style={styles.legendText}>{item.name}</Text>
-          </View>
-        ))}
+
+        {data.map((item, index) =>
+        shouldAnimated?
+          (item.population !== 0 ? (
+            <TypewriterLegendItem
+              key={index}
+              item={item}
+              speed={30}
+              startAnimation={animationStarted && index <= currentLegendIndex}
+              onComplete={handleLegendItemComplete}
+            />
+          ) : null)
+          :(
+           <View key={index} style={styles.legendItem}>
+              <View
+                style={[styles.legendColor, { backgroundColor: item.color }]}
+              />
+              <Text style={styles.legendText}>
+                {item.name}-{item.population} BYN{' '}
+              </Text>
+            </View>
+          )
+        
+        )}
       </View>
     </View>
   );
 }
-

@@ -177,7 +177,7 @@ function AddBudgetPlanScreen({ navigation }: AddBudgetPlanScreenProps) {
             placeholder="Мой план"
             style={[styles.input, titleError && styles.errorInput]}
             onChangeText={setBudgetInput}
-            placeholderTextColor="#fff"
+            placeholderTextColor="#9E9B9B"
           />
           {titleError ? (
             <Animated.View style={{ opacity: fadeAnim }}>
@@ -190,10 +190,10 @@ function AddBudgetPlanScreen({ navigation }: AddBudgetPlanScreenProps) {
           <Text style={styles.budgetNameText}>Уровень месячного дохода:</Text>
           <TextInput
             value={salary}
-            placeholder="1500-2500"
+            placeholder="2500"
             style={[styles.input, salaryError && styles.errorInput]}
             onChangeText={setSalaryInput}
-            placeholderTextColor="#fff"
+            placeholderTextColor="#9E9B9B"
           />
           {salaryError ? (
             <Animated.View style={{ opacity: fadeAnim }}>
@@ -209,7 +209,7 @@ function AddBudgetPlanScreen({ navigation }: AddBudgetPlanScreenProps) {
             placeholder="0-60"
             style={[styles.input, safeSummError && styles.errorInput]}
             onChangeText={setSafeSummInput}
-            placeholderTextColor="#fff"
+            placeholderTextColor="#9E9B9B"
           />
           {safeSummError ? (
             <Animated.View style={{ opacity: fadeAnim }}>
@@ -224,7 +224,7 @@ function AddBudgetPlanScreen({ navigation }: AddBudgetPlanScreenProps) {
             placeholder="01.01.2025"
             style={[styles.input, dateError && styles.errorInput]}
             onChangeText={setDateInput}
-            placeholderTextColor="#fff"
+            placeholderTextColor="#9E9B9B"
           />
           {dateError ? (
             <Animated.View style={{ opacity: fadeAnim }}>
@@ -249,7 +249,9 @@ function AddBudgetPlanScreen({ navigation }: AddBudgetPlanScreenProps) {
             }
             const numSalary=Number(salary);
             const numSafeSumm=Number(safeSumm);
-            dispatch(setDataFromFirstAddBudgetScreen({budgetName, date,numSalary,numSafeSumm}))
+            
+            dispatch(setDataFromFirstAddBudgetScreen({budgetName:budgetName, date:date,salary:numSalary,
+              safeSumm:numSafeSumm}))
             budgetNavigate.navigate('AddBudgetPlanSecondScreen');
           }}
           title="Далее"

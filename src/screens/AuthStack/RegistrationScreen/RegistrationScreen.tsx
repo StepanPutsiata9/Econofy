@@ -107,7 +107,7 @@ function RegistrationScreen() {
             onChangeText={setLogin}
             keyboardType="email-address"
             autoCapitalize="none"
-            placeholderTextColor="#fff"
+            placeholderTextColor="#9E9B9B"
           />
           <View style={styles.inputView}>
             <TextInput
@@ -115,7 +115,7 @@ function RegistrationScreen() {
               placeholder="Пароль"
               style={[styles.input, error && styles.errorInput]}
               onChangeText={setPassword}
-              placeholderTextColor="#fff"
+              placeholderTextColor="#9E9B9B"
               secureTextEntry={!isSecure}
             />
             <View style={styles.eye}>
@@ -134,7 +134,7 @@ function RegistrationScreen() {
               placeholder="Повторите пароль"
               style={[styles.repitPasswordInput, error && styles.errorInput]}
               onChangeText={setRepitPassword}
-              placeholderTextColor="#fff"
+              placeholderTextColor="#9E9B9B"
               secureTextEntry={!isSecureRepit}
             />
             <View style={styles.eye}>
