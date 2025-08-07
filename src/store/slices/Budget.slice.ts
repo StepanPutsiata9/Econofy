@@ -71,11 +71,19 @@ export const fetchAllPlans = createAsyncThunk(
   },
 );
 
+
+export type SpendingCardItem = {
+  title: string;
+  spendingCount: number;
+  spendingMoney: number;
+};
 export interface IPlanAllInfo {
   analysis: string;
   recommendations: string[];
   budgetPlan: ICircleItem[];
+  expenses:SpendingCardItem[];
   title: string;
+  id:string;
 }
 export const fetchPlanAllInfo = createAsyncThunk(
   'budget/fetchPlanAllInfo',
@@ -198,6 +206,8 @@ export const addFinalNewPlan = createAsyncThunk(
     }
   },
 );
+
+
 
 
 export const deletePlan = createAsyncThunk(

@@ -26,11 +26,12 @@ import Pie from '../../../components/ui/Pie/Pie.tsx';
 import TrashBin from '../../../components/SvgComponents/TrashBin.tsx';
 import {
   RootState,
-  // useAppDispatch
+  useAppDispatch
 } from '../../../store/store.ts';
 import { useSelector } from 'react-redux';
 import { LoadContainer } from '../../LoadScreen/LoadScreen.tsx';
 import ErrorMessage from '../../../components/ui/ErrorMessage/ErrorMessage.tsx';
+import { deletePlan } from '../../../store/slices/Budget.slice.ts';
 
 type BudgetPlanInfoScreenProps = {
   navigation: StackNavigationProp<BudgetStackParamList, 'BudgetPlanInfoScreen'>;
@@ -54,12 +55,15 @@ function BudgetPlanInfoScreen({ navigation }: BudgetPlanInfoScreenProps) {
   const fadeAnimAnalysis = useRef(new Animated.Value(0)).current;
   const fadeAnimRecommendations = useRef(new Animated.Value(0)).current;
 
-  // const dispatch=useAppDispatch();
+  const dispatch=useAppDispatch();
   const { planAllInfo, planInfoLoading, planInfoError } = useSelector(
     (state: RootState) => state.budgets,
   );
-  console.log('in component ',planAllInfo);
   
+  const hanndleDeletePlan=()=>{
+    dispatch(deletePlan(planAllInfo!.id))
+    budgetNavigate.goBack();
+  }
   const spinArrow = (
     spinValue: Animated.Value,
     text: Animated.Value,
@@ -189,11 +193,11 @@ function BudgetPlanInfoScreen({ navigation }: BudgetPlanInfoScreenProps) {
 
           <View style={styles.spendingGraf}>
             <Text style={styles.spendingText}>График расходов:</Text>
-            <SpendingList />
+            <SpendingList data={planAllInfo!.expenses} />
           </View>
           <View>
             <TouchableOpacity
-              onPress={() => {}}
+              onPress={hanndleDeletePlan}
               style={styles.delView}
               hitSlop={{ top: 5, bottom: 5, right: 5, left: 5 }}
             >

@@ -12,11 +12,12 @@ import Cloth from '../../../../../components/SvgComponents/Icons/Cloth.tsx';
 import Airbag from '../../../../../components/SvgComponents/Icons/Airbag.tsx';
 import Other from '../../../../../components/SvgComponents/Icons/Other.tsx';
 import UnforExpenses from '../../../../../components/SvgComponents/Icons/UnforExpenses.tsx';
-import { useMemo } from 'react';
+import {useMemo } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { BudgetStackParamList } from '../../../../../types/navigation.types.ts';
-
+import { Categories } from '../../../BudgetScreen/BudgetPlan/AddSpendingModal/AddSpendingModal.tsx';
+import {SpendingCardItem} from "../../../../../store/slices/Budget.slice.ts"
 type IconKey = keyof typeof componentsIcon;
 const componentsIcon = {
   STORE_AND_HOUSEHOLD: <Products />,
@@ -34,27 +35,34 @@ const componentsIcon = {
   ADDITIONAL_EXPENSES: <Other />,
 };
 
-type SpendingCardItem = {
-  logo: string;
-  title: string;
-  spendingCount: string;
-  spendingMoney: number;
-};
-
 type SpendingCardProps = {
   item: SpendingCardItem;
 };
+
+function getEnumKeyByValue<T extends Record<string, string>>(
+  enumObj: T,
+  value: string,
+): keyof T | undefined {
+  return (Object.keys(enumObj) as Array<keyof T>).find(
+    key => enumObj[key] === value,
+  );
+}
 function SpendingCard({ item }: SpendingCardProps) {
-  const logoConst = useMemo(() => {
-    return item.logo;
-  }, [item.logo]);
-    const budgetNavigate =
-      useNavigation<NativeStackNavigationProp<BudgetStackParamList>>();
+  const key = useMemo(() => {
+    return getEnumKeyByValue(Categories, item.title);
+  }, [item.title]);
+
+  const budgetNavigate =
+    useNavigation<NativeStackNavigationProp<BudgetStackParamList>>();
   return (
-    <TouchableOpacity onPress={() => {budgetNavigate.navigate('CatygoryScreen')}}>
+    <TouchableOpacity
+      onPress={() => {
+        budgetNavigate.navigate('CatygoryScreen');
+      }}
+    >
       <View style={styles.cardView}>
         <View style={styles.infoView}>
-          {componentsIcon[logoConst as IconKey]}
+          {componentsIcon[key as IconKey]}
           <View style={styles.titleView}>
             <Text style={styles.titleText}>{item.title}</Text>
             <Text style={styles.spendingCountText}>
