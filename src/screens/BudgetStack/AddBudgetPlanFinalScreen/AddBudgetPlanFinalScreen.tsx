@@ -14,11 +14,10 @@ import MainButton from '../../../components/ui/MainButton/MainButton.tsx';
 import { StackNavigationProp } from '@react-navigation/stack';
 import Pie from '../../../components/ui/Pie/Pie.tsx';
 import { useSelector } from 'react-redux';
-import { RootState,
-  //  useAppDispatch 
-  } from '../../../store/store.ts';
+import { RootState, useAppDispatch } from '../../../store/store.ts';
 import { LoadContainer } from '../../LoadScreen/LoadScreen.tsx';
 import ErrorMessage from '../../../components/ui/ErrorMessage/ErrorMessage.tsx';
+import { addFinalNewPlan } from '../../../store/slices/Budget.slice.ts';
 
 type AddBudgetPlanFinalScreenProps = {
   navigation: StackNavigationProp<
@@ -65,7 +64,7 @@ function AddBudgetPlanFinalScreen({
   const { creatingData, creatingLoading, creatingError } = useSelector(
     (state: RootState) => state.budgets,
   );
-  // const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
   useFocusEffect(
     React.useCallback(() => {
       navigation.getParent()?.setOptions({ tabBarStyle: { height: 0 } });
@@ -94,6 +93,10 @@ function AddBudgetPlanFinalScreen({
     setCurrentStage('recommendations');
   };
 
+  const handleCreatePlan = () => {
+    dispatch(addFinalNewPlan(creatingData!.id))
+    budgetNavigate.navigate('BudgetScreen');
+  };
   return (
     <View
       style={[
@@ -168,7 +171,7 @@ function AddBudgetPlanFinalScreen({
 
           {currentStage === 'done' && (
             <View style={styles.btnView}>
-              <MainButton onClick={() => {}} title="Создать" />
+              <MainButton onClick={handleCreatePlan} title="Создать" />
             </View>
           )}
           <View style={styles.goBack}>

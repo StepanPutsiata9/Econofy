@@ -17,25 +17,28 @@ export interface IFirstAddScreenData {
   safeSumm: number;
 }
 
-interface ICircleItem{
-  name:string;
-  population:number;
-  color:string;
+interface ICircleItem {
+  name: string;
+  population: number;
+  color: string;
 }
-export interface IAddBudgetPlanResponse{
-  analysis:string;
-  id:string;
-  recommendations:string[];
-  budgetPlan:ICircleItem[]
+export interface IAddBudgetPlanResponse {
+  analysis: string;
+  id: string;
+  recommendations: string[];
+  budgetPlan: ICircleItem[];
 }
 interface BudgetState {
   data: IBudgetPlan[] | null | undefined;
   loading: boolean;
-  creatingData: IAddBudgetPlanResponse|null|undefined;
+  creatingData: IAddBudgetPlanResponse | null | undefined;
   creatingLoading: boolean;
   error: string | null;
   creatingError: string | null;
   firstAddScreenData: IFirstAddScreenData | null;
+  planAllInfo: IPlanAllInfo | null;
+  planInfoLoading: boolean;
+  planInfoError: string | null;
 }
 
 const initialState: BudgetState = {
@@ -44,8 +47,11 @@ const initialState: BudgetState = {
   creatingData: null,
   creatingLoading: false,
   error: null,
-  creatingError:null,
+  creatingError: null,
   firstAddScreenData: null,
+  planAllInfo: null,
+  planInfoLoading: false,
+  planInfoError: null,
 };
 
 export const fetchAllPlans = createAsyncThunk(
@@ -53,6 +59,30 @@ export const fetchAllPlans = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const { data } = await api.get('plan');
+      if (data === null) {
+        return rejectWithValue('404');
+      }
+      return data;
+    } catch (error) {
+      return rejectWithValue(
+        error instanceof Error ? error.message : 'Unknown error',
+      );
+    }
+  },
+);
+
+export interface IPlanAllInfo {
+  analysis: string;
+  recommendations: string[];
+  budgetPlan: ICircleItem[];
+  title: string;
+}
+export const fetchPlanAllInfo = createAsyncThunk(
+  'budget/fetchPlanAllInfo',
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const { data } = await api.get(`plan/${id}`);
+
       if (data === null) {
         return rejectWithValue('404');
       }
@@ -97,17 +127,6 @@ export const createBudgetPlan = createAsyncThunk(
     { rejectWithValue },
   ) => {
     try {
-      console.log('try to create plan ', { title,
-      income_min,
-      income_max,
-      percents,
-      date,
-      trips,
-      rooms,
-      members,
-      credit,
-      hobby,
-      expences,});
       const { data } = await api.post(
         'plan',
         JSON.stringify({
@@ -124,8 +143,6 @@ export const createBudgetPlan = createAsyncThunk(
           expences,
         }),
       );
-      console.log('Plan for  ', data);
-
       if (data === null) {
         return rejectWithValue('404');
       }
@@ -164,6 +181,41 @@ export const addSpendingToPlan = createAsyncThunk(
     }
   },
 );
+
+export const addFinalNewPlan = createAsyncThunk(
+  'budget/addFinalNewPlan',
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const { data } = await api.post(`plan/end/${id}`);
+      if (data === null) {
+        return rejectWithValue('404');
+      }
+      return data;
+    } catch (error) {
+      return rejectWithValue(
+        error instanceof Error ? error.message : 'Unknown error',
+      );
+    }
+  },
+);
+
+
+export const deletePlan = createAsyncThunk(
+  'home/deletePlan',
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const { data } = await api.delete(`plan/${id}`);
+      if (data === null) {
+        return rejectWithValue('404');
+      }
+      return data;
+    } catch (error) {
+      return rejectWithValue(
+        error instanceof Error ? error.message : 'Unknown error',
+      );
+    }
+  },
+);
 const budgetsSlice = createSlice({
   name: 'budgets',
   initialState,
@@ -176,7 +228,12 @@ const budgetsSlice = createSlice({
         date: action.payload.date,
       };
     },
+    clearCreatingData(state) {
+      state.creatingData = null;
+      state.firstAddScreenData = null;
+    },
   },
+
   extraReducers: builder => {
     builder
       .addCase(fetchAllPlans.pending, state => {
@@ -209,22 +266,63 @@ const budgetsSlice = createSlice({
       })
 
       .addCase(createBudgetPlan.pending, state => {
-        console.log('pending');
         state.creatingLoading = true;
         state.creatingError = null;
       })
       .addCase(createBudgetPlan.fulfilled, (state, action) => {
-        console.log('fullfilled');
         state.creatingLoading = false;
         state.creatingData = action.payload;
       })
       .addCase(createBudgetPlan.rejected, (state, action) => {
-        console.log('fail');
         state.creatingLoading = false;
         state.creatingError = action.payload as string;
+      })
+
+      .addCase(addFinalNewPlan.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(addFinalNewPlan.fulfilled, (state, action) => {
+        state.loading = false;
+        if (state.data) {
+          state.data.push(action.payload);
+        } else {
+          state.data = [action.payload];
+        }
+      })
+      .addCase(addFinalNewPlan.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
+      .addCase(fetchPlanAllInfo.pending, state => {
+        state.planInfoLoading = true;
+        state.planInfoError = null;
+      })
+      .addCase(fetchPlanAllInfo.fulfilled, (state, action) => {
+        state.planInfoLoading = false;
+        state.planAllInfo = action.payload;
+      })
+      .addCase(fetchPlanAllInfo.rejected, (state, action) => {
+        state.planInfoLoading = false;
+        state.planInfoError = action.payload as string;
+      })
+
+      .addCase(deletePlan.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deletePlan.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload;
+      })
+      .addCase(deletePlan.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
       });
   },
 });
 
-export const { setDataFromFirstAddBudgetScreen } = budgetsSlice.actions;
+export const { setDataFromFirstAddBudgetScreen, clearCreatingData } =
+  budgetsSlice.actions;
 export default budgetsSlice.reducer;

@@ -5,7 +5,8 @@ import {
   storeAvatar,
   storeTokens,
 } from './AuthStorage.ts';
-
+import { store } from '../../store.ts';
+import { logout } from './Auth.slice.ts';
 const api = axios.create({
   baseURL: 'https://econofy-backend.onrender.com/',
 });
@@ -14,7 +15,7 @@ api.interceptors.request.use(async config => {
   const tokens = await getTokens();
   if (tokens?.accessToken) {
     config.headers.Authorization = `Bearer ${tokens.accessToken}`;
-    config.headers['Content-Type']="application/json";
+    config.headers['Content-Type'] = 'application/json';
   }
   return config;
 });
@@ -24,7 +25,15 @@ api.interceptors.response.use(
   async error => {
     const originalRequest = error.config;
     const tokens = await getTokens();
-
+    console.log('try to interceptors, ', tokens);
+    if (error.response?.status === 403) {
+      console.log('try to 403');
+      await clearTokens();
+      store.dispatch(logout());
+      const tokens2 = await getTokens();
+      console.log('tokens after clear, ', tokens2);
+      return Promise.reject("403");
+    }
     if (
       error.response?.status === 401 &&
       tokens?.refreshToken &&
@@ -32,6 +41,7 @@ api.interceptors.response.use(
     ) {
       originalRequest._retry = true;
       try {
+        console.log('try to refresh');
         const response = await axios.post(
           'https://econofy-backend.onrender.com/auth/refresh',
           { refreshToken: tokens.refreshToken },
@@ -46,8 +56,8 @@ api.interceptors.response.use(
         return Promise.reject(refreshError);
       }
     }
-    if(error.response?.status===404){
-      return {data:null};
+    if (error.response?.status === 404) {
+      return { data: null };
     }
     return Promise.reject(error);
   },

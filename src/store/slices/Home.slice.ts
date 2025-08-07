@@ -145,10 +145,13 @@ const homeSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchAllGoals.fulfilled, (state, action) => {
+        console.log("CORRECT FETCHING GOALS");
+        
         state.loading = false;
         state.data = action.payload;
       })
       .addCase(fetchAllGoals.rejected, (state, action) => {
+        console.log("ERROR FETCHING GOALS");
         state.loading = false;
         state.error = action.payload as string;
       })

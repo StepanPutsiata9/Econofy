@@ -11,8 +11,8 @@ interface ICircleItem {
 
 interface IPieProps {
   data: ICircleItem[];
-  handleCircleComplete:()=>void;
-  shouldAnimated:boolean;
+  handleCircleComplete: () => void;
+  shouldAnimated: boolean;
 }
 
 const TypewriterLegendItem = ({
@@ -60,11 +60,12 @@ const TypewriterLegendItem = ({
   );
 };
 
-export default function Pie({ data,handleCircleComplete,shouldAnimated }: IPieProps) {
+export default function Pie({ data, handleCircleComplete, shouldAnimated }: IPieProps) {
   const rotationAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0)).current;
   const [currentLegendIndex, setCurrentLegendIndex] = useState(0);
   const [animationStarted, setAnimationStarted] = useState(false);
+  const filteredData = data.filter(item => item.population !== 0);
 
   useEffect(() => {
     Animated.parallel([
@@ -95,16 +96,17 @@ export default function Pie({ data,handleCircleComplete,shouldAnimated }: IPiePr
   });
 
   const handleLegendItemComplete = () => {
-    if (
-      currentLegendIndex <
-      data.filter(item => item.population !== 0).length - 1
-    ) {
+    if (currentLegendIndex < filteredData.length - 1) {
       setCurrentLegendIndex(prev => prev + 1);
-    }else{
+    } else {
       handleCircleComplete();
     }
-
   };
+
+  useEffect(() => {
+    setCurrentLegendIndex(0);
+    setAnimationStarted(false);
+  }, [data]);
 
   return (
     <View>
@@ -137,30 +139,29 @@ export default function Pie({ data,handleCircleComplete,shouldAnimated }: IPiePr
       </View>
 
       <View style={styles.legendContainer}>
-
-        {data.map((item, index) =>
-        shouldAnimated?
-          (item.population !== 0 ? (
-            <TypewriterLegendItem
-              key={index}
-              item={item}
-              speed={30}
-              startAnimation={animationStarted && index <= currentLegendIndex}
-              onComplete={handleLegendItemComplete}
-            />
-          ) : null)
-          :(
-           <View key={index} style={styles.legendItem}>
-              <View
-                style={[styles.legendColor, { backgroundColor: item.color }]}
+        {shouldAnimated
+          ? filteredData.map((item, index) => (
+              <TypewriterLegendItem
+                key={`${item.name}-${index}`}
+                item={item}
+                speed={30}
+                startAnimation={animationStarted && index <= currentLegendIndex}
+                onComplete={handleLegendItemComplete}
               />
-              <Text style={styles.legendText}>
-                {item.name}-{item.population} BYN{' '}
-              </Text>
-            </View>
-          )
-        
-        )}
+            ))
+          : data.map(
+              (item, index) =>
+                item.population !== 0 && (
+                  <View key={`${item.name}-${index}`} style={styles.legendItem}>
+                    <View
+                      style={[styles.legendColor, { backgroundColor: item.color }]}
+                    />
+                    <Text style={styles.legendText}>
+                      {item.name}-{item.population} BYN
+                    </Text>
+                  </View>
+                )
+            )}
       </View>
     </View>
   );

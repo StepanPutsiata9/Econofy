@@ -114,6 +114,7 @@ export const logout = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       await clearTokens();
+      console.log("logout");
     } catch (error) {
       return rejectWithValue(
         error instanceof Error ? error.message : 'Unknown error',

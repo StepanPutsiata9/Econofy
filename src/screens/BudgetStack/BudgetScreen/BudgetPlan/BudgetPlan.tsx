@@ -3,25 +3,28 @@ import { styles } from './BudgetPlan';
 // @ts-ignore
 import ProgressBar from 'react-native-progress/Bar';
 import { useMemo, useState } from 'react';
-import AddSpendingModal from "./AddSpendingModal/AddSpendingModal.tsx"
+import AddSpendingModal from './AddSpendingModal/AddSpendingModal.tsx';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { BudgetStackParamList } from '../../../../types/navigation.types.ts';
+import { useAppDispatch } from '../../../../store/store.ts';
+import { fetchPlanAllInfo } from '../../../../store/slices/Budget.slice.ts';
 export interface IBudgetPlanItem {
   title: string;
   date: string;
   spentMoney: number;
   limitMoney: number;
   remainder: number;
-  term:string;
-  id:string;
+  term: string;
+  id: string;
 }
-interface IBudgetPlanProps{
-    item:IBudgetPlanItem
+interface IBudgetPlanProps {
+  item: IBudgetPlanItem;
 }
-function BudgetPlan({item}: IBudgetPlanProps) {
-  const progress = item.remainder/item.limitMoney;
-  const budgetNavigate= useNavigation<NativeStackNavigationProp<BudgetStackParamList>>();
+function BudgetPlan({ item }: IBudgetPlanProps) {
+  const progress = item.remainder / item.limitMoney;
+  const budgetNavigate =
+    useNavigation<NativeStackNavigationProp<BudgetStackParamList>>();
   const colorProgressBar: string = useMemo((): string => {
     if (progress <= 1 && progress >= 0.6) {
       return '#5BFF6F';
@@ -32,59 +35,70 @@ function BudgetPlan({item}: IBudgetPlanProps) {
     }
     return '';
   }, [progress]);
-  const [addModalVisible,setAddModalVisible]=useState<boolean>(false);
+  const [addModalVisible, setAddModalVisible] = useState<boolean>(false);
+  const dispatch=useAppDispatch();
+  const handleGetInfo = () => {
+    dispatch(fetchPlanAllInfo(item.id))
+    budgetNavigate.navigate('BudgetPlanInfoScreen');
+  };
   return (
     <>
-    <AddSpendingModal addModalVisible={addModalVisible} setAddModalVisible={setAddModalVisible}
-      item={item}
-    />
-    <TouchableOpacity onPress={()=>{budgetNavigate.navigate('BudgetPlanInfoScreen')}} style={styles.budgetPlan}>
-      <View style={styles.titleLine}>
-        <Text style={styles.titleText}>{item.title}</Text>
-        <Text style={styles.dateText}>{item.date}</Text>
-      </View>
-      <View style={styles.infoView}>
-        <View style={styles.moneyCountView}>
-          <Text style={styles.countText}>
-            Потрачено: <Text style={styles.countNumber}> {item.spentMoney}</Text>
-          </Text>
-          <Text style={styles.countText}>
-            Лимит: <Text style={styles.countNumber}> {item.limitMoney}</Text>
-          </Text>
-          <Text style={styles.countText}>
-            Остаток: <Text style={styles.countNumber}> {item.remainder}</Text>
-          </Text>
+      <AddSpendingModal
+        addModalVisible={addModalVisible}
+        setAddModalVisible={setAddModalVisible}
+        item={item}
+      />
+      <TouchableOpacity onPress={handleGetInfo} style={styles.budgetPlan}>
+        <View style={styles.titleLine}>
+          <Text style={styles.titleText}>{item.title}</Text>
+          <Text style={styles.dateText}>{item.date}</Text>
         </View>
-        <View>
-          <Text style={styles.termText}>Срок: {item.term}</Text>
+        <View style={styles.infoView}>
+          <View style={styles.moneyCountView}>
+            <Text style={styles.countText}>
+              Потрачено:{' '}
+              <Text style={styles.countNumber}> {item.spentMoney}</Text>
+            </Text>
+            <Text style={styles.countText}>
+              Лимит: <Text style={styles.countNumber}> {item.limitMoney}</Text>
+            </Text>
+            <Text style={styles.countText}>
+              Остаток: <Text style={styles.countNumber}> {item.remainder}</Text>
+            </Text>
+          </View>
+          <View>
+            <Text style={styles.termText}>Срок: {item.term}</Text>
+          </View>
         </View>
-      </View>
-      <View style={styles.progressView}>
-        <ProgressBar
-          progress={progress}
-          width={null}
-          height={3}
-          color={colorProgressBar}
-          unfilledColor="#B2B2B2"
-          borderWidth={0}
-          borderRadius={4}
-          animated={true}
-          animationType="spring"
-          animationConfig={{
-            tension: 20,
-            friction: 3,
-            duration: 500,
-          }}
-        />
-      </View>
-      <View style={styles.addConsumption}>
-        <TouchableOpacity onPress={() => {setAddModalVisible(true)}}>
-          <Text style={styles.addConsumptionText}>Добавить расход+</Text>
-        </TouchableOpacity>
-      </View>
-    </TouchableOpacity>
+        <View style={styles.progressView}>
+          <ProgressBar
+            progress={progress}
+            width={null}
+            height={3}
+            color={colorProgressBar}
+            unfilledColor="#B2B2B2"
+            borderWidth={0}
+            borderRadius={4}
+            animated={true}
+            animationType="spring"
+            animationConfig={{
+              tension: 20,
+              friction: 3,
+              duration: 500,
+            }}
+          />
+        </View>
+        <View style={styles.addConsumption}>
+          <TouchableOpacity
+            onPress={() => {
+              setAddModalVisible(true);
+            }}
+          >
+            <Text style={styles.addConsumptionText}>Добавить расход+</Text>
+          </TouchableOpacity>
+        </View>
+      </TouchableOpacity>
     </>
-
   );
 }
 

@@ -21,9 +21,8 @@ import MainButton from '../../../components/ui/MainButton/MainButton.tsx';
 import { StackNavigationProp } from '@react-navigation/stack';
 import Calendar from '../../../components/SvgComponents/Calendar.tsx';
 import DatePickerModal from '../../../components/ui/CalendarModal/CalendarModal.tsx';
-import {useAppDispatch } from '../../../store/store.ts';
-import { setDataFromFirstAddBudgetScreen } from '../../../store/slices/Budget.slice.ts';
-
+import { useAppDispatch } from '../../../store/store.ts';
+import {setDataFromFirstAddBudgetScreen } from '../../../store/slices/Budget.slice.ts';
 
 type AddBudgetPlanScreenProps = {
   navigation: StackNavigationProp<BudgetStackParamList, 'AddBudgetPlan'>;
@@ -35,11 +34,11 @@ function AddBudgetPlanScreen({ navigation }: AddBudgetPlanScreenProps) {
     navigation.getParent()?.setOptions({ tabBarStyle: { height: 0 } });
     console.log(navigation.getParent());
   });
-  const dispatch=useAppDispatch();
+  const dispatch = useAppDispatch();
   const insets = useSafeAreaInsets();
   const budgetNavigate =
     useNavigation<NativeStackNavigationProp<BudgetStackParamList>>();
- 
+
   const [budgetName, setBudgetName] = useState<string>('');
   const [salary, setSalary] = useState<string>('');
   const [date, setDate] = useState('');
@@ -243,15 +242,22 @@ function AddBudgetPlanScreen({ navigation }: AddBudgetPlanScreenProps) {
         </View>
         <MainButton
           onClick={() => {
-            if (!checkError(budgetName, date, Number(salary), Number(safeSumm))) {
-              
+            if (
+              !checkError(budgetName, date, Number(salary), Number(safeSumm))
+            ) {
               return;
             }
-            const numSalary=Number(salary);
-            const numSafeSumm=Number(safeSumm);
-            
-            dispatch(setDataFromFirstAddBudgetScreen({budgetName:budgetName, date:date,salary:numSalary,
-              safeSumm:numSafeSumm}))
+            const numSalary = Number(salary);
+            const numSafeSumm = Number(safeSumm);
+
+            dispatch(
+              setDataFromFirstAddBudgetScreen({
+                budgetName: budgetName,
+                date: date,
+                salary: numSalary,
+                safeSumm: numSafeSumm,
+              }),
+            );
             budgetNavigate.navigate('AddBudgetPlanSecondScreen');
           }}
           title="Далее"

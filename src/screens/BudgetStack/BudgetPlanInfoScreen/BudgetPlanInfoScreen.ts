@@ -100,21 +100,28 @@ export const styles = StyleSheet.create({
     fontSize: 18,
     color: '#fff',
     fontFamily: 'MontserratBold',
-    marginBottom:16,
+    marginBottom: 16,
   },
-    delView: {
-    flex:1,
-    justifyContent:'center',
+  delView: {
+    flex: 1,
+    justifyContent: 'center',
     flexDirection: 'column',
     alignItems: 'center',
-    textAlign:'center',
-    marginBottom:30,
+    textAlign: 'center',
+    marginBottom: 30,
   },
 
   delText: {
     color: '#FF1B44',
     fontSize: 16,
     fontFamily: 'MontserratBold',
-    marginTop:10,
+    marginTop: 10,
+  },
+
+  planTitle: {
+    color: '#fff',
+    fontFamily: 'MontserratBold',
+    fontSize: 22,
+    marginBottom:5,
   },
 });

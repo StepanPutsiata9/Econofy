@@ -44,18 +44,8 @@ function Budget({ navigation }: BudgetScreenProps) {
     (state: RootState) => state.budgets,
   );
 
-  const refreshData = useCallback(() => {
-
-    console.log('refreshed data');
-    setRefreshing(true)
-    dispatch(fetchAllPlans());
-    setRefreshing(false)
-  }, [dispatch]);
-
-  useEffect(() => {
-    refreshData();
-  }, [refreshData]);
-
+  const [isScreenFocused, setIsScreenFocused] = useState(true);
+  const [errorModalVisible, setErrorModalVisible] = useState<boolean>(false);
   useFocusEffect(
     useCallback(() => {
       navigation.getParent()?.setOptions({
@@ -65,14 +55,33 @@ function Budget({ navigation }: BudgetScreenProps) {
           animationEnabled: true,
         },
       });
-      return () => {};
-    }, [navigation]),
+      setIsScreenFocused(true);
+      return () => {
+        setIsScreenFocused(false);
+        setErrorModalVisible(false);
+      };
+    }, [navigation])
   );
 
-  const [errorModalVisible, setErrorModalVisible] = useState(false);
+  const refreshData = useCallback(() => {
+    setRefreshing(true);
+    dispatch(fetchAllPlans())
+      .unwrap()
+      .finally(() => setRefreshing(false));
+  }, [dispatch]);
+
   useEffect(() => {
-    setErrorModalVisible(!!error);
-  }, [error]);
+    refreshData();
+  }, [refreshData]);
+
+  useEffect(() => {
+    if (error && isScreenFocused) {
+      setErrorModalVisible(true);
+    } else {
+      setErrorModalVisible(false);
+    }
+  }, [error, isScreenFocused, setErrorModalVisible]);
+
   const [refreshing, setRefreshing] = React.useState(false);
   return (
     <>
@@ -101,8 +110,12 @@ function Budget({ navigation }: BudgetScreenProps) {
           (data?.length !== 0 ? (
             <FlatList
               refreshControl={
-                <RefreshControl refreshing={refreshing} onRefresh={refreshData} 
-                tintColor={"#5BFF6F"} colors={["#5BFF6F"]}/>
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={refreshData}
+                  tintColor={'#5BFF6F'}
+                  colors={['#5BFF6F']}
+                />
               }
               style={[styles.budgetsView, { marginBottom: insets.bottom + 75 }]}
               data={data}

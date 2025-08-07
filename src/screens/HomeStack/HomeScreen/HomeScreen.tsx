@@ -12,7 +12,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { LoadContainer } from '../../LoadScreen/LoadScreen.tsx';
 import ErrorMessage from '../../../components/ui/ErrorMessage/ErrorMessage.tsx';
 import { fetchAllGoals, Target } from '../../../store/slices/Home.slice.ts';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParamList } from '../../../types/navigation.types.ts';
 import BackendError from '../../../components/ui/BackendErrorModal/BackendError.tsx';
@@ -26,17 +26,41 @@ function Home() {
   const [refreshing,setRefreshing]=useState<boolean>(false);
   const homeNavigate =
     useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
+
+  const [isScreenFocused, setIsScreenFocused] = useState(true);
+  const [errorModalVisible, setErrorModalVisible] = useState<boolean>(false);
+
+  // Обработчик фокуса экрана
+  useFocusEffect(
+    React.useCallback(() => {
+      setIsScreenFocused(true);
+      return () => {
+        setIsScreenFocused(false);
+        setErrorModalVisible(false);
+      };
+    }, [setErrorModalVisible])
+  );
+
   const refreshData = useCallback(() => {
     setRefreshing(true);
-    dispatch(fetchAllGoals());
-    setRefreshing(false);
-
+    dispatch(fetchAllGoals())
+      .unwrap()
+      .finally(() => setRefreshing(false));
   }, [dispatch]);
 
   useEffect(() => {
     refreshData();
   }, [refreshData]);
 
+  useEffect(() => {
+    if (error && isScreenFocused) {
+      setErrorModalVisible(true);
+    } else {
+      setErrorModalVisible(false);
+    }
+  }, [error, isScreenFocused, setErrorModalVisible]);
+
+  
   const sortedData = useMemo(() => {
     const sortDataByDate = (targets: Target[]): Target[] | null => {
       return [...targets].sort((a, b) => {
@@ -52,7 +76,6 @@ function Home() {
     return sortDataByDate(data || []);
   }, [data]);
 
-  const [errorModalVisible, setErrorModalVisible] = useState<boolean>(false);
   useEffect(() => {
     if (error) {
       setErrorModalVisible(true);
