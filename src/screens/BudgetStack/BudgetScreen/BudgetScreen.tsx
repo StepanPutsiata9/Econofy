@@ -117,7 +117,7 @@ function Budget({ navigation }: BudgetScreenProps) {
                   colors={['#5BFF6F']}
                 />
               }
-              style={[styles.budgetsView, { marginBottom: insets.bottom + 75 }]}
+              style={[styles.budgetsView, { marginBottom: insets.bottom + 100 }]}
               data={data}
               renderItem={renderItem}
               keyExtractor={itemKey => itemKey.id}

@@ -102,7 +102,7 @@ function RegistrationScreen() {
         <View>
           <TextInput
             value={loginText}
-            placeholder="Login"
+            placeholder="Логин"
             style={[styles.input, error && styles.errorInput]}
             onChangeText={setLogin}
             keyboardType="email-address"

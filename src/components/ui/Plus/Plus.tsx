@@ -12,7 +12,7 @@ function Plus({ onPress }: PlusProps) {
   const insets = useSafeAreaInsets();
 
   return (  
-    <View style={[styles.plusContainer, { bottom: insets.bottom + 100 }]}>
+    <View style={[styles.plusContainer, { bottom: insets.bottom + 90 }]}>
       <TouchableOpacity
         style={styles.plus}
         hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}

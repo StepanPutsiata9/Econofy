@@ -168,7 +168,7 @@ function AddGoalScreen({ navigation }: AddGoalScreenProps) {
           placeholder="Моя цель"
           style={[styles.input, titleError && styles.errorInput]}
           onChangeText={setTitleInput}
-          placeholderTextColor="#fff"
+          placeholderTextColor="#9E9B9B"
         />
         {titleError ? (
           <Animated.View style={{ opacity: fadeAnim }}>
@@ -184,7 +184,7 @@ function AddGoalScreen({ navigation }: AddGoalScreenProps) {
           placeholder="5000"
           style={[styles.input, moneyError && styles.errorInput]}
           onChangeText={setSummInput}
-          placeholderTextColor="#fff"
+          placeholderTextColor="#9E9B9B"
         />
         {moneyError ? (
           <Animated.View style={{ opacity: fadeAnim }}>
@@ -200,7 +200,7 @@ function AddGoalScreen({ navigation }: AddGoalScreenProps) {
           placeholder="01.01.2025"
           style={[styles.input, dateError && styles.errorInput]}
           onChangeText={setDateInput}
-          placeholderTextColor="#fff"
+          placeholderTextColor="#9E9B9B"
         />
         {dateError ? (
           <Animated.View style={{ opacity: fadeAnim }}>
