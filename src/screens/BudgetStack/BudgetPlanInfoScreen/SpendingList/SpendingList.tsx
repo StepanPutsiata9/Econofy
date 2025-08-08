@@ -34,7 +34,7 @@ function SpendingList({ data }: ISpendinListProps) {
           </TouchableOpacity>
         </>
       ) : (
-        <Text>Нету трат</Text>
+        <Text style={styles.emptyListText}>Нету трат</Text>
       )}
     </>
   );
