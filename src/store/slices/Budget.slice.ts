@@ -22,6 +22,18 @@ interface ICircleItem {
   population: number;
   color: string;
 }
+
+export interface IExpenses {
+  id: string;
+  category: string;
+  expense: string;
+  createdAt:string;
+}
+export interface ISpendingInfo {
+  id: string;
+  category: string;
+  expenses: IExpenses[];
+}
 export interface IAddBudgetPlanResponse {
   analysis: string;
   id: string;
@@ -39,6 +51,10 @@ interface BudgetState {
   planAllInfo: IPlanAllInfo | null;
   planInfoLoading: boolean;
   planInfoError: string | null;
+
+  spendingInfo: ISpendingInfo | null;
+  spendingError: string | null;
+  spendingLoading: boolean;
 }
 
 const initialState: BudgetState = {
@@ -52,6 +68,9 @@ const initialState: BudgetState = {
   planAllInfo: null,
   planInfoLoading: false,
   planInfoError: null,
+  spendingInfo: null,
+  spendingError: null,
+  spendingLoading: false,
 };
 
 export const fetchAllPlans = createAsyncThunk(
@@ -71,7 +90,6 @@ export const fetchAllPlans = createAsyncThunk(
   },
 );
 
-
 export type SpendingCardItem = {
   title: string;
   spendingCount: number;
@@ -81,9 +99,9 @@ export interface IPlanAllInfo {
   analysis: string;
   recommendations: string[];
   budgetPlan: ICircleItem[];
-  expenses:SpendingCardItem[];
+  expenses: SpendingCardItem[];
   title: string;
-  id:string;
+  id: string;
 }
 export const fetchPlanAllInfo = createAsyncThunk(
   'budget/fetchPlanAllInfo',
@@ -207,14 +225,34 @@ export const addFinalNewPlan = createAsyncThunk(
   },
 );
 
-
-
-
 export const deletePlan = createAsyncThunk(
   'home/deletePlan',
   async (id: string, { rejectWithValue }) => {
     try {
       const { data } = await api.delete(`plan/${id}`);
+      if (data === null) {
+        return rejectWithValue('404');
+      }
+      return data;
+    } catch (error) {
+      return rejectWithValue(
+        error instanceof Error ? error.message : 'Unknown error',
+      );
+    }
+  },
+);
+
+interface IFetchSpendingInfo {
+  id: string;
+  category: string;
+}
+
+export const fetchSpendingInfo = createAsyncThunk(
+  'budget/fetchSpendingInfo',
+  async ({ id, category }: IFetchSpendingInfo, { rejectWithValue }) => {
+    try {      
+      const { data } = await api.post(`plan/expenses/${id}`,  JSON.stringify({category:category}));
+
       if (data === null) {
         return rejectWithValue('404');
       }
@@ -329,6 +367,22 @@ const budgetsSlice = createSlice({
       .addCase(deletePlan.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
+      })
+
+      .addCase(fetchSpendingInfo.pending, state => {
+        state.spendingLoading = true;
+        state.spendingError = null;
+      })
+      .addCase(fetchSpendingInfo.fulfilled, (state, action) => {
+        console.log("spending data ", action.payload);
+        state.spendingLoading = false;
+        state.spendingInfo = action.payload;
+      })
+      .addCase(fetchSpendingInfo.rejected, (state, action) => {
+        console.log("spending erorr ", action.payload);
+
+        state.spendingLoading = false;
+        state.spendingError = action.payload as string;
       });
   },
 });

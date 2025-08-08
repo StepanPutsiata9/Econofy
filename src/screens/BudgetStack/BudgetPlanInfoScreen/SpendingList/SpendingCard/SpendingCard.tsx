@@ -17,7 +17,8 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { BudgetStackParamList } from '../../../../../types/navigation.types.ts';
 import { Categories } from '../../../BudgetScreen/BudgetPlan/AddSpendingModal/AddSpendingModal.tsx';
-import {SpendingCardItem} from "../../../../../store/slices/Budget.slice.ts"
+import {fetchSpendingInfo, SpendingCardItem} from "../../../../../store/slices/Budget.slice.ts"
+import { useAppDispatch } from '../../../../../store/store.ts';
 type IconKey = keyof typeof componentsIcon;
 const componentsIcon = {
   STORE_AND_HOUSEHOLD: <Products />,
@@ -37,6 +38,7 @@ const componentsIcon = {
 
 type SpendingCardProps = {
   item: SpendingCardItem;
+  id:string
 };
 
 function getEnumKeyByValue<T extends Record<string, string>>(
@@ -47,18 +49,21 @@ function getEnumKeyByValue<T extends Record<string, string>>(
     key => enumObj[key] === value,
   );
 }
-function SpendingCard({ item }: SpendingCardProps) {
+function SpendingCard({ item,id }: SpendingCardProps) {
   const key = useMemo(() => {
     return getEnumKeyByValue(Categories, item.title);
   }, [item.title]);
 
   const budgetNavigate =
     useNavigation<NativeStackNavigationProp<BudgetStackParamList>>();
+  const dispatch=useAppDispatch();
+  const handleGetInfo=()=>{
+        dispatch(fetchSpendingInfo({id:id,category:item.title}))
+        budgetNavigate.navigate('CatygoryScreen',{allSpending:item.spendingMoney});
+  }
   return (
     <TouchableOpacity
-      onPress={() => {
-        budgetNavigate.navigate('CatygoryScreen');
-      }}
+      onPress={handleGetInfo}
     >
       <View style={styles.cardView}>
         <View style={styles.infoView}>

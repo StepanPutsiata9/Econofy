@@ -25,13 +25,8 @@ api.interceptors.response.use(
   async error => {
     const originalRequest = error.config;
     const tokens = await getTokens();
-    console.log('try to interceptors, ', tokens);
     if (error.response?.status === 403) {
-      console.log('try to 403');
-      await clearTokens();
       store.dispatch(logout());
-      const tokens2 = await getTokens();
-      console.log('tokens after clear, ', tokens2);
       return Promise.reject("403");
     }
     if (

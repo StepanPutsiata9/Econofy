@@ -79,7 +79,6 @@ export const updateGoal = createAsyncThunk(
         console.log(response);
         return rejectWithValue('404');
       }
-      console.log(response);
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -144,14 +143,11 @@ const homeSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchAllGoals.fulfilled, (state, action) => {
-        console.log("CORRECT FETCHING GOALS");
-        
+      .addCase(fetchAllGoals.fulfilled, (state, action) => {       
         state.loading = false;
         state.data = action.payload;
       })
       .addCase(fetchAllGoals.rejected, (state, action) => {
-        console.log("ERROR FETCHING GOALS");
         state.loading = false;
         state.error = action.payload as string;
       })

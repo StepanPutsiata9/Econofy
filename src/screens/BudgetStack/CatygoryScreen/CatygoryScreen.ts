@@ -12,6 +12,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: 10,
+    paddingRight:5,
   },
   title: {
     color: '#5BFF6F',
@@ -51,7 +52,7 @@ export const styles = StyleSheet.create({
     flexDirection:'row',
   },
   dateText:{
-    marginRight:16,
+    marginRight:8,
     color: '#fff',
     fontFamily: 'Montserrat',
     fontSize: 16,

@@ -21,7 +21,7 @@ export type BudgetStackParamList={
   AddBudgetPlanSecondScreen:undefined,
   AddBudgetPlanFinalScreen:undefined,
   BudgetPlanInfoScreen:undefined,
-  CatygoryScreen:undefined,
+  CatygoryScreen:{allSpending:number},
 }
 export type CurrencyStackParamList={
   CurrencyScreen:undefined;

@@ -193,7 +193,7 @@ function BudgetPlanInfoScreen({ navigation }: BudgetPlanInfoScreenProps) {
 
           <View style={styles.spendingGraf}>
             <Text style={styles.spendingText}>График расходов:</Text>
-            <SpendingList data={planAllInfo!.expenses} />
+            <SpendingList data={planAllInfo!.expenses} id={planAllInfo!.id} />
           </View>
           <View>
             <TouchableOpacity
