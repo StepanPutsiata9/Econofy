@@ -84,7 +84,7 @@ const currencySlice = createSlice({
 
       state.searchedCurrency = Object.fromEntries(
         Object.entries(state.loadedCurrency).filter(([currencyCode]) =>
-          currencyCode.toLowerCase().includes(searchTerm),
+          currencyCode.toLowerCase().startsWith(searchTerm),
         ),
       );
     },

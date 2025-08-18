@@ -4,7 +4,8 @@ import {
   TouchableOpacity,
   TextInput,
   Animated,
-  ScrollView
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
 import { styles } from './AddGoalScreen.ts';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -23,6 +24,7 @@ import Calendar from '../../../components/SvgComponents/Calendar.tsx';
 import { useAppDispatch } from '../../../store/store.ts';
 import { createNewGaol } from '../../../store/slices/Home.slice.ts';
 import DatePickerModal from '../../../components/ui/CalendarModal/CalendarModal.tsx';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 type AddGoalScreenProps = {
   navigation: StackNavigationProp<HomeStackParamList, 'AddGoalScreen'>;
   route: RouteProp<HomeStackParamList, 'AddGoalScreen'>;
@@ -141,93 +143,108 @@ function AddGoalScreen({ navigation }: AddGoalScreenProps) {
     }
     homeNavigate.goBack();
     async function postGoal() {
-      await dispatch(createNewGaol({ title, date:dateString, allMoney: summNum }));
+      await dispatch(
+        createNewGaol({ title, date: dateString, allMoney: summNum }),
+      );
     }
     postGoal();
   };
   return (
-    <ScrollView
+    <View
       style={[
         styles.container,
         {
           paddingTop: insets.top,
-          paddingBottom: insets.bottom,
+          paddingBottom: insets.bottom + 10,
         },
       ]}
     >
-      <View style={styles.titleView}>
-        <Text style={styles.title}>Создать цель</Text>
-        <TouchableOpacity onPress={() => homeNavigate.goBack()}>
-          <Cross />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.infoView}>
-        <Text style={styles.goalNameText}>Название:</Text>
-        <TextInput
-          value={goalName}
-          placeholder="Моя цель"
-          style={[styles.input, titleError && styles.errorInput]}
-          onChangeText={setTitleInput}
-          placeholderTextColor="#9E9B9B"
-        />
-        {titleError ? (
-          <Animated.View style={{ opacity: fadeAnim }}>
-            <Text style={styles.errorText}>{titleError}</Text>
-          </Animated.View>
-        ) : null}
-      </View>
+      <KeyboardAwareScrollView
+        enableOnAndroid={true}
+        extraScrollHeight={20}
+        contentContainerStyle={styles.avoidView}
+        keyboardShouldPersistTaps="handled"
+        enableAutomaticScroll={true}
+        showsVerticalScrollIndicator={false}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View>
+            <View style={styles.titleView}>
+              <Text style={styles.title}>Создать цель</Text>
+              <TouchableOpacity onPress={() => homeNavigate.goBack()}>
+                <Cross />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.infoView}>
+              <Text style={styles.goalNameText}>Название:</Text>
+              <TextInput
+                value={goalName}
+                placeholder="Моя цель"
+                style={[styles.input, titleError && styles.errorInput]}
+                onChangeText={setTitleInput}
+                placeholderTextColor="#9E9B9B"
+              />
+              {titleError ? (
+                <Animated.View style={{ opacity: fadeAnim }}>
+                  <Text style={styles.errorText}>{titleError}</Text>
+                </Animated.View>
+              ) : null}
+            </View>
 
-      <View style={styles.infoView}>
-        <Text style={styles.goalNameText}>Сумма:</Text>
-        <TextInput
-          value={summ}
-          placeholder="5000"
-          style={[styles.input, moneyError && styles.errorInput]}
-          onChangeText={setSummInput}
-          placeholderTextColor="#9E9B9B"
-        />
-        {moneyError ? (
-          <Animated.View style={{ opacity: fadeAnim }}>
-            <Text style={styles.errorText}>{moneyError}</Text>
-          </Animated.View>
-        ) : null}
-      </View>
+            <View style={styles.infoView}>
+              <Text style={styles.goalNameText}>Сумма:</Text>
+              <TextInput
+                value={summ}
+                placeholder="5000"
+                style={[styles.input, moneyError && styles.errorInput]}
+                onChangeText={setSummInput}
+                placeholderTextColor="#9E9B9B"
+              />
+              {moneyError ? (
+                <Animated.View style={{ opacity: fadeAnim }}>
+                  <Text style={styles.errorText}>{moneyError}</Text>
+                </Animated.View>
+              ) : null}
+            </View>
 
-      <View style={styles.dateView}>
-        <Text style={styles.goalNameText}>Дата выполнения:</Text>
-        <TextInput
-          value={date}
-          placeholder="01.01.2025"
-          style={[styles.input, dateError && styles.errorInput]}
-          onChangeText={setDateInput}
-          placeholderTextColor="#9E9B9B"
-        />
-        {dateError ? (
-          <Animated.View style={{ opacity: fadeAnim }}>
-            <Text style={styles.errorText}>{dateError}</Text>
-          </Animated.View>
-        ) : null}
-        <View style={styles.calendar}>
-          <TouchableOpacity
-            onPress={() => {
-              setIsVisible(true);
-            }}
-          >
-            <Calendar color={dateError ? '#FF1B44' : '#5BFF6F'} />
-          </TouchableOpacity>
-        </View>
-      </View>
-      <MainButton
-        onClick={() => createGoal(goalName, date, Number(summ))}
-        title="Создать цель"
-      />
-      <DatePickerModal
-        isVisible={isVisible}
-        setIsVisible={setIsVisible}
-        selectedDate={date}
-        setSelectedDate={setDate}
-      />
-    </ScrollView>
+            <View style={styles.dateView}>
+              <Text style={styles.goalNameText}>Дата выполнения:</Text>
+              <TextInput
+                value={date}
+                placeholder="01.01.2025"
+                style={[styles.input, dateError && styles.errorInput]}
+                onChangeText={setDateInput}
+                placeholderTextColor="#9E9B9B"
+              />
+              {dateError ? (
+                <Animated.View style={{ opacity: fadeAnim }}>
+                  <Text style={styles.errorText}>{dateError}</Text>
+                </Animated.View>
+              ) : null}
+              <View style={styles.calendar}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setIsVisible(true);
+                  }}
+                >
+                  <Calendar color={dateError ? '#FF1B44' : '#5BFF6F'} />
+                </TouchableOpacity>
+              </View>
+            </View>
+            <MainButton
+              onClick={() => createGoal(goalName, date, Number(summ))}
+              title="Создать цель"
+            />
+            <DatePickerModal
+              isVisible={isVisible}
+              setIsVisible={setIsVisible}
+              selectedDate={date}
+              setSelectedDate={setDate}
+            />
+          </View>
+        </TouchableWithoutFeedback>
+      </KeyboardAwareScrollView>
+    </View>
   );
 }
 

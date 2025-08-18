@@ -1,10 +1,11 @@
 import {
-  ScrollView,
   Text,
   View,
   TextInput,
   TouchableOpacity,
   Animated,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
 import Header from '../../../components/ui/Header/Header.tsx';
 import { styles } from './RegistrationScreen.ts';
@@ -20,8 +21,8 @@ import api from '../../../store/slices/AuthSlice/api.ts';
 import { useAppDispatch } from '../../../store/store.ts';
 import { setLoading } from '../../../store/slices/AuthSlice/Auth.slice.ts';
 import { checkError, errorInputs } from './RegistrationValidation.ts';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 function RegistrationScreen() {
-  
   const [isSecure, setIsSecure] = useState<boolean>(false);
   const [loginText, setLoginText] = useState<string>('');
   const [passwordText, setPasswordText] = useState<string>('');
@@ -45,7 +46,7 @@ function RegistrationScreen() {
     }
   }, [error, fadeAnim]);
 
-    const setNullInputs = () => {
+  const setNullInputs = () => {
     setLoginText('');
     setPasswordText('');
     setRepitPasswordText('');
@@ -95,77 +96,85 @@ function RegistrationScreen() {
     setError('');
   };
   return (
-    <View style={styles.container}>
-      <Header />
-      <Text style={styles.authText}>Регистрация</Text>
-      <ScrollView>
-        <View>
-          <TextInput
-            value={loginText}
-            placeholder="Логин"
-            style={[styles.input, error && styles.errorInput]}
-            onChangeText={setLogin}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            placeholderTextColor="#9E9B9B"
-          />
-          <View style={styles.inputView}>
+    <KeyboardAwareScrollView
+      contentContainerStyle={styles.avoidView}
+      enableOnAndroid={true}
+      extraScrollHeight={20}
+      keyboardShouldPersistTaps="handled"
+      enableAutomaticScroll={true}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.container}>
+          <Header />
+          <Text style={styles.authText}>Регистрация</Text>
+          <View>
             <TextInput
-              value={passwordText}
-              placeholder="Пароль"
+              value={loginText}
+              placeholder="Логин"
               style={[styles.input, error && styles.errorInput]}
-              onChangeText={setPassword}
+              onChangeText={setLogin}
+              keyboardType="email-address"
+              autoCapitalize="none"
               placeholderTextColor="#9E9B9B"
-              secureTextEntry={!isSecure}
             />
-            <View style={styles.eye}>
-              <TouchableOpacity onPress={() => setIsSecure(!isSecure)}>
-                {isSecure ? (
-                  <EyeClosed color={error ? '#FF1B44' : '#5BFF6F'} />
-                ) : (
-                  <EyeOpened color={error ? '#FF1B44' : '#5BFF6F'} />
-                )}
-              </TouchableOpacity>
+            <View style={styles.inputView}>
+              <TextInput
+                value={passwordText}
+                placeholder="Пароль"
+                style={[styles.input, error && styles.errorInput]}
+                onChangeText={setPassword}
+                placeholderTextColor="#9E9B9B"
+                secureTextEntry={!isSecure}
+              />
+              <View style={styles.eye}>
+                <TouchableOpacity onPress={() => setIsSecure(!isSecure)}>
+                  {isSecure ? (
+                    <EyeOpened color={error ? '#FF1B44' : '#5BFF6F'} />
+                  ) : (
+                    <EyeClosed color={error ? '#FF1B44' : '#5BFF6F'} />
+                  )}
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View style={styles.inputView}>
+              <TextInput
+                value={repitPasswordText}
+                placeholder="Повторите пароль"
+                style={[styles.repitPasswordInput, error && styles.errorInput]}
+                onChangeText={setRepitPassword}
+                placeholderTextColor="#9E9B9B"
+                secureTextEntry={!isSecureRepit}
+              />
+              <View style={styles.eye}>
+                <TouchableOpacity
+                  onPress={() => setIsSecureRepit(!isSecureRepit)}
+                >
+                  {isSecureRepit ? (
+                    <EyeOpened color={error ? '#FF1B44' : '#5BFF6F'} />
+                  ) : (
+                    <EyeClosed color={error ? '#FF1B44' : '#5BFF6F'} />
+                  )}
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-          <View style={styles.inputView}>
-            <TextInput
-              value={repitPasswordText}
-              placeholder="Повторите пароль"
-              style={[styles.repitPasswordInput, error && styles.errorInput]}
-              onChangeText={setRepitPassword}
-              placeholderTextColor="#9E9B9B"
-              secureTextEntry={!isSecureRepit}
-            />
-            <View style={styles.eye}>
-              <TouchableOpacity
-                onPress={() => setIsSecureRepit(!isSecureRepit)}
-              >
-                {isSecureRepit ? (
-                  <EyeClosed color={error ? '#FF1B44' : '#5BFF6F'} />
-                ) : (
-                  <EyeOpened color={error ? '#FF1B44' : '#5BFF6F'} />
-                )}
-              </TouchableOpacity>
-            </View>
-          </View>
+          {error ? (
+            <Animated.View style={{ opacity: fadeAnim }}>
+              <Text style={styles.errorText}>{error}</Text>
+            </Animated.View>
+          ) : null}
+          <TouchableOpacity
+            onPress={() => {
+              authNavigation.navigate('AuthScreen');
+            }}
+            style={styles.touchOpacity}
+          >
+            <Text style={styles.noAccountText}>Есть аккаунт? Войти</Text>
+          </TouchableOpacity>
+          <MainButton title="Зарегистрироваться" onClick={handleRegistration} />
         </View>
-        {error ? (
-          <Animated.View style={{ opacity: fadeAnim }}>
-            <Text style={styles.errorText}>{error}</Text>
-          </Animated.View>
-        ) : null}
-        <TouchableOpacity
-          onPress={() => {
-            authNavigation.navigate('AuthScreen');
-          }}
-          style={styles.touchOpacity}
-        >
-          <Text style={styles.noAccountText}>Есть аккаунт? Войти</Text>
-        </TouchableOpacity>
-        <MainButton title="Зарегистрироваться" onClick={handleRegistration} />
-      </ScrollView>
-    </View>
+      </TouchableWithoutFeedback>
+    </KeyboardAwareScrollView>
   );
 }
 export default RegistrationScreen;

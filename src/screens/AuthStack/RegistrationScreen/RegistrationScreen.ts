@@ -7,6 +7,10 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 16,
     height: '100%',
   },
+  avoidView: {
+    flexGrow: 1,
+    backgroundColor: '#121212',
+  },
   authText: {
     color: '#ffffff',
     fontFamily: 'MontserratBold',

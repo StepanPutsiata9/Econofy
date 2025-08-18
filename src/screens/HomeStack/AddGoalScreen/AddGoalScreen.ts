@@ -7,6 +7,10 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 16,
     height: '100%',
   },
+  avoidView: {
+    backgroundColor: '#121212',
+    flexGrow: 1,
+  },
   titleView: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -38,10 +42,10 @@ export const styles = StyleSheet.create({
     fontFamily: 'Montserrat',
     color: '#ffffff',
   },
-  errorInput:{
-    borderWidth:2,
-    borderColor:'#FF1B44',
-    borderRadius:18,
+  errorInput: {
+    borderWidth: 2,
+    borderColor: '#FF1B44',
+    borderRadius: 18,
   },
 
   dateView: {
@@ -52,7 +56,7 @@ export const styles = StyleSheet.create({
   calendar: {
     position: 'absolute',
     right: 17,
-    top:53,
+    top: 53,
   },
 
   errorText: {
@@ -60,6 +64,6 @@ export const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'left',
     paddingVertical: 3,
-    fontFamily:'Montserrat'
+    fontFamily: 'Montserrat',
   },
 });

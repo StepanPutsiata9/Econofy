@@ -7,6 +7,10 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 16,
     height: '100%',
   },
+  avoidView: {
+    backgroundColor: '#121212',
+    flexGrow: 1,
+  },
   titleView: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -55,8 +59,8 @@ export const styles = StyleSheet.create({
     borderRadius: 18,
   },
 
-  dateView:{
-    marginBottom:50,
+  dateView: {
+    marginBottom: 50,
   },
   calendar: {
     position: 'absolute',

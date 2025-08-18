@@ -1,11 +1,16 @@
 import {
-  ScrollView,
+  // ScrollView,
   Text,
   View,
   TextInput,
   TouchableOpacity,
   Animated,
+  // KeyboardAvoidingView,
+  // Platform,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Header from '../../../components/ui/Header/Header.tsx';
 import { styles } from './AuthScreen.ts';
 import MainButton from '../../../components/ui/MainButton/MainButton.tsx';
@@ -102,68 +107,66 @@ function AuthScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <Header />
-      <Text style={styles.authText}>Войти</Text>
-      <ScrollView>
-        <View>
-          <TextInput
-            value={loginText}
-            placeholder="Логин"
-            style={[
-              styles.loginInput,
-              authError && styles.errorInput,
-            ]}
-            onChangeText={setLogin}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            placeholderTextColor="#9E9B9B"
-          />
-          <View style={styles.inputView}>
+    <KeyboardAwareScrollView
+      contentContainerStyle={styles.avoidView}
+      enableOnAndroid={true}
+      extraScrollHeight={20}
+      keyboardShouldPersistTaps="handled"
+      enableAutomaticScroll={true}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.container}>
+          <Header />
+          <Text style={styles.authText}>Войти</Text>
+          <View>
             <TextInput
-              value={passwordText}
-              placeholder="Пароль"
-              style={[
-                styles.passwordInput,
-                authError && styles.errorInput,
-              ]}
-              onChangeText={setPassword}
+              value={loginText}
+              placeholder="Логин"
+              style={[styles.loginInput, authError && styles.errorInput]}
+              onChangeText={setLogin}
+              keyboardType="email-address"
+              autoCapitalize="none"
               placeholderTextColor="#9E9B9B"
-              secureTextEntry={!isSecure}
             />
-            <View style={styles.eye}>
-              <TouchableOpacity onPress={() => setIsSecure(!isSecure)}>
-                {isSecure ? (
-                  <EyeClosed
-                    color={authError ? '#FF1B44' : '#5BFF6F'}
-                  />
-                ) : (
-                  <EyeOpened
-                    color={authError ? '#FF1B44' : '#5BFF6F'}
-                  />
-                )}
-              </TouchableOpacity>
+            <View style={styles.inputView}>
+              <TextInput
+                value={passwordText}
+                placeholder="Пароль"
+                style={[styles.passwordInput, authError && styles.errorInput]}
+                onChangeText={setPassword}
+                placeholderTextColor="#9E9B9B"
+                secureTextEntry={!isSecure}
+              />
+              <View style={styles.eye}>
+                <TouchableOpacity onPress={() => setIsSecure(!isSecure)}>
+                  {isSecure ? (
+                    <EyeOpened color={authError ? '#FF1B44' : '#5BFF6F'} />
+                  ) : (
+                    <EyeClosed color={authError ? '#FF1B44' : '#5BFF6F'} />
+                  )}
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
+          {authError ? (
+            <Animated.View style={{ opacity: fadeAnim }}>
+              <Text style={styles.errorText}>{authError}</Text>
+            </Animated.View>
+          ) : null}
+          <TouchableOpacity
+            onPress={() => {
+              authNavigation.navigate('RegistrationScreen');
+            }}
+            style={styles.touchOpacity}
+          >
+            <Text style={styles.noAccountText}>
+              Нет аккаунта? Зарегистрироваться
+            </Text>
+          </TouchableOpacity>
+          <MainButton title="Войти" onClick={handleLogin} />
         </View>
-        {authError ? (
-          <Animated.View style={{ opacity: fadeAnim }}>
-            <Text style={styles.errorText}>{authError}</Text>
-          </Animated.View>
-        ) : null}
-        <TouchableOpacity
-          onPress={() => {
-            authNavigation.navigate('RegistrationScreen');
-          }}
-          style={styles.touchOpacity}
-        >
-          <Text style={styles.noAccountText}>
-            Нет аккаунта? Зарегистрироваться
-          </Text>
-        </TouchableOpacity>
-        <MainButton title="Войти" onClick={handleLogin} />
-      </ScrollView>
-    </View>
+      </TouchableWithoutFeedback>
+    </KeyboardAwareScrollView>
   );
 }
 export default AuthScreen;

@@ -4,7 +4,8 @@ import {
   TouchableOpacity,
   TextInput,
   Animated,
-  ScrollView,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
 import { styles } from './AddBudgetPlanSecondScreen.ts';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -22,6 +23,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootState, useAppDispatch } from '../../../store/store.ts';
 import { useSelector } from 'react-redux';
 import { createBudgetPlan } from '../../../store/slices/Budget.slice.ts';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 type AddBudgetPlanSecondScreenProps = {
   navigation: StackNavigationProp<
@@ -58,7 +60,7 @@ function AddBudgetPlanSecondScreen({
   const { firstAddScreenData } = useSelector(
     (state: RootState) => state.budgets,
   );
-  
+
   const handleChange1To15 = (value: string) => {
     if (/^([1-9]|1[0-5])?$/.test(value) || value === '') {
       setRoomCount(value);
@@ -182,165 +184,177 @@ function AddBudgetPlanSecondScreen({
         styles.container,
         {
           paddingTop: insets.top,
-          paddingBottom: insets.bottom,
+          paddingBottom: insets.bottom + 10,
         },
       ]}
     >
-      <View style={styles.titleView}>
-        <Text style={styles.title}>Создать план</Text>
-        <TouchableOpacity onPress={() => budgetNavigate.popTo('BudgetScreen')}>
-          <Cross />
-        </TouchableOpacity>
-      </View>
-      <ScrollView
-        contentContainerStyle={styles.scrollContainer}
+      <KeyboardAwareScrollView
+        enableOnAndroid={true}
+        extraScrollHeight={20}
+        contentContainerStyle={styles.avoidView}
         keyboardShouldPersistTaps="handled"
-        automaticallyAdjustKeyboardInsets={true}
+        enableAutomaticScroll={true}
+        showsVerticalScrollIndicator={false}
       >
-        <View style={styles.titleInfoView}>
-          <Text style={styles.titleInfoText}>
-            Эти данные необходимы для создания{' '}
-            <Text style={styles.greenText}>подробного</Text> плана
-            бюджетирования
-          </Text>
-        </View>
-        <View style={styles.infoView}>
-          <Text style={styles.budgetNameText}>
-            Количество комнат в квартире:
-          </Text>
-          <TextInput
-            value={roomCount}
-            placeholder="1-15"
-            style={[styles.input, roomError && styles.errorInput]}
-            onChangeText={setRoomsInput}
-            placeholderTextColor="#9E9B9B"
-          />
-          {roomError ? (
-            <Animated.View style={{ opacity: fadeAnim }}>
-              <Text style={styles.errorText}>{roomError}</Text>
-            </Animated.View>
-          ) : null}
-        </View>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={styles.scrollContainer}>
+            <View style={styles.titleView}>
+              <Text style={styles.title}>Создать план</Text>
+              <TouchableOpacity
+                onPress={() => budgetNavigate.popTo('BudgetScreen')}
+              >
+                <Cross />
+              </TouchableOpacity>
+            </View>
 
-        <View style={styles.infoView}>
-          <Text style={styles.budgetNameText}>Количество членов семьи:</Text>
-          <TextInput
-            value={peopleCount}
-            placeholder="1-10"
-            style={[styles.input, peopleError && styles.errorInput]}
-            onChangeText={setPeopleInput}
-            placeholderTextColor="#9E9B9B"
-          />
-          {peopleError ? (
-            <Animated.View style={{ opacity: fadeAnim }}>
-              <Text style={styles.errorText}>{peopleError}</Text>
-            </Animated.View>
-          ) : null}
-        </View>
+            <View style={styles.titleInfoView}>
+              <Text style={styles.titleInfoText}>
+                Эти данные необходимы для создания{' '}
+                <Text style={styles.greenText}>подробного</Text> плана
+                бюджетирования
+              </Text>
+            </View>
+            <View style={styles.infoView}>
+              <Text style={styles.budgetNameText}>
+                Количество комнат в квартире:
+              </Text>
+              <TextInput
+                value={roomCount}
+                placeholder="1-15"
+                style={[styles.input, roomError && styles.errorInput]}
+                onChangeText={setRoomsInput}
+                placeholderTextColor="#9E9B9B"
+              />
+              {roomError ? (
+                <Animated.View style={{ opacity: fadeAnim }}>
+                  <Text style={styles.errorText}>{roomError}</Text>
+                </Animated.View>
+              ) : null}
+            </View>
 
-        <View style={styles.infoView}>
-          <Text style={styles.budgetNameText}>
-            Количество поездок на общ. транспорте в день (на семью):
-          </Text>
-          <TextInput
-            value={transferCount}
-            placeholder="0-20"
-            style={[styles.input, transferError && styles.errorInput]}
-            onChangeText={setTransferInput}
-            placeholderTextColor="#9E9B9B"
-          />
-          {transferError ? (
-            <Animated.View style={{ opacity: fadeAnim }}>
-              <Text style={styles.errorText}>{transferError}</Text>
-            </Animated.View>
-          ) : null}
-        </View>
-        <View style={styles.infoView}>
-          <Text style={styles.budgetNameText}>Кредиты (в месяц):</Text>
-          <TextInput
-            value={credits}
-            placeholder="600"
-            style={[styles.input, creditsError && styles.errorInput]}
-            onChangeText={setCreditsInput}
-            placeholderTextColor="#9E9B9B"
-          />
-          {creditsError ? (
-            <Animated.View style={{ opacity: fadeAnim }}>
-              <Text style={styles.errorText}>{creditsError}</Text>
-            </Animated.View>
-          ) : null}
-        </View>
-        <View style={styles.infoView}>
-          <Text style={styles.budgetNameText}>Хобби (в месяц):</Text>
-          <TextInput
-            value={hobbys}
-            placeholder="125"
-            style={[styles.input, hobbysError && styles.errorInput]}
-            onChangeText={setHobbysInput}
-            placeholderTextColor="#9E9B9B"
-          />
-          {hobbysError ? (
-            <Animated.View style={{ opacity: fadeAnim }}>
-              <Text style={styles.errorText}>{hobbysError}</Text>
-            </Animated.View>
-          ) : null}
-        </View>
-        <View style={styles.extraView}>
-          <Text style={styles.budgetNameText}>
-            Дополнительные расходы (в месяц):
-          </Text>
-          <TextInput
-            value={extraSpending}
-            placeholder="Доп. траты..."
-            multiline={true}
-            scrollEnabled={true}
-            style={styles.extraInput}
-            onChangeText={setExtraSpendingInput}
-            placeholderTextColor="#9E9B9B"
-          />
-        </View>
-        <View style={styles.btnView}>
-          <MainButton
-            onClick={() => {
-              if (
-                checkError(
-                  roomCount,
-                  peopleCount,
-                  transferCount,
-                  credits,
-                  hobbys,
-                )
-              ) {
-               dispatch(
-                  createBudgetPlan({
-                    title: firstAddScreenData!.budgetName,
-                    income_min: Number(firstAddScreenData!.salary),
-                    income_max: Number(firstAddScreenData!.salary),
-                    percents: Number(firstAddScreenData!.safeSumm),
-                    date: firstAddScreenData!.date,
-                    trips: Number(transferCount),
-                    rooms: Number(roomCount),
-                    members: Number(peopleCount),
-                    credit: credits,
-                    hobby: hobbys,
-                    expences: extraSpending||"",
-                  }),
-                );
-                budgetNavigate.navigate('AddBudgetPlanFinalScreen');
-              }
-            }}
-            title="Далее"
-          />
-        </View>
-        <View style={styles.goBack}>
-          <TouchableOpacity
-            style={styles.goBackBtn}
-            onPress={() => budgetNavigate.goBack()}
-          >
-            <Text style={styles.goBackText}>Вернуться назад</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
+            <View style={styles.infoView}>
+              <Text style={styles.budgetNameText}>
+                Количество членов семьи:
+              </Text>
+              <TextInput
+                value={peopleCount}
+                placeholder="1-10"
+                style={[styles.input, peopleError && styles.errorInput]}
+                onChangeText={setPeopleInput}
+                placeholderTextColor="#9E9B9B"
+              />
+              {peopleError ? (
+                <Animated.View style={{ opacity: fadeAnim }}>
+                  <Text style={styles.errorText}>{peopleError}</Text>
+                </Animated.View>
+              ) : null}
+            </View>
+
+            <View style={styles.infoView}>
+              <Text style={styles.budgetNameText}>
+                Количество поездок на общ. транспорте в день (на семью):
+              </Text>
+              <TextInput
+                value={transferCount}
+                placeholder="0-20"
+                style={[styles.input, transferError && styles.errorInput]}
+                onChangeText={setTransferInput}
+                placeholderTextColor="#9E9B9B"
+              />
+              {transferError ? (
+                <Animated.View style={{ opacity: fadeAnim }}>
+                  <Text style={styles.errorText}>{transferError}</Text>
+                </Animated.View>
+              ) : null}
+            </View>
+            <View style={styles.infoView}>
+              <Text style={styles.budgetNameText}>Кредиты (в месяц):</Text>
+              <TextInput
+                value={credits}
+                placeholder="600"
+                style={[styles.input, creditsError && styles.errorInput]}
+                onChangeText={setCreditsInput}
+                placeholderTextColor="#9E9B9B"
+              />
+              {creditsError ? (
+                <Animated.View style={{ opacity: fadeAnim }}>
+                  <Text style={styles.errorText}>{creditsError}</Text>
+                </Animated.View>
+              ) : null}
+            </View>
+            <View style={styles.infoView}>
+              <Text style={styles.budgetNameText}>Хобби (в месяц):</Text>
+              <TextInput
+                value={hobbys}
+                placeholder="125"
+                style={[styles.input, hobbysError && styles.errorInput]}
+                onChangeText={setHobbysInput}
+                placeholderTextColor="#9E9B9B"
+              />
+              {hobbysError ? (
+                <Animated.View style={{ opacity: fadeAnim }}>
+                  <Text style={styles.errorText}>{hobbysError}</Text>
+                </Animated.View>
+              ) : null}
+            </View>
+            <View style={styles.extraView}>
+              <Text style={styles.budgetNameText}>
+                Дополнительные расходы (в месяц):
+              </Text>
+              <TextInput
+                value={extraSpending}
+                placeholder="Доп. траты..."
+                multiline={true}
+                scrollEnabled={true}
+                style={styles.extraInput}
+                onChangeText={setExtraSpendingInput}
+                placeholderTextColor="#9E9B9B"
+              />
+            </View>
+            <View style={styles.btnView}>
+              <MainButton
+                onClick={() => {
+                  if (
+                    checkError(
+                      roomCount,
+                      peopleCount,
+                      transferCount,
+                      credits,
+                      hobbys,
+                    )
+                  ) {
+                    dispatch(
+                      createBudgetPlan({
+                        title: firstAddScreenData!.budgetName,
+                        income_min: Number(firstAddScreenData!.salary),
+                        income_max: Number(firstAddScreenData!.salary),
+                        percents: Number(firstAddScreenData!.safeSumm),
+                        date: firstAddScreenData!.date,
+                        trips: Number(transferCount),
+                        rooms: Number(roomCount),
+                        members: Number(peopleCount),
+                        credit: credits,
+                        hobby: hobbys,
+                        expences: extraSpending || '',
+                      }),
+                    );
+                    budgetNavigate.navigate('AddBudgetPlanFinalScreen');
+                  }
+                }}
+                title="Далее"
+              />
+            </View>
+            <View style={styles.goBack}>
+              <TouchableOpacity
+                style={styles.goBackBtn}
+                onPress={() => budgetNavigate.goBack()}
+              >
+                <Text style={styles.goBackText}>Вернуться назад</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+      </KeyboardAwareScrollView>
     </View>
   );
 }
